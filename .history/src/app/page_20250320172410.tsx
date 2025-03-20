@@ -1,13 +1,12 @@
 import { fetchBigQueryData } from "@/components/server/DataTableServer";
 import { DataTableClient } from "@/components/client/DataTableClient";
-import { NormalizedDataFields } from "@/types/bigquery";
 
 export default async function DataExplorerPage() {
-  const initialData: NormalizedDataFields[] = await fetchBigQueryData();
+  const initialData = await fetchBigQueryData();
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">BigQuery Data Explorer</h1>
+    <div>
+      <h1>BigQuery Data Explorer</h1>
       <DataTableClient initialData={initialData} />
     </div>
   );

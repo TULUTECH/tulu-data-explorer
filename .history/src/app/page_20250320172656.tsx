@@ -3,7 +3,7 @@ import { DataTableClient } from "@/components/client/DataTableClient";
 import { NormalizedDataFields } from "@/types/bigquery";
 
 export default async function DataExplorerPage() {
-  const initialData: NormalizedDataFields[] = await fetchBigQueryData();
+  const initialData: CampaignData[] = await fetchBigQueryData();
 
   return (
     <div className="container mx-auto p-4">
