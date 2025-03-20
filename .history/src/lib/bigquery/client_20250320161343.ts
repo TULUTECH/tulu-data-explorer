@@ -17,18 +17,9 @@ export function createBigQueryClient() {
   return bigquery;
 }
 
-// TODO: update type of T with correct schema
-export async function queryBigQuery<T = any>(query: string): Promise<T[]> {
-  const bigquery = createBigQueryClient();
-  try {
-    const [job] = await bigquery.createQueryJob({
-      query,
-      location: "EU",
-    });
-    const [rows] = await job.getQueryResults();
-    return rows as T[];
-  } catch (error) {
-    console.error("BigQuery Query Error:", error);
-    throw error;
-  }
+export async function queryBigQuery<T = any>;(query:string): Promise<T[]> {
+    const bigquery = createBigQueryClient();
+    try {
+        const [job] = await bigquery.createQueryJob({
+    }
 }
