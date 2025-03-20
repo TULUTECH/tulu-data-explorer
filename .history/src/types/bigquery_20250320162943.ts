@@ -1,4 +1,4 @@
-export interface NormalizedDataFields {
+export interface NormalizedData {
   campaign_id: number | null;
   campaign_name: string | null;
   ad_group_id: number | null;
@@ -7,6 +7,12 @@ export interface NormalizedDataFields {
   cost_micros: number | null;
   impressions: number | null;
   clicks: number | null;
+  _sdc_received_at: Date | null;
+  _sdc_batched_at: Date | null;
+  _sdc_deleted_at: Date | null;
+  _sdc_extracted_at: Date | null;
+  _sdc_sequence: number | null;
+  _sdc_table_version: number | null;
   sessions: number | null;
   leads: number | null;
   revenue: number | null;
