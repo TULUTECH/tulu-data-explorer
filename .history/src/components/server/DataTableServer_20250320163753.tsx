@@ -10,14 +10,8 @@ export async function fetchBigQueryData(): Promise<NormalizedDataFields[]> {
   try {
     return await queryBigQuery<NormalizedDataFields>(query);
   } catch (error) {
-    // Detailed logging
-    console.error("BigQuery Data Fetch Error:", {
-      message: error instanceof Error ? error.message : "Unknown error",
-      query: query,
-      timestamp: new Date().toISOString(),
-    });
-
-    // Throw a more specific error
-    throw new Error("Failed to fetch campaign data. Please try again later.");
+    console.error("Error fetching BigQuery data:", error);
+    throw error;
+    return [];
   }
 }
