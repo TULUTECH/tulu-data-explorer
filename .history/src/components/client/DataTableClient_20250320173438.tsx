@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Datepicker from "react-tailwindcss-datepicker";
-import { NormalizedDataFields } from "@/types/bigquery";
+import Norm
 // Define the prop types
 interface DataTableClientProps {
   initialData: NormalizedDataFields[];
