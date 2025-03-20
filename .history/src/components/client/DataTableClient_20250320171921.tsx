@@ -3,12 +3,7 @@
 import { useState } from "react";
 import Datepicker from "react-tailwindcss-datepicker";
 
-// Define the prop types
-interface DataTableClientProps {
-  initialData: NormalizedDataFields[];
-}
-
-export function DataTableClient({ initialData }: DataTableClientProps) {
+export function DataTableClient() {
   const [dateRange, setDateRange] = useState({
     startDate: null,
     endDate: null,
@@ -20,7 +15,6 @@ export function DataTableClient({ initialData }: DataTableClientProps) {
     console.log("Fetching data:", {
       table: selectedTable,
       dateRange,
-      initialData,
     });
   };
 
