@@ -2,7 +2,6 @@ import { BigQuery } from "@google-cloud/bigquery";
 
 export function createBigQueryClient() {
   const { BIGQUERY_PROJECT_ID, BIGQUERY_CLIENT_EMAIL, BIGQUERY_PRIVATE_KEY } = process.env;
-
   if (!BIGQUERY_PROJECT_ID || !BIGQUERY_CLIENT_EMAIL || !BIGQUERY_PRIVATE_KEY) {
     throw new Error("Missing required BigQuery environment variables.");
   }
@@ -15,20 +14,4 @@ export function createBigQueryClient() {
     },
   });
   return bigquery;
-}
-
-// TODO: update type of T with correct schema
-export async function queryBigQuery<T = any>(query: string): Promise<T[]> {
-  const bigquery = createBigQueryClient();
-  try {
-    const [job] = await bigquery.createQueryJob({
-      query,
-      location: "EU",
-    });
-    const [rows] = await job.getQueryResults();
-    return rows as T[];
-  } catch (error) {
-    console.error("BigQuery Query Error:", error);
-    throw error;
-  }
 }

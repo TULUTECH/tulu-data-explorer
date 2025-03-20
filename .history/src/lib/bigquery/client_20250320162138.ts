@@ -17,7 +17,7 @@ export function createBigQueryClient() {
   return bigquery;
 }
 
-// TODO: update type of T with correct schema
+// TODO: update type of 
 export async function queryBigQuery<T = any>(query: string): Promise<T[]> {
   const bigquery = createBigQueryClient();
   try {
