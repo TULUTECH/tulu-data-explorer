@@ -1,5 +1,3 @@
-import { TableClient } from "@/components/client/TableClient";
-
 export default async function DataExplorerPage() {
   return (
     <div className="container mx-auto p-4">
