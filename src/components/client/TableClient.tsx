@@ -68,7 +68,8 @@ const columns = [
 ];
 
 export function TableClient() {
-  const [data, _setData] = React.useState(() => [...defaultData]);
+  // const [data, _setData] = React.useState(() => [...defaultData]);
+  const data = [...defaultData];
 
   const table = useReactTable({
     data,
@@ -77,13 +78,13 @@ export function TableClient() {
   });
 
   return (
-    <div className="p-2">
-      <table>
+    <div className="border-4 p-2">
+      <table className="text-center">
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
+            <tr key={headerGroup.id} className="bg-gray-100">
               {headerGroup.headers.map((header) => (
-                <th key={header.id}>
+                <th key={header.id} className="border border-gray-300 px-4 py-2">
                   {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                 </th>
               ))}
@@ -94,16 +95,18 @@ export function TableClient() {
           {table.getRowModel().rows.map((row) => (
             <tr key={row.id}>
               {row.getVisibleCells().map((cell) => (
-                <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
+                <td key={cell.id} className="border border-gray-300 px-4 py-2">
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </td>
               ))}
             </tr>
           ))}
         </tbody>
         <tfoot>
           {table.getFooterGroups().map((footerGroup) => (
-            <tr key={footerGroup.id}>
+            <tr key={footerGroup.id} className="bg-gray-100">
               {footerGroup.headers.map((header) => (
-                <th key={header.id}>
+                <th key={header.id} className="border border-gray-300 px-4 py-2">
                   {header.isPlaceholder ? null : flexRender(header.column.columnDef.footer, header.getContext())}
                 </th>
               ))}
