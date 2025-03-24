@@ -96,6 +96,31 @@ export function TableClient() {
 
   return (
     <div className="p-2">
+      {/* Pagination controls */}
+      <div className="flex justify-center items-center mt-4 space-x-4">
+        <button
+          className="px-4 py-2 bg-gray-300 rounded disabled:opacity-50"
+          onClick={() => table.previousPage()}
+          disabled={!table.getCanPreviousPage()}
+        >
+          Previous
+        </button>
+        <span>
+          Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
+        </span>
+        <button
+          className="px-4 py-2 bg-gray-300 rounded disabled:opacity-50"
+          onClick={() => table.nextPage()}
+          disabled={!table.getCanNextPage()}
+        >
+          Next
+        </button>
+        <span>
+          Rows {table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1}-
+          {Math.min((table.getState().pagination.pageIndex + 1) * table.getState().pagination.pageSize, data.length)} of{" "}
+          {data.length}
+        </span>
+      </div>
       <table className="text-center">
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
@@ -131,26 +156,6 @@ export function TableClient() {
           ))}
         </tfoot>
       </table>
-      {/* Pagination controls */}
-      <div className="flex justify-center items-center mt-4 space-x-4">
-        <button
-          className="px-4 py-2 bg-gray-300 rounded disabled:opacity-50"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          Previous
-        </button>
-        <span>
-          Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
-        </span>
-        <button
-          className="px-4 py-2 bg-gray-300 rounded disabled:opacity-50"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          Next
-        </button>
-      </div>
       <div className="h-4" />
     </div>
   );
