@@ -11,7 +11,7 @@ import {
 } from "@tanstack/react-table";
 import { ITypeParsedOmpData } from "@/types/data";
 import rawDataJson from "@/data/normalized_omp_data.json";
-import { parseOmpDataTypes } from "@/utils/utils/parseNormalizedOmpData";
+import { parseOmpDataTypes } from "@/utils/parseNormalizedOmpData";
 import { DateRangePicker } from "./DateRangePicker";
 import { format } from "date-fns";
 
@@ -46,10 +46,10 @@ const customDateRangeFilter: FilterFn<ITypeParsedOmpData> = (row, columnId, filt
     return false;
   }
 
-  // Format the dates to ignore the time component.
-  const cellDateStr = format(cellDate, "yyyy-MM-dd");
-  const startDateStr = format(startDate, "yyyy-MM-dd");
-  const endDateStr = format(endDate, "yyyy-MM-dd");
+  const formatDate = (date: Date): string => format(date, "yyyy-MM-dd");
+  const cellDateStr = formatDate(cellDate);
+  const startDateStr = formatDate(startDate);
+  const endDateStr = formatDate(endDate);
 
   const isInRange = cellDateStr >= startDateStr && cellDateStr <= endDateStr;
   if (addMeta) addMeta({ isInRange });
@@ -127,7 +127,7 @@ const columns = [
 
 export const TableClient = () => {
   const data = useMemo(() => [...defaultData], []);
-  const [filterValues, setFilterValues] = useState<{
+  const [filtersState, setFiltersState] = useState<{
     date: { startDate: Date | null; endDate: Date | null };
   }>({
     date: { startDate: null, endDate: null },
@@ -149,12 +149,14 @@ export const TableClient = () => {
 
   // Functions
   const handleFilter = () => {
-    table.setColumnFilters(
-      Object.entries(filterValues)
-        .filter(([, value]) => value !== null && value !== undefined)
-        .map(([id, value]) => ({ id, value }))
-    );
+    const activeFilters = Object.entries(filtersState)
+      .filter(([, value]) => value !== null && value !== undefined)
+      .map(([id, value]) => ({ id, value }));
+    table.setColumnFilters(activeFilters);
   };
+
+  const { pageIndex, pageSize } = table.getState().pagination;
+  const totalRows = table.getFilteredRowModel().rows.length;
 
   return (
     <div className="p-2">
@@ -168,7 +170,7 @@ export const TableClient = () => {
           Previous
         </button>
         <span>
-          Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
+          Page {pageIndex + 1} of {table.getPageCount()}
         </span>
         <button
           className="px-4 py-2 bg-gray-300 rounded disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
@@ -178,15 +180,10 @@ export const TableClient = () => {
           Next
         </button>
         <span>
-          Rows {table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1}-
-          {Math.min(
-            (table.getState().pagination.pageIndex + 1) * table.getState().pagination.pageSize,
-            table.getFilteredRowModel().rows.length
-          )}{" "}
-          of {table.getFilteredRowModel().rows.length}
+          Rows {pageIndex * pageSize + 1}-{Math.min((pageIndex + 1) * pageSize, totalRows)} of {totalRows}
         </span>
       </div>
-      <DateRangePicker onDateRangeChange={(range) => setFilterValues({ ...filterValues, date: range })} />
+      <DateRangePicker onDateRangeChange={(range) => setFiltersState({ ...filtersState, date: range })} />
       <button className="bg-red-400 cursor-pointer p-4 rounded-4xl" onClick={handleFilter}>
         Filter
       </button>
