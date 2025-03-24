@@ -203,10 +203,15 @@ export const TableClient = () => {
           <option value="om_proptech">OM Proptech Normalized Table</option>
         </select>
       </div>
-      <DateRangePicker onDateRangeChange={(range) => setFiltersState({ ...filtersState, date: range })} />
-      <button className="bg-red-400 cursor-pointer p-4 rounded-4xl" onClick={handleFilter}>
-        Filter
-      </button>
+      {tableData.length > 0 && (
+        <>
+          <DateRangePicker onDateRangeChange={(range) => setFiltersState({ ...filtersState, date: range })} />
+          <button className="bg-red-400 cursor-pointer p-4 rounded-4xl" onClick={handleFilter}>
+            Filter
+          </button>
+        </>
+      )}
+
       <table className="text-center">
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
