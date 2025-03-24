@@ -6,6 +6,8 @@ import {
   getCoreRowModel,
   useReactTable,
   getPaginationRowModel,
+  FilterFn,
+  getFilteredRowModel,
 } from "@tanstack/react-table";
 import { ITypeParsedOmpData } from "@/types/data";
 import rawDataJson from "@/data/normalized_omp_data.json";
@@ -14,6 +16,27 @@ import { parseOmpDataTypes } from "@/utils/utils/parseNormalizedOmpData";
 const defaultData = parseOmpDataTypes(rawDataJson);
 
 const columnHelper = createColumnHelper<ITypeParsedOmpData>();
+
+const customDateRangeFilter: FilterFn<ITypeParsedOmpData> = (row, columnId, filterValue, addMeta) => {
+  const { startDate, endDate } = filterValue || {};
+  if (!startDate || !endDate) {
+    if (addMeta) addMeta({ filtered: false });
+    return true;
+  }
+  const cellValue = row.getValue(columnId);
+  if (cellValue === null || cellValue === undefined) {
+    if (addMeta) addMeta({ filtered: false });
+    return false;
+  }
+  const cellDate = cellValue instanceof Date ? cellValue : new Date(cellValue as string | number | Date);
+  if (isNaN(cellDate.getTime())) {
+    if (addMeta) addMeta({ filtered: false });
+    return false;
+  }
+  const isInRange = cellDate >= startDate && cellDate <= endDate;
+  if (addMeta) addMeta({ isInRange });
+  return isInRange;
+};
 
 const columns = [
   columnHelper.accessor("campaign_id", {
@@ -36,15 +59,21 @@ const columns = [
     cell: (props) => props.getValue(),
     footer: (props) => props.column.id,
   }),
-  columnHelper.accessor("date", {
+  columnHelper.accessor((row) => (row.date ? new Date(row.date) : new Date(0)), {
+    id: "date",
     header: "Date",
     cell: (props) => {
-      const rawValue = props.getValue();
-      if (!rawValue) return "-";
-      const date = new Date(rawValue);
-      return date.toISOString().split("T")[0];
+      const date = props.getValue();
+      return date.getTime() === 0
+        ? "-"
+        : date.toLocaleDateString("en-GB", {
+            day: "numeric",
+            month: "short",
+            year: "numeric",
+          });
     },
     footer: (props) => props.column.id,
+    filterFn: customDateRangeFilter,
   }),
   columnHelper.accessor("cost_micros", {
     header: "Cost (micros)",
@@ -85,6 +114,7 @@ export function TableClient() {
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     initialState: {
       pagination: {
