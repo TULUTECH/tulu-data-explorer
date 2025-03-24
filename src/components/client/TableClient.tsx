@@ -12,7 +12,7 @@ import {
 import { ITypeParsedOmpData } from "@/types/data";
 import rawDataJson from "@/data/normalized_omp_data.json";
 import { parseOmpDataTypes } from "@/utils/parseNormalizedOmpData";
-import { DateRangePicker } from "./DateRangePicker";
+import { DateRangePicker } from "@/components/client/DateRangePicker";
 import { format } from "date-fns";
 
 const defaultData = parseOmpDataTypes(rawDataJson);
