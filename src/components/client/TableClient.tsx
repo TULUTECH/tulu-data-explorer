@@ -129,7 +129,7 @@ export function TableClient() {
       {/* Pagination controls */}
       <div className="flex justify-center items-center mt-4 space-x-4">
         <button
-          className="px-4 py-2 bg-gray-300 rounded disabled:opacity-50"
+          className="px-4 py-2 bg-gray-300 rounded disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
         >
@@ -139,7 +139,7 @@ export function TableClient() {
           Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
         </span>
         <button
-          className="px-4 py-2 bg-gray-300 rounded disabled:opacity-50"
+          className="px-4 py-2 bg-gray-300 rounded disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
         >
