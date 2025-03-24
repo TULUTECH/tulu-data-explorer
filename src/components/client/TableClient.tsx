@@ -78,7 +78,7 @@ export function TableClient() {
   });
 
   return (
-    <div className="border-4 p-2">
+    <div className="p-2">
       <table className="text-center">
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
