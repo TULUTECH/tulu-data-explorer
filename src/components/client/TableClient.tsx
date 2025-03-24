@@ -1,6 +1,12 @@
 "use client";
 import React from "react";
-import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
+import {
+  createColumnHelper,
+  flexRender,
+  getCoreRowModel,
+  useReactTable,
+  getPaginationRowModel,
+} from "@tanstack/react-table";
 import { ITypeParsedOmpData } from "@/types/data";
 import rawDataJson from "@/data/normalized_omp_data.json";
 import { parseOmpDataTypes } from "@/utils/utils/parseNormalizedOmpData";
@@ -32,7 +38,12 @@ const columns = [
   }),
   columnHelper.accessor("date", {
     header: "Date",
-    cell: (props) => (props.getValue() ? new Date(props.getValue()!).toLocaleDateString("en-US") : "-"),
+    cell: (props) => {
+      const rawValue = props.getValue();
+      if (!rawValue) return "-";
+      const date = new Date(rawValue);
+      return date.toISOString().split("T")[0];
+    },
     footer: (props) => props.column.id,
   }),
   columnHelper.accessor("cost_micros", {
@@ -68,13 +79,19 @@ const columns = [
 ];
 
 export function TableClient() {
-  // const [data, _setData] = React.useState(() => [...defaultData]);
-  const data = [...defaultData];
+  const data = React.useMemo(() => [...defaultData], []);
 
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    initialState: {
+      pagination: {
+        pageIndex: 0,
+        pageSize: 100,
+      },
+    },
   });
 
   return (
@@ -92,7 +109,7 @@ export function TableClient() {
           ))}
         </thead>
         <tbody>
-          {table.getRowModel().rows.map((row) => (
+          {table.getPaginationRowModel().rows.map((row) => (
             <tr key={row.id}>
               {row.getVisibleCells().map((cell) => (
                 <td key={cell.id} className="border border-gray-300 px-4 py-2">
@@ -114,6 +131,26 @@ export function TableClient() {
           ))}
         </tfoot>
       </table>
+      {/* Pagination controls */}
+      <div className="flex justify-center items-center mt-4 space-x-4">
+        <button
+          className="px-4 py-2 bg-gray-300 rounded disabled:opacity-50"
+          onClick={() => table.previousPage()}
+          disabled={!table.getCanPreviousPage()}
+        >
+          Previous
+        </button>
+        <span>
+          Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
+        </span>
+        <button
+          className="px-4 py-2 bg-gray-300 rounded disabled:opacity-50"
+          onClick={() => table.nextPage()}
+          disabled={!table.getCanNextPage()}
+        >
+          Next
+        </button>
+      </div>
       <div className="h-4" />
     </div>
   );
