@@ -11,3 +11,8 @@ export interface ITypeParsedOmpData {
   leads: number | null;
   revenue: number | null;
 }
+
+export interface IDateRange {
+  startDate: Date | null;
+  endDate: Date | null;
+}
