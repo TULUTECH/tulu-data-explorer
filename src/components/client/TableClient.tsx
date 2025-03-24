@@ -47,9 +47,11 @@ const customDateRangeFilter: FilterFn<ITypeParsedOmpData> = (row, columnId, filt
   }
 
   const formatDate = (date: Date): string => format(date, "yyyy-MM-dd");
+  const effectiveEndDate = endDate || startDate; // If endDate is missing, treat the filter as a single-date filter
+
   const cellDateStr = formatDate(cellDate);
   const startDateStr = formatDate(startDate);
-  const endDateStr = formatDate(endDate);
+  const endDateStr = formatDate(effectiveEndDate);
 
   const isInRange = cellDateStr >= startDateStr && cellDateStr <= endDateStr;
   if (addMeta) addMeta({ isInRange });
