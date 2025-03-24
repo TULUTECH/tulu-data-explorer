@@ -23,13 +23,30 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({ onDateRangeCha
       newRange.endDate = null;
     }
     setSelectedDates(Array.isArray(date) ? date : []);
-    onDateRangeChange(newRange);
+    // Only update on change if two dates are selected.
+    if (Array.isArray(date) && date.length === 2) {
+      onDateRangeChange(newRange);
+    }
+  };
+
+  const handleClose = () => {
+    // When the picker closes, if only one date is selected, treat it as a single-day filter.
+    if (selectedDates.length === 1) {
+      const date = selectedDates[0].toDate();
+      onDateRangeChange({ startDate: date, endDate: date });
+    }
   };
 
   return (
     <div>
       <h2 className="text-xl font-bold mb-2">Select Date Range</h2>
-      <DatePicker value={selectedDates} onChange={handleDateChange} range inputClass="w-50 px-2 py-1 border" />
+      <DatePicker
+        value={selectedDates}
+        onChange={handleDateChange}
+        onClose={handleClose}
+        range
+        inputClass="w-50 px-2 py-1 border"
+      />
     </div>
   );
 };
