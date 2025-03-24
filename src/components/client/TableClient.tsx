@@ -220,15 +220,23 @@ export const TableClient = () => {
           ))}
         </thead>
         <tbody>
-          {table.getPaginationRowModel().rows.map((row) => (
-            <tr key={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <td key={cell.id} className="border border-gray-300 px-4 py-2">
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
-              ))}
+          {tableData.length === 0 ? (
+            <tr>
+              <td className="border border-gray-300 px-4 py-2" colSpan={columns.length}>
+                Please select a table from the menu
+              </td>
             </tr>
-          ))}
+          ) : (
+            table.getPaginationRowModel().rows.map((row) => (
+              <tr key={row.id}>
+                {row.getVisibleCells().map((cell) => (
+                  <td key={cell.id} className="border border-gray-300 px-4 py-2">
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </td>
+                ))}
+              </tr>
+            ))
+          )}
         </tbody>
         <tfoot>
           {table.getFooterGroups().map((footerGroup) => (
