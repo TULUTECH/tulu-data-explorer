@@ -1,5 +1,5 @@
 "use client";
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import {
   createColumnHelper,
   flexRender,
@@ -15,7 +15,7 @@ import { parseOmpDataTypes } from "@/utils/parseNormalizedOmpData";
 import { DateRangePicker } from "@/components/client/DateRangePicker";
 import { format } from "date-fns";
 
-const defaultData = parseOmpDataTypes(rawDataJson);
+const omProptechData = parseOmpDataTypes(rawDataJson);
 
 const columnHelper = createColumnHelper<ITypeParsedOmpData>();
 
@@ -128,7 +128,8 @@ const columns = [
 ];
 
 export const TableClient = () => {
-  const data = useMemo(() => [...defaultData], []);
+  const [tableData, setTableData] = useState<ITypeParsedOmpData[]>([]);
+
   const [filtersState, setFiltersState] = useState<{
     date: { startDate: Date | null; endDate: Date | null };
   }>({
@@ -136,7 +137,7 @@ export const TableClient = () => {
   });
 
   const table = useReactTable({
-    data,
+    data: tableData,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -184,6 +185,23 @@ export const TableClient = () => {
         <span>
           Rows {pageIndex * pageSize + 1}-{Math.min((pageIndex + 1) * pageSize, totalRows)} of {totalRows}
         </span>
+      </div>
+      <div className="mb-4">
+        <label className="mr-2 font-medium">Select Table:</label>
+        <select
+          className="border p-2 rounded"
+          onChange={(e) => {
+            if (e.target.value === "om_proptech") {
+              setTableData([...omProptechData]);
+            } else {
+              setTableData([]);
+            }
+          }}
+          defaultValue=""
+        >
+          <option value="">-- Choose an option --</option>
+          <option value="om_proptech">OM Proptech Normalized Table</option>
+        </select>
       </div>
       <DateRangePicker onDateRangeChange={(range) => setFiltersState({ ...filtersState, date: range })} />
       <button className="bg-red-400 cursor-pointer p-4 rounded-4xl" onClick={handleFilter}>
