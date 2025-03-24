@@ -9,9 +9,9 @@ interface DateRangePickerProps {
 }
 
 export const DateRangePicker: React.FC<DateRangePickerProps> = ({ onDateRangeChange }) => {
-  const [value, setValue] = useState<DateObject[]>([]);
+  const [selectedDates, setSelectedDates] = useState<DateObject[]>([]);
 
-  const handleSetValue = (date: DateObject | DateObject[] | null) => {
+  const handleDateChange = (date: DateObject | DateObject[] | null) => {
     const newRange: IDateRange = { startDate: null, endDate: null };
     if (Array.isArray(date)) {
       newRange.startDate = date[0] ? date[0].toDate() : null;
@@ -20,14 +20,14 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({ onDateRangeCha
       newRange.startDate = date.toDate();
       newRange.endDate = null;
     }
-    setValue(Array.isArray(date) ? date : []);
+    setSelectedDates(Array.isArray(date) ? date : []);
     onDateRangeChange(newRange);
   };
 
   return (
     <div>
       <h2 className="text-xl font-bold mb-2">Select Date Range</h2>
-      <DatePicker value={value} onChange={handleSetValue} range inputClass="w-50 px-2 py-1 border" />
+      <DatePicker value={selectedDates} onChange={handleDateChange} range inputClass="w-50 px-2 py-1 border" />
     </div>
   );
 };
