@@ -27,7 +27,7 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({ onDateRangeCha
   return (
     <div>
       <h2 className="text-xl font-bold mb-2">Select Date Range</h2>
-      <DatePicker value={value} onChange={handleSetValue} range />
+      <DatePicker value={value} onChange={handleSetValue} range inputClass="w-50 px-2 py-1 border" />
     </div>
   );
 };
