@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useMemo, useState } from "react";
 import {
   createColumnHelper,
   flexRender,
@@ -12,6 +12,8 @@ import {
 import { ITypeParsedOmpData } from "@/types/data";
 import rawDataJson from "@/data/normalized_omp_data.json";
 import { parseOmpDataTypes } from "@/utils/utils/parseNormalizedOmpData";
+import { DateRangePicker } from "./DateRangePicker";
+import { format } from "date-fns";
 
 const defaultData = parseOmpDataTypes(rawDataJson);
 
@@ -19,21 +21,37 @@ const columnHelper = createColumnHelper<ITypeParsedOmpData>();
 
 const customDateRangeFilter: FilterFn<ITypeParsedOmpData> = (row, columnId, filterValue, addMeta) => {
   const { startDate, endDate } = filterValue || {};
+
+  // If no complete range is provided, don't filter out any rows.
   if (!startDate || !endDate) {
     if (addMeta) addMeta({ filtered: false });
     return true;
   }
+
   const cellValue = row.getValue(columnId);
-  if (cellValue === null || cellValue === undefined) {
+  if (!cellValue) {
     if (addMeta) addMeta({ filtered: false });
     return false;
   }
-  const cellDate = cellValue instanceof Date ? cellValue : new Date(cellValue as string | number | Date);
+
+  // Only proceed if cellValue is a string, number, or Date
+  if (typeof cellValue !== "string" && typeof cellValue !== "number" && !(cellValue instanceof Date)) {
+    if (addMeta) addMeta({ filtered: false });
+    return false;
+  }
+
+  const cellDate = cellValue instanceof Date ? cellValue : new Date(cellValue as string | number);
   if (isNaN(cellDate.getTime())) {
     if (addMeta) addMeta({ filtered: false });
     return false;
   }
-  const isInRange = cellDate >= startDate && cellDate <= endDate;
+
+  // Format the dates to ignore the time component.
+  const cellDateStr = format(cellDate, "yyyy-MM-dd");
+  const startDateStr = format(startDate, "yyyy-MM-dd");
+  const endDateStr = format(endDate, "yyyy-MM-dd");
+
+  const isInRange = cellDateStr >= startDateStr && cellDateStr <= endDateStr;
   if (addMeta) addMeta({ isInRange });
   return isInRange;
 };
@@ -107,8 +125,13 @@ const columns = [
   }),
 ];
 
-export function TableClient() {
-  const data = React.useMemo(() => [...defaultData], []);
+export const TableClient = () => {
+  const data = useMemo(() => [...defaultData], []);
+  const [filterValues, setFilterValues] = useState<{
+    date: { startDate: Date | null; endDate: Date | null };
+  }>({
+    date: { startDate: null, endDate: null },
+  });
 
   const table = useReactTable({
     data,
@@ -123,6 +146,15 @@ export function TableClient() {
       },
     },
   });
+
+  // Functions
+  const handleFilter = () => {
+    table.setColumnFilters(
+      Object.entries(filterValues)
+        .filter(([, value]) => value !== null && value !== undefined)
+        .map(([id, value]) => ({ id, value }))
+    );
+  };
 
   return (
     <div className="p-2">
@@ -147,10 +179,17 @@ export function TableClient() {
         </button>
         <span>
           Rows {table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1}-
-          {Math.min((table.getState().pagination.pageIndex + 1) * table.getState().pagination.pageSize, data.length)} of{" "}
-          {data.length}
+          {Math.min(
+            (table.getState().pagination.pageIndex + 1) * table.getState().pagination.pageSize,
+            table.getFilteredRowModel().rows.length
+          )}{" "}
+          of {table.getFilteredRowModel().rows.length}
         </span>
       </div>
+      <DateRangePicker onDateRangeChange={(range) => setFilterValues({ ...filterValues, date: range })} />
+      <button className="bg-red-400 cursor-pointer p-4 rounded-4xl" onClick={handleFilter}>
+        Filter
+      </button>
       <table className="text-center">
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
@@ -189,4 +228,4 @@ export function TableClient() {
       <div className="h-4" />
     </div>
   );
-}
+};
