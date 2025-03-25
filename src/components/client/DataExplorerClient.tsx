@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import {
   createColumnHelper,
-  flexRender,
   getCoreRowModel,
   useReactTable,
   getPaginationRowModel,
@@ -14,6 +13,7 @@ import rawDataJson from "@/data/normalized_omp_data.json";
 import { parseOmpDataTypes } from "@/utils/parseNormalizedOmpData";
 import { Filters } from "@/components/client/Filters";
 import { format } from "date-fns";
+import { Table } from "@/components/client/Table";
 
 const omProptechData = parseOmpDataTypes(rawDataJson);
 
@@ -158,9 +158,6 @@ export const DataExplorerClient = () => {
     table.setColumnFilters(activeFilters);
   };
 
-  const { pageIndex, pageSize } = table.getState().pagination;
-  const totalRows = table.getFilteredRowModel().rows.length;
-
   return (
     <div className="p-2">
       <div className="mb-4">
@@ -185,72 +182,7 @@ export const DataExplorerClient = () => {
         onFilter={handleFilter}
         hasData={tableData.length > 0}
       />
-      {/* Pagination controls */}
-      <div className="flex justify-left items-center mt-2 space-x-2 text-sm">
-        <button
-          className="px-2 py-1 bg-gray-300 rounded disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          {"<"}
-        </button>
-        <span>
-          Page {pageIndex + 1} of {table.getPageCount()}
-        </span>
-        <button
-          className="px-2 py-1 bg-gray-300 rounded disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          {">"}
-        </button>
-        <span>
-          Rows {pageIndex * pageSize + 1}-{Math.min((pageIndex + 1) * pageSize, totalRows)} of {totalRows}
-        </span>
-      </div>
-      <table className="text-center">
-        <thead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id} className="bg-gray-100">
-              {headerGroup.headers.map((header) => (
-                <th key={header.id} className="border border-gray-300 px-4 py-2">
-                  {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody>
-          {tableData.length === 0 ? (
-            <tr>
-              <td className="border border-gray-300 px-4 py-2" colSpan={columns.length}>
-                Please select a table from the menu
-              </td>
-            </tr>
-          ) : (
-            table.getPaginationRowModel().rows.map((row) => (
-              <tr key={row.id}>
-                {row.getVisibleCells().map((cell) => (
-                  <td key={cell.id} className="border border-gray-300 px-4 py-2">
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-                ))}
-              </tr>
-            ))
-          )}
-        </tbody>
-        <tfoot>
-          {table.getFooterGroups().map((footerGroup) => (
-            <tr key={footerGroup.id} className="bg-gray-100">
-              {footerGroup.headers.map((header) => (
-                <th key={header.id} className="border border-gray-300 px-4 py-2">
-                  {header.isPlaceholder ? null : flexRender(header.column.columnDef.footer, header.getContext())}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </tfoot>
-      </table>
+      <Table table={table} />
       <div className="h-4" />
     </div>
   );
