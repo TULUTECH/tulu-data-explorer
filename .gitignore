@@ -3,3 +3,4 @@ private/
 .next/
 .env*
 .history/
+.vscode/
