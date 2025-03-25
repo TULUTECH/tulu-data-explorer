@@ -163,29 +163,6 @@ export const TableClient = () => {
 
   return (
     <div className="p-2">
-      {/* Pagination controls */}
-      <div className="flex justify-center items-center mt-4 space-x-4">
-        <button
-          className="px-4 py-2 bg-gray-300 rounded disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          Previous
-        </button>
-        <span>
-          Page {pageIndex + 1} of {table.getPageCount()}
-        </span>
-        <button
-          className="px-4 py-2 bg-gray-300 rounded disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          Next
-        </button>
-        <span>
-          Rows {pageIndex * pageSize + 1}-{Math.min((pageIndex + 1) * pageSize, totalRows)} of {totalRows}
-        </span>
-      </div>
       <div className="mb-4">
         <h2 className="text-xl font-bold mb-4">Step 1: Select Table</h2>
         <select
@@ -208,7 +185,29 @@ export const TableClient = () => {
         onFilter={handleFilter}
         hasData={tableData.length > 0}
       />
-
+      {/* Pagination controls */}
+      <div className="flex justify-left items-center mt-2 space-x-2 text-sm">
+        <button
+          className="px-2 py-1 bg-gray-300 rounded disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
+          onClick={() => table.previousPage()}
+          disabled={!table.getCanPreviousPage()}
+        >
+          {"<"}
+        </button>
+        <span>
+          Page {pageIndex + 1} of {table.getPageCount()}
+        </span>
+        <button
+          className="px-2 py-1 bg-gray-300 rounded disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
+          onClick={() => table.nextPage()}
+          disabled={!table.getCanNextPage()}
+        >
+          {">"}
+        </button>
+        <span>
+          Rows {pageIndex * pageSize + 1}-{Math.min((pageIndex + 1) * pageSize, totalRows)} of {totalRows}
+        </span>
+      </div>
       <table className="text-center">
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
