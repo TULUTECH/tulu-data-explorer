@@ -127,7 +127,7 @@ const columns = [
   }),
 ];
 
-export const TableClient = () => {
+export const DataExplorerClient = () => {
   const [tableData, setTableData] = useState<ITypeParsedOmpData[]>([]);
 
   const [filtersState, setFiltersState] = useState<{
