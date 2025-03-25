@@ -187,7 +187,7 @@ export const TableClient = () => {
         </span>
       </div>
       <div className="mb-4">
-        <label className="mr-2 font-medium">Select Table:</label>
+        <h2 className="text-xl font-bold mb-4">Step 1: Select Table</h2>
         <select
           className="border p-2 rounded"
           onChange={(e) => {
