@@ -12,7 +12,7 @@ import {
 import { ITypeParsedOmpData } from "@/types/data";
 import rawDataJson from "@/data/normalized_omp_data.json";
 import { parseOmpDataTypes } from "@/utils/parseNormalizedOmpData";
-import { DateRangePicker } from "@/components/client/DateRangePicker";
+import { Filters } from "@/components/client/Filters";
 import { format } from "date-fns";
 
 const omProptechData = parseOmpDataTypes(rawDataJson);
@@ -203,14 +203,11 @@ export const TableClient = () => {
           <option value="om_proptech">OM Proptech Normalized Table</option>
         </select>
       </div>
-      {tableData.length > 0 && (
-        <>
-          <DateRangePicker onDateRangeChange={(range) => setFiltersState({ ...filtersState, date: range })} />
-          <button className="bg-red-400 cursor-pointer p-4 rounded-4xl" onClick={handleFilter}>
-            Filter
-          </button>
-        </>
-      )}
+      <Filters
+        onDateRangeChange={(range) => setFiltersState({ ...filtersState, date: range })}
+        onFilter={handleFilter}
+        hasData={tableData.length > 0}
+      />
 
       <table className="text-center">
         <thead>
