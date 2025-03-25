@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 
-export type Dimension = "date" | "campaign_name" | "campaign_adgroup_name";
+export type Dimension = "date" | "campaign_name" | "adgroup_name";
 export type Metric = "impressions" | "clicks" | "cost" | "sessions" | "leads" | "revenue";
 
 interface DimensionsAndMetricsPickerProps {
@@ -20,7 +20,7 @@ export const DimensionsAndMetricsPicker: React.FC<DimensionsAndMetricsPickerProp
   const dimensions: { value: Dimension; label: string }[] = [
     { value: "date", label: "Date" },
     { value: "campaign_name", label: "Campaign Name" },
-    { value: "campaign_adgroup_name", label: "Campaign Name | Ad-group name" },
+    { value: "adgroup_name", label: "Ad Group Name" },
   ];
 
   const metrics: { value: Metric; label: string }[] = [
@@ -33,9 +33,30 @@ export const DimensionsAndMetricsPicker: React.FC<DimensionsAndMetricsPickerProp
   ];
 
   const handleDimensionChange = (dimension: Dimension) => {
-    const newDimensions = selectedDimensions.includes(dimension)
-      ? selectedDimensions.filter((d) => d !== dimension)
-      : [...selectedDimensions, dimension];
+    let newDimensions: Dimension[];
+
+    if (dimension === "adgroup_name") {
+      // If trying to select adgroup_name, ensure campaign_name is selected
+      if (!selectedDimensions.includes("campaign_name")) {
+        newDimensions = [...selectedDimensions, "campaign_name", "adgroup_name"];
+      } else {
+        // If campaign_name is already selected, just toggle adgroup_name
+        newDimensions = selectedDimensions.includes("adgroup_name")
+          ? selectedDimensions.filter((d) => d !== "adgroup_name")
+          : [...selectedDimensions, "adgroup_name"];
+      }
+    } else if (dimension === "campaign_name") {
+      // If unchecking campaign_name, also uncheck adgroup_name
+      newDimensions = selectedDimensions.includes("campaign_name")
+        ? selectedDimensions.filter((d) => d !== "campaign_name" && d !== "adgroup_name")
+        : [...selectedDimensions, "campaign_name"];
+    } else {
+      // For other dimensions (like date), handle normal toggle
+      newDimensions = selectedDimensions.includes(dimension)
+        ? selectedDimensions.filter((d) => d !== dimension)
+        : [...selectedDimensions, dimension];
+    }
+
     onDimensionsChange(newDimensions);
   };
 
