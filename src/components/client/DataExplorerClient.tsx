@@ -14,6 +14,7 @@ import { parseOmpDataTypes } from "@/utils/parseNormalizedOmpData";
 import { Filters } from "@/components/client/Filters";
 import { format } from "date-fns";
 import { Table } from "@/components/client/Table";
+import { Dimension, Metric } from "@/components/client/DimensionsAndMetricsPicker";
 
 const omProptechData = parseOmpDataTypes(rawDataJson);
 
@@ -129,11 +130,11 @@ const columns = [
 
 export const DataExplorerClient = () => {
   const [tableData, setTableData] = useState<ITypeParsedOmpData[]>([]);
-
-  const [filtersState, setFiltersState] = useState<{
-    date: { startDate: Date | null; endDate: Date | null };
-  }>({
-    date: { startDate: null, endDate: null },
+  const [selectedDimensions, setSelectedDimensions] = useState<Dimension[]>([]);
+  const [selectedMetrics, setSelectedMetrics] = useState<Metric[]>([]);
+  const [dateRange, setDateRange] = useState<{ startDate: Date | null; endDate: Date | null }>({
+    startDate: null,
+    endDate: null,
   });
 
   const table = useReactTable({
@@ -151,12 +152,21 @@ export const DataExplorerClient = () => {
   });
 
   // Functions
+  const handleDateRangeChange = (range: { startDate: Date | null; endDate: Date | null }) => {
+    setDateRange(range);
+  };
+
   const handleFilter = () => {
-    const activeFilters = Object.entries(filtersState)
-      .filter(([, value]) => value !== null && value !== undefined)
-      .map(([id, value]) => ({ id, value }));
+    const activeFilters = [
+      {
+        id: "date",
+        value: dateRange,
+      },
+    ];
     table.setColumnFilters(activeFilters);
   };
+
+  const isFilterDisabled = !selectedDimensions.length && (!dateRange.startDate || !dateRange.endDate);
 
   return (
     <div className="p-2">
@@ -178,9 +188,15 @@ export const DataExplorerClient = () => {
         </select>
       </div>
       <Filters
-        onDateRangeChange={(range) => setFiltersState({ ...filtersState, date: range })}
+        onDateRangeChange={handleDateRangeChange}
         onFilter={handleFilter}
         hasData={tableData.length > 0}
+        selectedDimensions={selectedDimensions}
+        selectedMetrics={selectedMetrics}
+        onDimensionsChange={setSelectedDimensions}
+        onMetricsChange={setSelectedMetrics}
+        dateRange={dateRange}
+        isFilterDisabled={isFilterDisabled}
       />
       <Table table={table} />
       <div className="h-4" />

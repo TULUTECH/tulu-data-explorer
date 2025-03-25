@@ -1,58 +1,47 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import { DateRangePicker } from "@/components/client/DateRangePicker";
 import { DimensionsAndMetricsPicker, Dimension, Metric } from "@/components/client/DimensionsAndMetricsPicker";
 
 interface FiltersProps {
   onDateRangeChange: (range: { startDate: Date | null; endDate: Date | null }) => void;
-  onFilter: (filters: {
-    dateRange: { startDate: Date | null; endDate: Date | null };
-    dimensions: Dimension[];
-    metrics: Metric[];
-  }) => void;
+  onFilter: () => void;
   hasData: boolean;
+  selectedDimensions: Dimension[];
+  selectedMetrics: Metric[];
+  onDimensionsChange: (dimensions: Dimension[]) => void;
+  onMetricsChange: (metrics: Metric[]) => void;
+  dateRange: { startDate: Date | null; endDate: Date | null };
+  isFilterDisabled: boolean;
 }
 
-export const Filters: React.FC<FiltersProps> = ({ onDateRangeChange, onFilter, hasData }) => {
-  const [selectedDimensions, setSelectedDimensions] = useState<Dimension[]>([]);
-  const [selectedMetrics, setSelectedMetrics] = useState<Metric[]>([]);
-  const [dateRange, setDateRange] = useState<{ startDate: Date | null; endDate: Date | null }>({
-    startDate: null,
-    endDate: null,
-  });
-
+export const Filters: React.FC<FiltersProps> = ({
+  onDateRangeChange,
+  onFilter,
+  hasData,
+  selectedDimensions,
+  selectedMetrics,
+  onDimensionsChange,
+  onMetricsChange,
+  isFilterDisabled,
+}) => {
   if (!hasData) return null;
-
-  const handleDateRangeChange = (range: { startDate: Date | null; endDate: Date | null }) => {
-    setDateRange(range);
-    onDateRangeChange(range);
-  };
-
-  const handleFilter = () => {
-    onFilter({
-      dateRange,
-      dimensions: selectedDimensions,
-      metrics: selectedMetrics,
-    });
-  };
-
-  const isFilterDisabled = !selectedDimensions.length && (!dateRange.startDate || !dateRange.endDate);
 
   return (
     <div className="flex flex-col gap-4 mb-4">
       <h2 className="text-xl font-bold mb-4">Step 2: Select Filters</h2>
       <div className="flex items-start gap-8">
-        <DateRangePicker onDateRangeChange={handleDateRangeChange} />
+        <DateRangePicker onDateRangeChange={onDateRangeChange} />
         <div className="h-full w-px bg-gray-300" />
         <DimensionsAndMetricsPicker
           selectedDimensions={selectedDimensions}
           selectedMetrics={selectedMetrics}
-          onDimensionsChange={setSelectedDimensions}
-          onMetricsChange={setSelectedMetrics}
+          onDimensionsChange={onDimensionsChange}
+          onMetricsChange={onMetricsChange}
         />
         <button
           className="bg-red-400 hover:bg-red-500 text-white px-8 py-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed ml-auto text-lg font-medium"
-          onClick={handleFilter}
+          onClick={onFilter}
           disabled={isFilterDisabled}
         >
           Filter
