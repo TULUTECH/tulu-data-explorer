@@ -71,14 +71,17 @@ export const columns = [
     id: "date",
     header: "Date",
     cell: (props) => {
-      const date = props.getValue();
-      return date.getTime() === 0
-        ? "-"
-        : date.toLocaleDateString("en-GB", {
-            day: "numeric",
-            month: "short",
-            year: "numeric",
-          });
+      const dateValue = props.getValue();
+      // Handle grouped or aggregated cells
+      if (!(dateValue instanceof Date) || isNaN(dateValue.getTime()) || dateValue.getTime() === 0) {
+        return "-";
+      }
+      // Handle regular cells
+      return dateValue.toLocaleDateString("en-GB", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+      });
     },
     footer: (props) => props.column.id,
     filterFn: customDateRangeFilter,
