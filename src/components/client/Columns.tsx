@@ -54,6 +54,7 @@ export const columns = [
     header: "Campaign Name",
     cell: (props) => props.getValue(),
     footer: (props) => props.column.id,
+    enableGrouping: true,
   }),
   columnHelper.accessor("ad_group_id", {
     header: "Ad Group ID",
@@ -64,6 +65,7 @@ export const columns = [
     header: "Ad Group Name",
     cell: (props) => props.getValue(),
     footer: (props) => props.column.id,
+    enableGrouping: true,
   }),
   columnHelper.accessor((row) => (row.date ? new Date(row.date) : new Date(0)), {
     id: "date",
@@ -80,6 +82,7 @@ export const columns = [
     },
     footer: (props) => props.column.id,
     filterFn: customDateRangeFilter,
+    enableGrouping: true,
   }),
   columnHelper.accessor("cost_micros", {
     header: "Cost (micros)",
@@ -91,6 +94,7 @@ export const columns = [
     cell: (props) => props.getValue() ?? "0",
     footer: (props) => props.column.id,
     aggregationFn: "sum",
+    aggregatedCell: ({ getValue }) => getValue()?.toLocaleString(),
   }),
   columnHelper.accessor("clicks", {
     header: "Clicks",
