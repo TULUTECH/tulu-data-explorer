@@ -1,20 +1,14 @@
 "use client";
 import React from "react";
 import { Dimension, Metric } from "@/types/data";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import { setSelectedDimensions, setSelectedMetrics } from "@/store/slices/dataExplorerSlice";
 
-interface DimensionsAndMetricsPickerProps {
-  selectedDimensions: Dimension[];
-  selectedMetrics: Metric[];
-  onDimensionsChange: (dimensions: Dimension[]) => void;
-  onMetricsChange: (metrics: Metric[]) => void;
-}
+export const DimensionsAndMetricsPicker: React.FC = () => {
+  const dispatch = useDispatch();
+  const { selectedDimensions, selectedMetrics } = useSelector((state: RootState) => state.dataExplorer);
 
-export const DimensionsAndMetricsPicker: React.FC<DimensionsAndMetricsPickerProps> = ({
-  selectedDimensions,
-  selectedMetrics,
-  onDimensionsChange,
-  onMetricsChange,
-}) => {
   const dimensions: { value: Dimension; label: string }[] = [
     { value: "date", label: "Date" },
     { value: "campaign_name", label: "Campaign Name" },
@@ -55,14 +49,14 @@ export const DimensionsAndMetricsPicker: React.FC<DimensionsAndMetricsPickerProp
         : [...selectedDimensions, dimension];
     }
 
-    onDimensionsChange(newDimensions);
+    dispatch(setSelectedDimensions(newDimensions));
   };
 
   const handleMetricChange = (metric: Metric) => {
     const newMetrics = selectedMetrics.includes(metric)
       ? selectedMetrics.filter((m) => m !== metric)
       : [...selectedMetrics, metric];
-    onMetricsChange(newMetrics);
+    dispatch(setSelectedMetrics(newMetrics));
   };
 
   const isMetricsDisabled = selectedDimensions.length === 0;
