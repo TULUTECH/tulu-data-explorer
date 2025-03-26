@@ -1,12 +1,20 @@
 "use client";
-import React, { useState } from "react";
-import { getCoreRowModel, useReactTable, getPaginationRowModel, getFilteredRowModel } from "@tanstack/react-table";
-import { ITypeParsedOmpData } from "@/types/data";
+import React, { useEffect, useState } from "react";
+import {
+  getCoreRowModel,
+  useReactTable,
+  getPaginationRowModel,
+  getFilteredRowModel,
+  getGroupedRowModel,
+  GroupingState,
+} from "@tanstack/react-table";
+import { Dimension, ITypeParsedOmpData } from "@/types/data";
 import { Filters } from "@/components/client/Filters";
 import { Table } from "@/components/client/Table";
 import { columns } from "@/components/client/Columns";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
+import { setSelectedDimensions } from "@/store/slices/dataExplorerSlice";
 
 interface DataExplorerClientProps {
   initialData: ITypeParsedOmpData[];
@@ -15,13 +23,26 @@ interface DataExplorerClientProps {
 export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialData }) => {
   const [tableData, setTableData] = useState<ITypeParsedOmpData[]>([]);
   const { selectedDimensions, dateRange } = useSelector((state: RootState) => state.dataExplorer);
+  const [grouping, setGrouping] = useState<GroupingState>([]);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    // Directly set grouping state from Redux dimensions
+    setGrouping(selectedDimensions);
+  }, [selectedDimensions]);
 
   const table = useReactTable({
     data: tableData,
     columns,
+    state: { grouping },
+    onGroupingChange: (updatedGrouping) => {
+      // Update Redux store when grouping changes via user interaction
+      dispatch(setSelectedDimensions(updatedGrouping as Dimension[]));
+    },
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    getGroupedRowModel: getGroupedRowModel(),
     initialState: {
       pagination: {
         pageIndex: 0,
