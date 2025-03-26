@@ -2,7 +2,7 @@
 import React from "react";
 
 export type Dimension = "date" | "campaign_name" | "adgroup_name";
-export type Metric = "impressions" | "clicks" | "cost" | "sessions" | "leads" | "revenue";
+export type Metric = "impressions" | "clicks" | "cost_micros" | "sessions" | "leads" | "revenue";
 
 interface DimensionsAndMetricsPickerProps {
   selectedDimensions: Dimension[];
@@ -26,7 +26,7 @@ export const DimensionsAndMetricsPicker: React.FC<DimensionsAndMetricsPickerProp
   const metrics: { value: Metric; label: string }[] = [
     { value: "impressions", label: "Impressions" },
     { value: "clicks", label: "Clicks" },
-    { value: "cost", label: "Cost" },
+    { value: "cost_micros", label: "Cost (micros)" },
     { value: "sessions", label: "Sessions" },
     { value: "leads", label: "Leads" },
     { value: "revenue", label: "Revenue" },
