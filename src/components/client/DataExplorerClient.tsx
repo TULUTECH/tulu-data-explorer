@@ -16,7 +16,7 @@ interface DataExplorerClientProps {
 export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialData }) => {
   const [tableData, setTableData] = useState<ITypeParsedOmpData[]>([]);
   const dispatch = useDispatch();
-  const { selectedDimensions, selectedMetrics, dateRange } = useSelector((state: RootState) => state.dataExplorer);
+  const { selectedDimensions, dateRange } = useSelector((state: RootState) => state.dataExplorer);
 
   const table = useReactTable({
     data: tableData,
