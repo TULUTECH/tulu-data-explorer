@@ -1,7 +1,8 @@
 "use client";
 import React from "react";
 import { DateRangePicker } from "@/components/client/DateRangePicker";
-import { DimensionsAndMetricsPicker, Dimension, Metric } from "@/components/client/DimensionsAndMetricsPicker";
+import { DimensionsAndMetricsPicker } from "@/components/client/DimensionsAndMetricsPicker";
+import { Dimension, Metric } from "@/types/data";
 
 interface FiltersProps {
   onDateRangeChange: (range: { startDate: Date | null; endDate: Date | null }) => void;
@@ -11,7 +12,6 @@ interface FiltersProps {
   selectedMetrics: Metric[];
   onDimensionsChange: (dimensions: Dimension[]) => void;
   onMetricsChange: (metrics: Metric[]) => void;
-  dateRange: { startDate: Date | null; endDate: Date | null };
   isFilterDisabled: boolean;
 }
 

@@ -4,17 +4,10 @@ import { getCoreRowModel, useReactTable, getPaginationRowModel, getFilteredRowMo
 import { ITypeParsedOmpData } from "@/types/data";
 import { Filters } from "@/components/client/Filters";
 import { Table } from "@/components/client/Table";
-import { Dimension, Metric } from "@/components/client/DimensionsAndMetricsPicker";
 import { columns } from "@/components/client/Columns";
-
-type ValidDimension = keyof Pick<
-  ITypeParsedOmpData,
-  "date" | "campaign_id" | "campaign_name" | "ad_group_id" | "ad_group_name"
->;
-type ValidMetric = keyof Pick<
-  ITypeParsedOmpData,
-  "impressions" | "clicks" | "cost_micros" | "sessions" | "leads" | "revenue"
->;
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import { setSelectedDimensions, setSelectedMetrics, setDateRange } from "@/store/slices/dataExplorerSlice";
 
 interface DataExplorerClientProps {
   initialData: ITypeParsedOmpData[];
@@ -22,12 +15,8 @@ interface DataExplorerClientProps {
 
 export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialData }) => {
   const [tableData, setTableData] = useState<ITypeParsedOmpData[]>([]);
-  const [selectedDimensions, setSelectedDimensions] = useState<ValidDimension[]>([]);
-  const [selectedMetrics, setSelectedMetrics] = useState<ValidMetric[]>([]);
-  const [dateRange, setDateRange] = useState<{ startDate: Date | null; endDate: Date | null }>({
-    startDate: null,
-    endDate: null,
-  });
+  const dispatch = useDispatch();
+  const { selectedDimensions, selectedMetrics, dateRange } = useSelector((state: RootState) => state.dataExplorer);
 
   const table = useReactTable({
     data: tableData,
@@ -45,7 +34,13 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
 
   // Functions
   const handleDateRangeChange = (range: { startDate: Date | null; endDate: Date | null }) => {
-    setDateRange(range);
+    // Convert Date objects to ISO strings before dispatching
+    dispatch(
+      setDateRange({
+        startDate: range.startDate?.toISOString() || null,
+        endDate: range.endDate?.toISOString() || null,
+      })
+    );
   };
 
   const handleFilter = () => {
@@ -83,11 +78,10 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
         onDateRangeChange={handleDateRangeChange}
         onFilter={handleFilter}
         hasData={tableData.length > 0}
-        selectedDimensions={selectedDimensions as Dimension[]}
-        selectedMetrics={selectedMetrics as Metric[]}
-        onDimensionsChange={(dims) => setSelectedDimensions(dims as ValidDimension[])}
-        onMetricsChange={(metrics) => setSelectedMetrics(metrics as ValidMetric[])}
-        dateRange={dateRange}
+        selectedDimensions={selectedDimensions}
+        selectedMetrics={selectedMetrics}
+        onDimensionsChange={(dims) => dispatch(setSelectedDimensions(dims))}
+        onMetricsChange={(metrics) => dispatch(setSelectedMetrics(metrics))}
         isFilterDisabled={isFilterDisabled}
       />
       <Table table={table} />
