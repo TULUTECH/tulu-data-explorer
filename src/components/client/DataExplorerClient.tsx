@@ -5,9 +5,8 @@ import { ITypeParsedOmpData } from "@/types/data";
 import { Filters } from "@/components/client/Filters";
 import { Table } from "@/components/client/Table";
 import { columns } from "@/components/client/Columns";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import { setDateRange } from "@/store/slices/dataExplorerSlice";
 
 interface DataExplorerClientProps {
   initialData: ITypeParsedOmpData[];
@@ -15,7 +14,6 @@ interface DataExplorerClientProps {
 
 export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialData }) => {
   const [tableData, setTableData] = useState<ITypeParsedOmpData[]>([]);
-  const dispatch = useDispatch();
   const { selectedDimensions, dateRange } = useSelector((state: RootState) => state.dataExplorer);
 
   const table = useReactTable({
@@ -31,17 +29,6 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
       },
     },
   });
-
-  // Functions
-  const handleDateRangeChange = (range: { startDate: Date | null; endDate: Date | null }) => {
-    // Convert Date objects to ISO strings before dispatching
-    dispatch(
-      setDateRange({
-        startDate: range.startDate?.toISOString() || null,
-        endDate: range.endDate?.toISOString() || null,
-      })
-    );
-  };
 
   const handleFilter = () => {
     const activeFilters = [
@@ -74,12 +61,7 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
           <option value="om_proptech">OM Proptech Normalized Table</option>
         </select>
       </div>
-      <Filters
-        onDateRangeChange={handleDateRangeChange}
-        onFilter={handleFilter}
-        hasData={tableData.length > 0}
-        isFilterDisabled={isFilterDisabled}
-      />
+      <Filters onFilter={handleFilter} hasData={tableData.length > 0} isFilterDisabled={isFilterDisabled} />
       <Table table={table} />
       <div className="h-4" />
     </div>
