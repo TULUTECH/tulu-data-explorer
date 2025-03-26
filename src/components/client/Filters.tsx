@@ -4,12 +4,10 @@ import { DateRangePicker } from "@/components/client/DateRangePicker";
 import { DimensionsAndMetricsPicker } from "@/components/client/DimensionsAndMetricsPicker";
 
 interface FiltersProps {
-  onFilter: () => void;
   hasData: boolean;
-  isFilterDisabled: boolean;
 }
 
-export const Filters: React.FC<FiltersProps> = ({ onFilter, hasData, isFilterDisabled }) => {
+export const Filters: React.FC<FiltersProps> = ({ hasData }) => {
   if (!hasData) return null;
 
   return (
@@ -19,13 +17,6 @@ export const Filters: React.FC<FiltersProps> = ({ onFilter, hasData, isFilterDis
         <DateRangePicker />
         <div className="h-full w-px bg-gray-300" />
         <DimensionsAndMetricsPicker />
-        <button
-          className="bg-red-400 hover:bg-red-500 text-white px-8 py-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed ml-auto text-lg font-medium"
-          onClick={onFilter}
-          disabled={isFilterDisabled}
-        >
-          Apply Filters
-        </button>
       </div>
     </div>
   );
