@@ -1,8 +1,6 @@
 "use client";
 import React from "react";
-
-export type Dimension = "date" | "campaign_name" | "adgroup_name";
-export type Metric = "impressions" | "clicks" | "cost_micros" | "sessions" | "leads" | "revenue";
+import { Dimension, Metric } from "@/types/data";
 
 interface DimensionsAndMetricsPickerProps {
   selectedDimensions: Dimension[];

@@ -3,7 +3,7 @@ export interface ITypeParsedOmpData {
   campaign_name: string | null;
   ad_group_id: number | null;
   ad_group_name: string | null;
-  date: Date | null;
+  date: string | null;
   cost_micros: number | null;
   impressions: number | null;
   clicks: number | null;
@@ -13,6 +13,9 @@ export interface ITypeParsedOmpData {
 }
 
 export interface IDateRange {
-  startDate: Date | null;
-  endDate: Date | null;
+  startDate: string | null;
+  endDate: string | null;
 }
+
+export type Dimension = "date" | "campaign_name" | "adgroup_name";
+export type Metric = "impressions" | "clicks" | "cost_micros" | "sessions" | "leads" | "revenue";
