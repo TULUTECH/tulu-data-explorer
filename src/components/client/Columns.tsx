@@ -90,25 +90,30 @@ export const columns = [
     header: "Impressions",
     cell: (props) => props.getValue() ?? "0",
     footer: (props) => props.column.id,
+    aggregationFn: "sum",
   }),
   columnHelper.accessor("clicks", {
     header: "Clicks",
     cell: (props) => props.getValue() ?? "0",
     footer: (props) => props.column.id,
+    aggregationFn: "sum",
   }),
   columnHelper.accessor("sessions", {
     header: "Sessions",
     cell: (props) => props.getValue() ?? "0",
     footer: (props) => props.column.id,
+    aggregationFn: "sum",
   }),
   columnHelper.accessor("leads", {
     header: "Leads",
     cell: (props) => props.getValue() ?? "0",
     footer: (props) => props.column.id,
+    aggregationFn: "sum",
   }),
   columnHelper.accessor("revenue", {
     header: "Revenue",
     cell: (props) => props.getValue() ?? "0",
     footer: (props) => props.column.id,
+    aggregationFn: "sum",
   }),
 ];
