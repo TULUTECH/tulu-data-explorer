@@ -4,20 +4,19 @@ import { DateRangePicker } from "@/components/client/DateRangePicker";
 import { DimensionsAndMetricsPicker } from "@/components/client/DimensionsAndMetricsPicker";
 
 interface FiltersProps {
-  onDateRangeChange: (range: { startDate: Date | null; endDate: Date | null }) => void;
   onFilter: () => void;
   hasData: boolean;
   isFilterDisabled: boolean;
 }
 
-export const Filters: React.FC<FiltersProps> = ({ onDateRangeChange, onFilter, hasData, isFilterDisabled }) => {
+export const Filters: React.FC<FiltersProps> = ({ onFilter, hasData, isFilterDisabled }) => {
   if (!hasData) return null;
 
   return (
     <div className="flex flex-col gap-4 mb-4">
       <h2 className="text-xl font-bold mb-4">Step 2: Select Filters</h2>
       <div className="flex items-start gap-8">
-        <DateRangePicker onDateRangeChange={onDateRangeChange} />
+        <DateRangePicker />
         <div className="h-full w-px bg-gray-300" />
         <DimensionsAndMetricsPicker />
         <button

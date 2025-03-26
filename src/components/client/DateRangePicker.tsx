@@ -1,14 +1,14 @@
 "use client";
 
-import React, { useState } from "react";
+import { setDateRange } from "@/store/slices/dataExplorerSlice";
+import React from "react";
 import DatePicker, { DateObject } from "react-multi-date-picker";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
-interface DateRangePickerProps {
-  onDateRangeChange: (range: { startDate: Date | null; endDate: Date | null }) => void;
-}
-
-export const DateRangePicker: React.FC<DateRangePickerProps> = ({ onDateRangeChange }) => {
-  const [selectedDates, setSelectedDates] = useState<DateObject[]>([]);
+export const DateRangePicker: React.FC = () => {
+  const dispatch = useDispatch();
+  const { dateRange } = useSelector((state: RootState) => state.dataExplorer);
 
   const handleDateChange = (date: DateObject | DateObject[] | null) => {
     const newRange: { startDate: Date | null; endDate: Date | null } = { startDate: null, endDate: null };
@@ -16,21 +16,30 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({ onDateRangeCha
       newRange.startDate = date[0] ? date[0].toDate() : null;
       newRange.endDate = date[1] ? date[1].toDate() : null;
     } else if (date) {
-      newRange.startDate = date.toDate();
-      newRange.endDate = null;
+      // For single date selection, use it as both start and end
+      const singleDate = date.toDate();
+      newRange.startDate = singleDate;
+      newRange.endDate = singleDate;
     }
-    setSelectedDates(Array.isArray(date) ? date : []);
-    // Only update on change if two dates are selected.
-    if (Array.isArray(date) && date.length === 2) {
-      onDateRangeChange(newRange);
-    }
+
+    dispatch(
+      setDateRange({
+        startDate: newRange.startDate?.toISOString() || null,
+        endDate: newRange.endDate?.toISOString() || null,
+      })
+    );
   };
 
   const handleClose = () => {
     // When the picker closes, if only one date is selected, treat it as a single-day filter.
-    if (selectedDates.length === 1) {
-      const date = selectedDates[0].toDate();
-      onDateRangeChange({ startDate: date, endDate: date });
+    if (Object.values(dateRange).filter(Boolean).length === 1) {
+      const date = new Date(dateRange.startDate || dateRange.endDate || "");
+      dispatch(
+        setDateRange({
+          startDate: date.toISOString(),
+          endDate: date.toISOString(),
+        })
+      );
     }
   };
 
@@ -38,7 +47,7 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({ onDateRangeCha
     <div>
       <h3 className="font-medium text-gray-700 mb-2">Select Date Range</h3>
       <DatePicker
-        value={selectedDates}
+        value={[dateRange.startDate, dateRange.endDate]}
         onChange={handleDateChange}
         onClose={handleClose}
         range
