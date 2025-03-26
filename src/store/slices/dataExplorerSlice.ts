@@ -1,15 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Dimension, Metric } from "@/components/client/DimensionsAndMetricsPicker";
-
-interface DateRange {
-  startDate: Date | null;
-  endDate: Date | null;
-}
+import { IDateRange } from "@/types/data";
 
 interface DataExplorerState {
   selectedDimensions: Dimension[];
   selectedMetrics: Metric[];
-  dateRange: DateRange;
+  dateRange: IDateRange;
 }
 
 const initialState: DataExplorerState = {
@@ -31,7 +27,7 @@ const dataExplorerSlice = createSlice({
     setSelectedMetrics: (state, action: PayloadAction<Metric[]>) => {
       state.selectedMetrics = action.payload;
     },
-    setDateRange: (state, action: PayloadAction<DateRange>) => {
+    setDateRange: (state, action: PayloadAction<IDateRange>) => {
       state.dateRange = action.payload;
     },
   },
