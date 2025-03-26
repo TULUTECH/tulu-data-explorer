@@ -1,11 +1,7 @@
 "use client";
-import rawDataJson from "@/data/normalized_omp_data.json";
 import { ITypeParsedOmpData } from "@/types/data";
-import { parseOmpDataTypes } from "@/utils/parseNormalizedOmpData";
 import { createColumnHelper, FilterFn } from "@tanstack/react-table";
 import { format } from "date-fns";
-
-export const omProptechData = parseOmpDataTypes(rawDataJson);
 
 export const columnHelper = createColumnHelper<ITypeParsedOmpData>();
 
