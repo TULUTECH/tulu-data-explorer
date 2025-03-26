@@ -5,12 +5,25 @@ import { ITypeParsedOmpData } from "@/types/data";
 import { Filters } from "@/components/client/Filters";
 import { Table } from "@/components/client/Table";
 import { Dimension, Metric } from "@/components/client/DimensionsAndMetricsPicker";
-import { columns, omProptechData } from "@/components/client/Columns";
+import { columns } from "@/components/client/Columns";
 
-export const DataExplorerClient = () => {
+type ValidDimension = keyof Pick<
+  ITypeParsedOmpData,
+  "date" | "campaign_id" | "campaign_name" | "ad_group_id" | "ad_group_name"
+>;
+type ValidMetric = keyof Pick<
+  ITypeParsedOmpData,
+  "impressions" | "clicks" | "cost_micros" | "sessions" | "leads" | "revenue"
+>;
+
+interface DataExplorerClientProps {
+  initialData: ITypeParsedOmpData[];
+}
+
+export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialData }) => {
   const [tableData, setTableData] = useState<ITypeParsedOmpData[]>([]);
-  const [selectedDimensions, setSelectedDimensions] = useState<Dimension[]>([]);
-  const [selectedMetrics, setSelectedMetrics] = useState<Metric[]>([]);
+  const [selectedDimensions, setSelectedDimensions] = useState<ValidDimension[]>([]);
+  const [selectedMetrics, setSelectedMetrics] = useState<ValidMetric[]>([]);
   const [dateRange, setDateRange] = useState<{ startDate: Date | null; endDate: Date | null }>({
     startDate: null,
     endDate: null,
@@ -55,7 +68,7 @@ export const DataExplorerClient = () => {
           className="border p-2 rounded"
           onChange={(e) => {
             if (e.target.value === "om_proptech") {
-              setTableData([...omProptechData]);
+              setTableData([...initialData]);
             } else {
               setTableData([]);
             }
@@ -70,10 +83,10 @@ export const DataExplorerClient = () => {
         onDateRangeChange={handleDateRangeChange}
         onFilter={handleFilter}
         hasData={tableData.length > 0}
-        selectedDimensions={selectedDimensions}
-        selectedMetrics={selectedMetrics}
-        onDimensionsChange={setSelectedDimensions}
-        onMetricsChange={setSelectedMetrics}
+        selectedDimensions={selectedDimensions as Dimension[]}
+        selectedMetrics={selectedMetrics as Metric[]}
+        onDimensionsChange={(dims) => setSelectedDimensions(dims as ValidDimension[])}
+        onMetricsChange={(metrics) => setSelectedMetrics(metrics as ValidMetric[])}
         dateRange={dateRange}
         isFilterDisabled={isFilterDisabled}
       />
