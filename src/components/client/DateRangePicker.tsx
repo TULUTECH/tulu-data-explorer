@@ -1,15 +1,13 @@
 "use client";
 
+import { IDateRange } from "@/types/data";
 import React, { useState } from "react";
 import DatePicker, { DateObject } from "react-multi-date-picker";
 
 interface DateRangePickerProps {
   onDateRangeChange: (range: IDateRange) => void;
 }
-interface IDateRange {
-  startDate: Date | null;
-  endDate: Date | null;
-}
+
 export const DateRangePicker: React.FC<DateRangePickerProps> = ({ onDateRangeChange }) => {
   const [selectedDates, setSelectedDates] = useState<DateObject[]>([]);
 
