@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   getCoreRowModel,
   useReactTable,
@@ -23,18 +23,14 @@ interface DataExplorerClientProps {
 export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialData }) => {
   const [tableData, setTableData] = useState<ITypeParsedOmpData[]>([]);
   const { selectedDimensions, dateRange } = useSelector((state: RootState) => state.dataExplorer);
-  const [grouping, setGrouping] = useState<GroupingState>([]);
-  const dispatch = useDispatch();
+  const [appliedGrouping, setAppliedGrouping] = useState<GroupingState>([]);
 
-  useEffect(() => {
-    // Directly set grouping state from Redux dimensions
-    setGrouping(selectedDimensions);
-  }, [selectedDimensions]);
+  const dispatch = useDispatch();
 
   const table = useReactTable({
     data: tableData,
     columns,
-    state: { grouping },
+    state: { grouping: appliedGrouping },
     onGroupingChange: (updatedGrouping) => {
       // Update Redux store when grouping changes via user interaction
       dispatch(setSelectedDimensions(updatedGrouping as Dimension[]));
@@ -52,6 +48,8 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
   });
 
   const handleFilter = () => {
+    setAppliedGrouping(selectedDimensions);
+
     const activeFilters = [
       {
         id: "date",
@@ -82,7 +80,24 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
           <option value="om_proptech">OM Proptech Normalized Table</option>
         </select>
       </div>
-      <Filters onFilter={handleFilter} hasData={tableData.length > 0} isFilterDisabled={isFilterDisabled} />
+      <Filters hasData={tableData.length > 0} />
+      <button
+        className="bg-red-400 hover:bg-red-500 text-white px-8 py-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed ml-auto text-lg font-medium"
+        onClick={handleFilter}
+        disabled={isFilterDisabled}
+      >
+        Apply Filters
+      </button>
+      <button
+        className="bg-gray-300 hover:bg-gray-400 text-black px-8 py-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed ml-auto text-lg font-medium"
+        onClick={() => {
+          setAppliedGrouping([]);
+          table.resetColumnFilters();
+        }}
+        disabled={isFilterDisabled}
+      >
+        Reset
+      </button>
       <Table table={table} />
       <div className="h-4" />
     </div>
