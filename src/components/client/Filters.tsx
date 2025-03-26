@@ -2,29 +2,15 @@
 import React from "react";
 import { DateRangePicker } from "@/components/client/DateRangePicker";
 import { DimensionsAndMetricsPicker } from "@/components/client/DimensionsAndMetricsPicker";
-import { Dimension, Metric } from "@/types/data";
 
 interface FiltersProps {
   onDateRangeChange: (range: { startDate: Date | null; endDate: Date | null }) => void;
   onFilter: () => void;
   hasData: boolean;
-  selectedDimensions: Dimension[];
-  selectedMetrics: Metric[];
-  onDimensionsChange: (dimensions: Dimension[]) => void;
-  onMetricsChange: (metrics: Metric[]) => void;
   isFilterDisabled: boolean;
 }
 
-export const Filters: React.FC<FiltersProps> = ({
-  onDateRangeChange,
-  onFilter,
-  hasData,
-  selectedDimensions,
-  selectedMetrics,
-  onDimensionsChange,
-  onMetricsChange,
-  isFilterDisabled,
-}) => {
+export const Filters: React.FC<FiltersProps> = ({ onDateRangeChange, onFilter, hasData, isFilterDisabled }) => {
   if (!hasData) return null;
 
   return (
@@ -33,18 +19,13 @@ export const Filters: React.FC<FiltersProps> = ({
       <div className="flex items-start gap-8">
         <DateRangePicker onDateRangeChange={onDateRangeChange} />
         <div className="h-full w-px bg-gray-300" />
-        <DimensionsAndMetricsPicker
-          selectedDimensions={selectedDimensions}
-          selectedMetrics={selectedMetrics}
-          onDimensionsChange={onDimensionsChange}
-          onMetricsChange={onMetricsChange}
-        />
+        <DimensionsAndMetricsPicker />
         <button
           className="bg-red-400 hover:bg-red-500 text-white px-8 py-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed ml-auto text-lg font-medium"
           onClick={onFilter}
           disabled={isFilterDisabled}
         >
-          Filter
+          Apply Filters
         </button>
       </div>
     </div>

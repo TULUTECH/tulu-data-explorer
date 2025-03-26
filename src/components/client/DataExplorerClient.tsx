@@ -7,7 +7,7 @@ import { Table } from "@/components/client/Table";
 import { columns } from "@/components/client/Columns";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import { setSelectedDimensions, setSelectedMetrics, setDateRange } from "@/store/slices/dataExplorerSlice";
+import { setDateRange } from "@/store/slices/dataExplorerSlice";
 
 interface DataExplorerClientProps {
   initialData: ITypeParsedOmpData[];
@@ -78,10 +78,6 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
         onDateRangeChange={handleDateRangeChange}
         onFilter={handleFilter}
         hasData={tableData.length > 0}
-        selectedDimensions={selectedDimensions}
-        selectedMetrics={selectedMetrics}
-        onDimensionsChange={(dims) => dispatch(setSelectedDimensions(dims))}
-        onMetricsChange={(metrics) => dispatch(setSelectedMetrics(metrics))}
         isFilterDisabled={isFilterDisabled}
       />
       <Table table={table} />
