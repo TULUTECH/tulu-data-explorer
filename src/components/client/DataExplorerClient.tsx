@@ -86,8 +86,8 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
       date: selectedDimensions.includes("date"),
       campaign_name: selectedDimensions.includes("campaign_name"),
       campaign_id: selectedDimensions.includes("campaign_name"), // Always show campaign_id with campaign_name
-      ad_group_name: selectedDimensions.includes("adgroup_name"),
-      ad_group_id: selectedDimensions.includes("adgroup_name"), // Always show ad_group_id with ad_group_name
+      ad_group_name: selectedDimensions.includes("ad_group_name"),
+      ad_group_id: selectedDimensions.includes("ad_group_name"), // Always show ad_group_id with ad_group_name
       impressions: selectedMetrics.includes("impressions"),
       clicks: selectedMetrics.includes("clicks"),
       cost_micros: selectedMetrics.includes("cost_micros"),
@@ -267,7 +267,7 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
     }
 
     // Only apply grouping if we have ad_group_name selected
-    if (selectedDimensions.includes("adgroup_name")) {
+    if (selectedDimensions.includes("ad_group_name")) {
       const grouping = selectedDimensions.includes("campaign_name")
         ? [...selectedDimensions, "campaign_id"]
         : selectedDimensions;
