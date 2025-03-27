@@ -27,8 +27,7 @@ interface TableConfigurationProps {
   tableData: ITypeParsedOmpData[];
   appliedGrouping: GroupingState;
   columnVisibility: VisibilityState;
-  // TODO: correct type
-  dispatch: AppDispatch; // You might want to type this properly with your Redux dispatch type
+  dispatch: AppDispatch;
   isMountedRef: React.RefObject<boolean>;
   setColumnVisibility: (visibility: VisibilityState) => void;
 }
@@ -58,7 +57,6 @@ export const useTableConfiguration = ({
       }
     },
     onColumnVisibilityChange: handleColumnVisibilityChange,
-    // Table feature enablers
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
