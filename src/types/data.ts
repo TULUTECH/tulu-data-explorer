@@ -17,5 +17,5 @@ export interface IDateRange {
   endDate: string | null;
 }
 
-export type Dimension = "date" | "campaign_name" | "adgroup_name";
+export type Dimension = "date" | "campaign_name" | "ad_group_name";
 export type Metric = "impressions" | "clicks" | "cost_micros" | "sessions" | "leads" | "revenue";
