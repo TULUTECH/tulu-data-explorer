@@ -45,7 +45,19 @@ export const Table = ({ table }: TableProps) => {
               <th className="border border-gray-300 px-4 py-2">#</th>
               {headerGroup.headers.map((header) => (
                 <th key={header.id} className="border border-gray-300 px-4 py-2">
-                  {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                  {header.isPlaceholder ? null : (
+                    <div
+                      onClick={header.column.getToggleSortingHandler()}
+                      className={header.column.getCanSort() ? "cursor-pointer select-none" : ""}
+                    >
+                      {flexRender(header.column.columnDef.header, header.getContext())}
+                      {header.column.getIsSorted() === "asc"
+                        ? " 🔼"
+                        : header.column.getIsSorted() === "desc"
+                        ? " 🔽"
+                        : ""}
+                    </div>
+                  )}
                 </th>
               ))}
             </tr>

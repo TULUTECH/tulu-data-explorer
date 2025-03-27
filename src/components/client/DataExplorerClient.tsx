@@ -7,6 +7,7 @@ import {
   getFilteredRowModel,
   getGroupedRowModel,
   GroupingState,
+  getSortedRowModel,
 } from "@tanstack/react-table";
 import { Dimension, ITypeParsedOmpData } from "@/types/data";
 import { Filters } from "@/components/client/Filters";
@@ -36,6 +37,7 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
       dispatch(setSelectedDimensions(updatedGrouping as Dimension[]));
     },
     getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getGroupedRowModel: getGroupedRowModel(),
