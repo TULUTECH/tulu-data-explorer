@@ -1,0 +1,88 @@
+import { ITypeParsedOmpData } from "@/types/data";
+
+export const filterByDateRange = (
+  data: ITypeParsedOmpData[],
+  startDate: string | null,
+  endDate: string | null
+): ITypeParsedOmpData[] => {
+  if (!startDate || !endDate) return data;
+
+  const startDateStr = startDate.split("T")[0];
+  const endDateStr = endDate.split("T")[0];
+
+  return data.filter((row) => {
+    if (!row.date) return false;
+    const rowDateStr = new Date(row.date).toISOString().split("T")[0];
+    return rowDateStr >= startDateStr && rowDateStr <= endDateStr;
+  });
+};
+
+export const aggregateByDate = (data: ITypeParsedOmpData[]): Map<string, ITypeParsedOmpData> => {
+  const aggregatedData = new Map<string, ITypeParsedOmpData>();
+
+  data.forEach((row) => {
+    const dateStr = row.date ? new Date(row.date).toISOString().split("T")[0] : null;
+    if (!dateStr) return;
+
+    if (!aggregatedData.has(dateStr)) {
+      aggregatedData.set(dateStr, {
+        date: dateStr,
+        campaign_name: null,
+        campaign_id: null,
+        ad_group_name: null,
+        ad_group_id: null,
+        impressions: 0,
+        clicks: 0,
+        cost_micros: 0,
+        sessions: 0,
+        leads: 0,
+        revenue: 0,
+      });
+    }
+
+    const aggregatedRow = aggregatedData.get(dateStr)!;
+    aggregatedRow.impressions = (aggregatedRow.impressions || 0) + (row.impressions || 0);
+    aggregatedRow.clicks = (aggregatedRow.clicks || 0) + (row.clicks || 0);
+    aggregatedRow.cost_micros = (aggregatedRow.cost_micros || 0) + (row.cost_micros || 0);
+    aggregatedRow.sessions = (aggregatedRow.sessions || 0) + (row.sessions || 0);
+    aggregatedRow.leads = (aggregatedRow.leads || 0) + (row.leads || 0);
+    aggregatedRow.revenue = (aggregatedRow.revenue || 0) + (row.revenue || 0);
+  });
+
+  return aggregatedData;
+};
+
+export const aggregateByCampaign = (data: ITypeParsedOmpData[]): Map<string, ITypeParsedOmpData> => {
+  const aggregatedData = new Map<string, ITypeParsedOmpData>();
+
+  data.forEach((row) => {
+    const campaignName = row.campaign_name;
+    if (!campaignName) return;
+
+    if (!aggregatedData.has(campaignName)) {
+      aggregatedData.set(campaignName, {
+        date: null,
+        campaign_name: campaignName,
+        campaign_id: row.campaign_id,
+        ad_group_name: null,
+        ad_group_id: null,
+        impressions: 0,
+        clicks: 0,
+        cost_micros: 0,
+        sessions: 0,
+        leads: 0,
+        revenue: 0,
+      });
+    }
+
+    const aggregatedRow = aggregatedData.get(campaignName)!;
+    aggregatedRow.impressions = (aggregatedRow.impressions || 0) + (row.impressions || 0);
+    aggregatedRow.clicks = (aggregatedRow.clicks || 0) + (row.clicks || 0);
+    aggregatedRow.cost_micros = (aggregatedRow.cost_micros || 0) + (row.cost_micros || 0);
+    aggregatedRow.sessions = (aggregatedRow.sessions || 0) + (row.sessions || 0);
+    aggregatedRow.leads = (aggregatedRow.leads || 0) + (row.leads || 0);
+    aggregatedRow.revenue = (aggregatedRow.revenue || 0) + (row.revenue || 0);
+  });
+
+  return aggregatedData;
+};
