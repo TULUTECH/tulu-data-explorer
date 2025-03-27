@@ -76,6 +76,11 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
   });
 
   const handleFilter = () => {
+    // Prevent filtering if no dimensions are selected
+    if (selectedDimensions.length === 0) {
+      return;
+    }
+
     // Set column visibility based on selected dimensions and metrics
     const visibilityState: VisibilityState = {
       date: selectedDimensions.includes("date"),
@@ -265,7 +270,7 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
     }
   };
 
-  const isFilterDisabled = !selectedDimensions.length && (!dateRange.startDate || !dateRange.endDate);
+  const isFilterDisabled = selectedDimensions.length === 0;
 
   return (
     <div className="p-2">
