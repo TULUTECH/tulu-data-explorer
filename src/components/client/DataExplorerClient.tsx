@@ -103,14 +103,21 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
       return;
     }
 
-    // Apply date filter
-    const activeFilters = [{ id: "date", value: dateRange }];
-    table.setColumnFilters(activeFilters);
-
     // Always start with the initial data when applying filters
-    const dataToProcess = [...initialData];
+    let dataToProcess = [...initialData];
 
-    // If we have date selected, aggregate by date
+    // Apply date range filter if dates are selected, regardless of dimension selection
+    if (dateRange.startDate && dateRange.endDate) {
+      const startDate = new Date(dateRange.startDate);
+      const endDate = new Date(dateRange.endDate);
+      dataToProcess = dataToProcess.filter((row) => {
+        if (!row.date) return false;
+        const rowDate = new Date(row.date);
+        return rowDate >= startDate && rowDate <= endDate;
+      });
+    }
+
+    // If we have date selected as a dimension, aggregate by date
     if (selectedDimensions.includes("date")) {
       // First, aggregate the data by date
       const aggregatedData = new Map<string, ITypeParsedOmpData>();
