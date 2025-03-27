@@ -42,6 +42,7 @@ export const Table = ({ table }: TableProps) => {
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id} className="bg-gray-100">
+              <th className="border border-gray-300 px-4 py-2">#</th>
               {headerGroup.headers.map((header) => (
                 <th key={header.id} className="border border-gray-300 px-4 py-2">
                   {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
@@ -53,13 +54,16 @@ export const Table = ({ table }: TableProps) => {
         <tbody>
           {table.getRowModel().rows.length === 0 ? (
             <tr>
-              <td className="border border-gray-300 px-4 py-2" colSpan={table.getAllColumns().length}>
+              <td className="border border-gray-300 px-4 py-2" colSpan={table.getAllColumns().length + 1}>
                 Please select a table from the menu
               </td>
             </tr>
           ) : (
-            table.getPaginationRowModel().rows.map((row) => (
+            table.getPaginationRowModel().rows.map((row, rowIndex) => (
               <tr key={row.id}>
+                <td className="border border-gray-300 px-4 py-2 font-bold">
+                  {table.getState().pagination.pageIndex * table.getState().pagination.pageSize + rowIndex + 1}
+                </td>
                 {row.getVisibleCells().map((cell) => (
                   <td key={cell.id} className="border border-gray-300 px-4 py-2">
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -72,6 +76,7 @@ export const Table = ({ table }: TableProps) => {
         <tfoot>
           {table.getFooterGroups().map((footerGroup) => (
             <tr key={footerGroup.id} className="bg-gray-100">
+              <th className="border border-gray-300 px-4 py-2">#</th>
               {footerGroup.headers.map((header) => (
                 <th key={header.id} className="border border-gray-300 px-4 py-2">
                   {header.isPlaceholder ? null : flexRender(header.column.columnDef.footer, header.getContext())}
