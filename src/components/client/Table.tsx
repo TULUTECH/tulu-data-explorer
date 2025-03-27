@@ -3,6 +3,8 @@
 import React from "react";
 import { ITypeParsedOmpData } from "@/types/data";
 import { flexRender, Table as TanstackTable } from "@tanstack/react-table";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 interface TableProps {
   table: TanstackTable<ITypeParsedOmpData>;
@@ -12,8 +14,9 @@ export const Table = ({ table }: TableProps) => {
   const { pageIndex, pageSize } = table.getState().pagination;
   const totalRows = table.getFilteredRowModel().rows.length;
   const visibleColumns = table.getVisibleFlatColumns().length;
+  const { selectedTable } = useSelector((state: RootState) => state.dataExplorer);
 
-  if (table.getRowModel().rows.length === 0) {
+  if (!selectedTable) {
     return <div className="text-center py-4">Please select a table from the menu</div>;
   }
 
