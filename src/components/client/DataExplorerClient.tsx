@@ -21,6 +21,27 @@ import { setSelectedDimensions, setSelectedTable } from "@/store/slices/dataExpl
 interface DataExplorerClientProps {
   initialData: ITypeParsedOmpData[];
 }
+const INITIAL_COLUMN_VISIBILITY: VisibilityState = {
+  date: false,
+  campaign_name: false,
+  campaign_id: false,
+  ad_group_name: false,
+  ad_group_id: false,
+  impressions: false,
+  clicks: false,
+  cost_micros: false,
+  sessions: false,
+  leads: false,
+  revenue: false,
+};
+
+const INITIAL_TABLE_STATE = {
+  pagination: {
+    pageIndex: 0,
+    pageSize: 100,
+  },
+  grouping: [],
+};
 
 export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialData }) => {
   const [tableData, setTableData] = useState<ITypeParsedOmpData[]>([]);
@@ -28,19 +49,7 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
     (state: RootState) => state.dataExplorer
   );
   const [appliedGrouping, setAppliedGrouping] = useState<GroupingState>([]);
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
-    date: false,
-    campaign_name: false,
-    campaign_id: false,
-    ad_group_name: false,
-    ad_group_id: false,
-    impressions: false,
-    clicks: false,
-    cost_micros: false,
-    sessions: false,
-    leads: false,
-    revenue: false,
-  });
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(INITIAL_COLUMN_VISIBILITY);
   const dispatch = useDispatch();
   const isMountedRef = useRef(false);
 
@@ -66,13 +75,7 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getGroupedRowModel: getGroupedRowModel(),
-    initialState: {
-      pagination: {
-        pageIndex: 0,
-        pageSize: 100,
-      },
-      grouping: [], // Start with no grouping
-    },
+    initialState: INITIAL_TABLE_STATE,
   });
 
   const handleFilter = () => {
