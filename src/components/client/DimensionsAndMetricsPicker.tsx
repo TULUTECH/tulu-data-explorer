@@ -12,7 +12,7 @@ export const DimensionsAndMetricsPicker: React.FC = () => {
   const dimensions: { value: Dimension; label: string }[] = [
     { value: "date", label: "Date" },
     { value: "campaign_name", label: "Campaign Name" },
-    { value: "adgroup_name", label: "Ad Group Name" },
+    { value: "ad_group_name", label: "Ad Group Name" },
   ];
 
   const metrics: { value: Metric; label: string }[] = [
@@ -27,20 +27,20 @@ export const DimensionsAndMetricsPicker: React.FC = () => {
   const handleDimensionChange = (dimension: Dimension) => {
     let newDimensions: Dimension[];
 
-    if (dimension === "adgroup_name") {
-      // If trying to select adgroup_name, ensure campaign_name is selected
+    if (dimension === "ad_group_name") {
+      // If trying to select ad_group_name, ensure campaign_name is selected
       if (!selectedDimensions.includes("campaign_name")) {
-        newDimensions = [...selectedDimensions, "campaign_name", "adgroup_name"];
+        newDimensions = [...selectedDimensions, "campaign_name", "ad_group_name"];
       } else {
-        // If campaign_name is already selected, just toggle adgroup_name
-        newDimensions = selectedDimensions.includes("adgroup_name")
-          ? selectedDimensions.filter((d) => d !== "adgroup_name")
-          : [...selectedDimensions, "adgroup_name"];
+        // If campaign_name is already selected, just toggle ad_group_name
+        newDimensions = selectedDimensions.includes("ad_group_name")
+          ? selectedDimensions.filter((d) => d !== "ad_group_name")
+          : [...selectedDimensions, "ad_group_name"];
       }
     } else if (dimension === "campaign_name") {
-      // If unchecking campaign_name, also uncheck adgroup_name
+      // If unchecking campaign_name, also uncheck ad_group_name
       newDimensions = selectedDimensions.includes("campaign_name")
-        ? selectedDimensions.filter((d) => d !== "campaign_name" && d !== "adgroup_name")
+        ? selectedDimensions.filter((d) => d !== "campaign_name" && d !== "ad_group_name")
         : [...selectedDimensions, "campaign_name"];
     } else {
       // For other dimensions (like date), handle normal toggle
