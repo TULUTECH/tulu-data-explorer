@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   getCoreRowModel,
   useReactTable,
@@ -8,6 +8,7 @@ import {
   getGroupedRowModel,
   GroupingState,
   getSortedRowModel,
+  VisibilityState,
 } from "@tanstack/react-table";
 import { Dimension, ITypeParsedOmpData } from "@/types/data";
 import { Filters } from "@/components/client/Filters";
@@ -23,19 +24,29 @@ interface DataExplorerClientProps {
 
 export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialData }) => {
   const [tableData, setTableData] = useState<ITypeParsedOmpData[]>([]);
-  const { selectedDimensions, dateRange } = useSelector((state: RootState) => state.dataExplorer);
+  const { selectedDimensions, selectedMetrics, dateRange } = useSelector((state: RootState) => state.dataExplorer);
   const [appliedGrouping, setAppliedGrouping] = useState<GroupingState>([]);
-
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const dispatch = useDispatch();
+  const isMountedRef = useRef(false);
+  useEffect(() => {
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
 
   const table = useReactTable({
     data: tableData,
     columns,
-    state: { grouping: appliedGrouping },
+    state: { grouping: appliedGrouping, columnVisibility },
     onGroupingChange: (updatedGrouping) => {
       // Update Redux store when grouping changes via user interaction
-      dispatch(setSelectedDimensions(updatedGrouping as Dimension[]));
+      if (isMountedRef.current) {
+        dispatch(setSelectedDimensions(updatedGrouping as Dimension[]));
+      }
     },
+    onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -52,13 +63,37 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
   const handleFilter = () => {
     setAppliedGrouping(selectedDimensions);
 
-    const activeFilters = [
-      {
-        id: "date",
-        value: dateRange,
-      },
-    ];
+    const activeFilters = [{ id: "date", value: dateRange }];
     table.setColumnFilters(activeFilters);
+    table.setColumnVisibility({
+      date: selectedDimensions.includes("date"),
+      campaign_name: selectedDimensions.includes("campaign_name"),
+      campaign_id: selectedDimensions.includes("campaign_name"),
+      ad_group_name: selectedDimensions.includes("adgroup_name"),
+      ad_group_id: selectedDimensions.includes("adgroup_name"),
+    });
+    // Update column visibility for metrics.
+    // Assuming metric column IDs: "impressions", "clicks", "cost_micros", "sessions", "leads", "revenue"
+    if (selectedMetrics && selectedMetrics.length > 0) {
+      table.setColumnVisibility({
+        impressions: selectedMetrics.includes("impressions"),
+        clicks: selectedMetrics.includes("clicks"),
+        cost_micros: selectedMetrics.includes("cost_micros"),
+        sessions: selectedMetrics.includes("sessions"),
+        leads: selectedMetrics.includes("leads"),
+        revenue: selectedMetrics.includes("revenue"),
+      });
+    } else {
+      // If no metrics are selected, show all metric columns.
+      table.setColumnVisibility({
+        impressions: false,
+        clicks: false,
+        cost_micros: false,
+        sessions: false,
+        leads: false,
+        revenue: false,
+      });
+    }
   };
 
   const isFilterDisabled = !selectedDimensions.length && (!dateRange.startDate || !dateRange.endDate);
