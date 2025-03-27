@@ -17,6 +17,15 @@ export const filterByDateRange = (
   });
 };
 
+const aggregateNumericValues = (aggregatedRow: ITypeParsedOmpData, row: ITypeParsedOmpData) => {
+  aggregatedRow.impressions = (aggregatedRow.impressions || 0) + (row.impressions || 0);
+  aggregatedRow.clicks = (aggregatedRow.clicks || 0) + (row.clicks || 0);
+  aggregatedRow.cost_micros = (aggregatedRow.cost_micros || 0) + (row.cost_micros || 0);
+  aggregatedRow.sessions = (aggregatedRow.sessions || 0) + (row.sessions || 0);
+  aggregatedRow.leads = (aggregatedRow.leads || 0) + (row.leads || 0);
+  aggregatedRow.revenue = (aggregatedRow.revenue || 0) + (row.revenue || 0);
+};
+
 export const aggregateByDate = (data: ITypeParsedOmpData[]): Map<string, ITypeParsedOmpData> => {
   const aggregatedData = new Map<string, ITypeParsedOmpData>();
 
@@ -41,12 +50,7 @@ export const aggregateByDate = (data: ITypeParsedOmpData[]): Map<string, ITypePa
     }
 
     const aggregatedRow = aggregatedData.get(dateStr)!;
-    aggregatedRow.impressions = (aggregatedRow.impressions || 0) + (row.impressions || 0);
-    aggregatedRow.clicks = (aggregatedRow.clicks || 0) + (row.clicks || 0);
-    aggregatedRow.cost_micros = (aggregatedRow.cost_micros || 0) + (row.cost_micros || 0);
-    aggregatedRow.sessions = (aggregatedRow.sessions || 0) + (row.sessions || 0);
-    aggregatedRow.leads = (aggregatedRow.leads || 0) + (row.leads || 0);
-    aggregatedRow.revenue = (aggregatedRow.revenue || 0) + (row.revenue || 0);
+    aggregateNumericValues(aggregatedRow, row);
   });
 
   return aggregatedData;
@@ -76,12 +80,7 @@ export const aggregateByCampaign = (data: ITypeParsedOmpData[]): Map<string, ITy
     }
 
     const aggregatedRow = aggregatedData.get(campaignName)!;
-    aggregatedRow.impressions = (aggregatedRow.impressions || 0) + (row.impressions || 0);
-    aggregatedRow.clicks = (aggregatedRow.clicks || 0) + (row.clicks || 0);
-    aggregatedRow.cost_micros = (aggregatedRow.cost_micros || 0) + (row.cost_micros || 0);
-    aggregatedRow.sessions = (aggregatedRow.sessions || 0) + (row.sessions || 0);
-    aggregatedRow.leads = (aggregatedRow.leads || 0) + (row.leads || 0);
-    aggregatedRow.revenue = (aggregatedRow.revenue || 0) + (row.revenue || 0);
+    aggregateNumericValues(aggregatedRow, row);
   });
 
   return aggregatedData;
