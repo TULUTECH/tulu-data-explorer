@@ -26,9 +26,22 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
   const [tableData, setTableData] = useState<ITypeParsedOmpData[]>([]);
   const { selectedDimensions, selectedMetrics, dateRange } = useSelector((state: RootState) => state.dataExplorer);
   const [appliedGrouping, setAppliedGrouping] = useState<GroupingState>([]);
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
+    date: false,
+    campaign_name: false,
+    campaign_id: false,
+    ad_group_name: false,
+    ad_group_id: false,
+    impressions: false,
+    clicks: false,
+    cost_micros: false,
+    sessions: false,
+    leads: false,
+    revenue: false,
+  });
   const dispatch = useDispatch();
   const isMountedRef = useRef(false);
+
   useEffect(() => {
     isMountedRef.current = true;
     return () => {
@@ -41,7 +54,6 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
     columns,
     state: { grouping: appliedGrouping, columnVisibility },
     onGroupingChange: (updatedGrouping) => {
-      // Update Redux store when grouping changes via user interaction
       if (isMountedRef.current) {
         dispatch(setSelectedDimensions(updatedGrouping as Dimension[]));
       }
@@ -62,38 +74,24 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
 
   const handleFilter = () => {
     setAppliedGrouping(selectedDimensions);
-
     const activeFilters = [{ id: "date", value: dateRange }];
     table.setColumnFilters(activeFilters);
-    table.setColumnVisibility({
+
+    // Set column visibility based on selected dimensions and metrics
+    const visibilityState: VisibilityState = {
       date: selectedDimensions.includes("date"),
       campaign_name: selectedDimensions.includes("campaign_name"),
       campaign_id: selectedDimensions.includes("campaign_name"),
       ad_group_name: selectedDimensions.includes("adgroup_name"),
       ad_group_id: selectedDimensions.includes("adgroup_name"),
-    });
-    // Update column visibility for metrics.
-    // Assuming metric column IDs: "impressions", "clicks", "cost_micros", "sessions", "leads", "revenue"
-    if (selectedMetrics && selectedMetrics.length > 0) {
-      table.setColumnVisibility({
-        impressions: selectedMetrics.includes("impressions"),
-        clicks: selectedMetrics.includes("clicks"),
-        cost_micros: selectedMetrics.includes("cost_micros"),
-        sessions: selectedMetrics.includes("sessions"),
-        leads: selectedMetrics.includes("leads"),
-        revenue: selectedMetrics.includes("revenue"),
-      });
-    } else {
-      // If no metrics are selected, show all metric columns.
-      table.setColumnVisibility({
-        impressions: false,
-        clicks: false,
-        cost_micros: false,
-        sessions: false,
-        leads: false,
-        revenue: false,
-      });
-    }
+      impressions: selectedMetrics.includes("impressions"),
+      clicks: selectedMetrics.includes("clicks"),
+      cost_micros: selectedMetrics.includes("cost_micros"),
+      sessions: selectedMetrics.includes("sessions"),
+      leads: selectedMetrics.includes("leads"),
+      revenue: selectedMetrics.includes("revenue"),
+    };
+    setColumnVisibility(visibilityState);
   };
 
   const isFilterDisabled = !selectedDimensions.length && (!dateRange.startDate || !dateRange.endDate);
@@ -107,8 +105,35 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
           onChange={(e) => {
             if (e.target.value === "om_proptech") {
               setTableData([...initialData]);
+              // Reset column visibility when table is selected
+              setColumnVisibility({
+                date: false,
+                campaign_name: false,
+                campaign_id: false,
+                ad_group_name: false,
+                ad_group_id: false,
+                impressions: false,
+                clicks: false,
+                cost_micros: false,
+                sessions: false,
+                leads: false,
+                revenue: false,
+              });
             } else {
               setTableData([]);
+              setColumnVisibility({
+                date: false,
+                campaign_name: false,
+                campaign_id: false,
+                ad_group_name: false,
+                ad_group_id: false,
+                impressions: false,
+                clicks: false,
+                cost_micros: false,
+                sessions: false,
+                leads: false,
+                revenue: false,
+              });
             }
           }}
           defaultValue=""
@@ -130,6 +155,19 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
         onClick={() => {
           setAppliedGrouping([]);
           table.resetColumnFilters();
+          setColumnVisibility({
+            date: false,
+            campaign_name: false,
+            campaign_id: false,
+            ad_group_name: false,
+            ad_group_id: false,
+            impressions: false,
+            clicks: false,
+            cost_micros: false,
+            sessions: false,
+            leads: false,
+            revenue: false,
+          });
         }}
         disabled={isFilterDisabled}
       >

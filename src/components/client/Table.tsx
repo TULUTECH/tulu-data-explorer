@@ -11,10 +11,18 @@ interface TableProps {
 export const Table = ({ table }: TableProps) => {
   const { pageIndex, pageSize } = table.getState().pagination;
   const totalRows = table.getFilteredRowModel().rows.length;
+  const visibleColumns = table.getVisibleFlatColumns().length;
+
+  if (table.getRowModel().rows.length === 0) {
+    return <div className="text-center py-4">Please select a table from the menu</div>;
+  }
+
+  if (visibleColumns === 0) {
+    return <div className="text-center py-4">Please select dimensions and/or metrics</div>;
+  }
 
   return (
     <div>
-      Table
       {/* Pagination controls */}
       <div className="flex justify-left items-center mt-2 space-x-2 text-sm">
         <button
@@ -64,26 +72,18 @@ export const Table = ({ table }: TableProps) => {
           ))}
         </thead>
         <tbody>
-          {table.getRowModel().rows.length === 0 ? (
-            <tr>
-              <td className="border border-gray-300 px-4 py-2" colSpan={table.getAllColumns().length + 1}>
-                Please select a table from the menu
+          {table.getPaginationRowModel().rows.map((row, rowIndex) => (
+            <tr key={row.id}>
+              <td className="border border-gray-300 px-4 py-2 font-bold">
+                {table.getState().pagination.pageIndex * table.getState().pagination.pageSize + rowIndex + 1}
               </td>
-            </tr>
-          ) : (
-            table.getPaginationRowModel().rows.map((row, rowIndex) => (
-              <tr key={row.id}>
-                <td className="border border-gray-300 px-4 py-2 font-bold">
-                  {table.getState().pagination.pageIndex * table.getState().pagination.pageSize + rowIndex + 1}
+              {row.getVisibleCells().map((cell) => (
+                <td key={cell.id} className="border border-gray-300 px-4 py-2">
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>
-                {row.getVisibleCells().map((cell) => (
-                  <td key={cell.id} className="border border-gray-300 px-4 py-2">
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-                ))}
-              </tr>
-            ))
-          )}
+              ))}
+            </tr>
+          ))}
         </tbody>
         <tfoot>
           {table.getFooterGroups().map((footerGroup) => (
