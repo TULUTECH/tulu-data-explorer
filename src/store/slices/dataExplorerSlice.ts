@@ -9,6 +9,7 @@ interface DataExplorerState {
     startDate: string | null;
     endDate: string | null;
   };
+  selectedTable: string;
 }
 
 const initialState: DataExplorerState = {
@@ -18,6 +19,7 @@ const initialState: DataExplorerState = {
     startDate: null,
     endDate: null,
   },
+  selectedTable: "",
 };
 
 const dataExplorerSlice = createSlice({
@@ -36,8 +38,11 @@ const dataExplorerSlice = createSlice({
         endDate: action.payload.endDate || null,
       };
     },
+    setSelectedTable: (state, action: PayloadAction<string>) => {
+      state.selectedTable = action.payload;
+    },
   },
 });
 
-export const { setSelectedDimensions, setSelectedMetrics, setDateRange } = dataExplorerSlice.actions;
+export const { setSelectedDimensions, setSelectedMetrics, setDateRange, setSelectedTable } = dataExplorerSlice.actions;
 export default dataExplorerSlice.reducer;

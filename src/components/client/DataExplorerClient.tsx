@@ -16,7 +16,7 @@ import { Table } from "@/components/client/Table";
 import { columns } from "@/components/client/Columns";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import { setSelectedDimensions } from "@/store/slices/dataExplorerSlice";
+import { setSelectedDimensions, setSelectedTable } from "@/store/slices/dataExplorerSlice";
 
 interface DataExplorerClientProps {
   initialData: ITypeParsedOmpData[];
@@ -24,7 +24,9 @@ interface DataExplorerClientProps {
 
 export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialData }) => {
   const [tableData, setTableData] = useState<ITypeParsedOmpData[]>([]);
-  const { selectedDimensions, selectedMetrics, dateRange } = useSelector((state: RootState) => state.dataExplorer);
+  const { selectedDimensions, selectedMetrics, dateRange, selectedTable } = useSelector(
+    (state: RootState) => state.dataExplorer
+  );
   const [appliedGrouping, setAppliedGrouping] = useState<GroupingState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
     date: false,
@@ -39,7 +41,6 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
     leads: false,
     revenue: false,
   });
-  const [selectedTable, setSelectedTable] = useState<string>("");
   const dispatch = useDispatch();
   const isMountedRef = useRef(false);
 
@@ -274,7 +275,7 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
           className="border p-2 rounded"
           value={selectedTable}
           onChange={(e) => {
-            setSelectedTable(e.target.value);
+            dispatch(setSelectedTable(e.target.value));
             if (e.target.value === "om_proptech") {
               setTableData([...initialData]);
               // Reset column visibility when table is selected
