@@ -85,3 +85,33 @@ export const aggregateByCampaign = (data: ITypeParsedOmpData[]): Map<string, ITy
 
   return aggregatedData;
 };
+
+export const aggregateByAdGroup = (data: ITypeParsedOmpData[]): Map<string, ITypeParsedOmpData> => {
+  const aggregatedData = new Map<string, ITypeParsedOmpData>();
+
+  data.forEach((row) => {
+    const adGroupName = row.ad_group_name;
+    if (!adGroupName) return;
+
+    if (!aggregatedData.has(adGroupName)) {
+      aggregatedData.set(adGroupName, {
+        date: null,
+        campaign_name: row.campaign_name,
+        campaign_id: row.campaign_id,
+        ad_group_name: adGroupName,
+        ad_group_id: row.ad_group_id,
+        impressions: 0,
+        clicks: 0,
+        cost_micros: 0,
+        sessions: 0,
+        leads: 0,
+        revenue: 0,
+      });
+    }
+
+    const aggregatedRow = aggregatedData.get(adGroupName)!;
+    aggregateNumericValues(aggregatedRow, row);
+  });
+
+  return aggregatedData;
+};
