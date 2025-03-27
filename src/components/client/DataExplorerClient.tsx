@@ -108,17 +108,12 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
 
     // Apply date range filter if dates are selected, regardless of dimension selection
     if (dateRange.startDate && dateRange.endDate) {
-      const startDate = new Date(dateRange.startDate);
-      const endDate = new Date(dateRange.endDate);
-      // Set end date to end of day to include the full day
-      endDate.setHours(23, 59, 59, 999);
+      const startDateStr = dateRange.startDate.split("T")[0];
+      const endDateStr = dateRange.endDate.split("T")[0];
       dataToProcess = dataToProcess.filter((row) => {
         if (!row.date) return false;
-        const rowDate = new Date(row.date);
-        // Convert all dates to start of day for consistent comparison
-        rowDate.setHours(0, 0, 0, 0);
-        startDate.setHours(0, 0, 0, 0);
-        return rowDate >= startDate && rowDate <= endDate;
+        const rowDateStr = new Date(row.date).toISOString().split("T")[0];
+        return rowDateStr >= startDateStr && rowDateStr <= endDateStr;
       });
     }
 
