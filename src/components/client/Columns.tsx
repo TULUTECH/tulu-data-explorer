@@ -45,24 +45,26 @@ export const customDateRangeFilter: FilterFn<ITypeParsedOmpData> = (row, columnI
 };
 
 export const columns = [
-  columnHelper.accessor("campaign_id", {
-    header: "Campaign ID",
-    cell: (props) => props.getValue(),
-    footer: (props) => props.column.id,
-  }),
   columnHelper.accessor("campaign_name", {
     header: "Campaign Name",
     cell: (props) => props.getValue(),
     footer: (props) => props.column.id,
     enableGrouping: true,
   }),
-  columnHelper.accessor("ad_group_id", {
-    header: "Ad Group ID",
+  columnHelper.accessor("campaign_id", {
+    header: "Campaign ID",
     cell: (props) => props.getValue(),
     footer: (props) => props.column.id,
+    enableGrouping: true,
   }),
   columnHelper.accessor("ad_group_name", {
     header: "Ad Group Name",
+    cell: (props) => props.getValue(),
+    footer: (props) => props.column.id,
+    enableGrouping: true,
+  }),
+  columnHelper.accessor("ad_group_id", {
+    header: "Ad Group ID",
     cell: (props) => props.getValue(),
     footer: (props) => props.column.id,
     enableGrouping: true,
@@ -91,6 +93,7 @@ export const columns = [
     header: "Cost (micros)",
     cell: (props) => props.getValue() ?? "0",
     footer: (props) => props.column.id,
+    aggregationFn: "sum",
   }),
   columnHelper.accessor("impressions", {
     header: "Impressions",

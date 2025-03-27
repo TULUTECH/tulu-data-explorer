@@ -72,11 +72,9 @@ export const Table = ({ table }: TableProps) => {
           ))}
         </thead>
         <tbody>
-          {table.getPaginationRowModel().rows.map((row, rowIndex) => (
+          {table.getRowModel().rows.map((row, rowIndex) => (
             <tr key={row.id}>
-              <td className="border border-gray-300 px-4 py-2 font-bold">
-                {table.getState().pagination.pageIndex * table.getState().pagination.pageSize + rowIndex + 1}
-              </td>
+              <td className="border border-gray-300 px-4 py-2 font-bold">{rowIndex + 1}</td>
               {row.getVisibleCells().map((cell) => (
                 <td key={cell.id} className="border border-gray-300 px-4 py-2">
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
