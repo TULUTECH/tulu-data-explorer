@@ -110,9 +110,14 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
     if (dateRange.startDate && dateRange.endDate) {
       const startDate = new Date(dateRange.startDate);
       const endDate = new Date(dateRange.endDate);
+      // Set end date to end of day to include the full day
+      endDate.setHours(23, 59, 59, 999);
       dataToProcess = dataToProcess.filter((row) => {
         if (!row.date) return false;
         const rowDate = new Date(row.date);
+        // Convert all dates to start of day for consistent comparison
+        rowDate.setHours(0, 0, 0, 0);
+        startDate.setHours(0, 0, 0, 0);
         return rowDate >= startDate && rowDate <= endDate;
       });
     }
