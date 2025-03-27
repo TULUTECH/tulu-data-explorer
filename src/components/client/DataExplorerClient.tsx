@@ -10,7 +10,7 @@ import { setSelectedTable } from "@/store/slices/dataExplorerSlice";
 import { useTableConfiguration } from "@/hooks/useTableConfiguration";
 import { getVisibilityState } from "@/utils/visibilityState";
 import { filterByDateRange } from "@/utils/dataAggregation";
-import { processCampaignDimension, processDateDimension } from "@/utils/dataProcessing";
+import { processCampaignDimension, processDateDimension, processAdGroupDimension } from "@/utils/dataProcessing";
 
 const INITIAL_COLUMN_VISIBILITY: VisibilityState = {
   date: false,
@@ -69,6 +69,8 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
     // Process data based on selected dimensions
     if (selectedDimensions.includes("date")) {
       processedData = processDateDimension(processedData, selectedDimensions);
+    } else if (selectedDimensions.includes("ad_group_name")) {
+      processedData = processAdGroupDimension(processedData);
     } else if (selectedDimensions.includes("campaign_name")) {
       processedData = processCampaignDimension(processedData);
     }
