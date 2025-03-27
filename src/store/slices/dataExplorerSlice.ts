@@ -5,7 +5,7 @@ import { GroupingState } from "@tanstack/react-table";
 interface DataExplorerState {
   selectedDimensions: GroupingState;
   selectedMetrics: Metric[];
-  dateRange: {
+  selectedDateRange: {
     startDate: string | null;
     endDate: string | null;
   };
@@ -15,7 +15,7 @@ interface DataExplorerState {
 const initialState: DataExplorerState = {
   selectedDimensions: [],
   selectedMetrics: [],
-  dateRange: {
+  selectedDateRange: {
     startDate: null,
     endDate: null,
   },
@@ -32,8 +32,8 @@ const dataExplorerSlice = createSlice({
     setSelectedMetrics: (state, action: PayloadAction<Metric[]>) => {
       state.selectedMetrics = action.payload;
     },
-    setDateRange: (state, action: PayloadAction<IDateRange>) => {
-      state.dateRange = {
+    setSelectedDateRange: (state, action: PayloadAction<IDateRange>) => {
+      state.selectedDateRange = {
         startDate: action.payload.startDate || null,
         endDate: action.payload.endDate || null,
       };
@@ -44,5 +44,6 @@ const dataExplorerSlice = createSlice({
   },
 });
 
-export const { setSelectedDimensions, setSelectedMetrics, setDateRange, setSelectedTable } = dataExplorerSlice.actions;
+export const { setSelectedDimensions, setSelectedMetrics, setSelectedDateRange, setSelectedTable } =
+  dataExplorerSlice.actions;
 export default dataExplorerSlice.reducer;

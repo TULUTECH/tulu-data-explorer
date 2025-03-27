@@ -18,9 +18,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { setSelectedDimensions, setSelectedTable } from "@/store/slices/dataExplorerSlice";
 
-interface DataExplorerClientProps {
-  initialData: ITypeParsedOmpData[];
-}
 const INITIAL_COLUMN_VISIBILITY: VisibilityState = {
   date: false,
   campaign_name: false,
@@ -43,9 +40,12 @@ const INITIAL_TABLE_STATE = {
   grouping: [],
 };
 
+interface DataExplorerClientProps {
+  initialData: ITypeParsedOmpData[];
+}
 export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialData }) => {
   const [tableData, setTableData] = useState<ITypeParsedOmpData[]>([]);
-  const { selectedDimensions, selectedMetrics, dateRange, selectedTable } = useSelector(
+  const { selectedDimensions, selectedMetrics, selectedDateRange, selectedTable } = useSelector(
     (state: RootState) => state.dataExplorer
   );
   const [appliedGrouping, setAppliedGrouping] = useState<GroupingState>([]);
@@ -110,9 +110,9 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
     let dataToProcess = [...initialData];
 
     // Apply date range filter if dates are selected, regardless of dimension selection
-    if (dateRange.startDate && dateRange.endDate) {
-      const startDateStr = dateRange.startDate.split("T")[0];
-      const endDateStr = dateRange.endDate.split("T")[0];
+    if (selectedDateRange.startDate && selectedDateRange.endDate) {
+      const startDateStr = selectedDateRange.startDate.split("T")[0];
+      const endDateStr = selectedDateRange.endDate.split("T")[0];
       dataToProcess = dataToProcess.filter((row) => {
         if (!row.date) return false;
         const rowDateStr = new Date(row.date).toISOString().split("T")[0];
