@@ -1,22 +1,13 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import {
-  getCoreRowModel,
-  useReactTable,
-  getPaginationRowModel,
-  getFilteredRowModel,
-  getGroupedRowModel,
-  GroupingState,
-  getSortedRowModel,
-  VisibilityState,
-} from "@tanstack/react-table";
-import { Dimension, ITypeParsedOmpData } from "@/types/data";
+import { GroupingState, VisibilityState } from "@tanstack/react-table";
+import { ITypeParsedOmpData } from "@/types/data";
 import { Filters } from "@/components/client/Filters";
 import { Table } from "@/components/client/Table";
-import { columns } from "@/components/client/Columns";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import { setSelectedDimensions, setSelectedTable } from "@/store/slices/dataExplorerSlice";
+import { setSelectedTable } from "@/store/slices/dataExplorerSlice";
+import { useTableConfiguration } from "@/hooks/useTableConfiguration";
 
 const INITIAL_COLUMN_VISIBILITY: VisibilityState = {
   date: false,
@@ -30,14 +21,6 @@ const INITIAL_COLUMN_VISIBILITY: VisibilityState = {
   sessions: false,
   leads: false,
   revenue: false,
-};
-
-const INITIAL_TABLE_STATE = {
-  pagination: {
-    pageIndex: 0,
-    pageSize: 100,
-  },
-  grouping: [],
 };
 
 interface DataExplorerClientProps {
@@ -60,22 +43,13 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
     };
   }, []);
 
-  const table = useReactTable({
-    data: tableData,
-    columns,
-    state: { grouping: appliedGrouping, columnVisibility },
-    onGroupingChange: (updatedGrouping) => {
-      if (isMountedRef.current) {
-        dispatch(setSelectedDimensions(updatedGrouping as Dimension[]));
-      }
-    },
-    onColumnVisibilityChange: setColumnVisibility,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getGroupedRowModel: getGroupedRowModel(),
-    initialState: INITIAL_TABLE_STATE,
+  const table = useTableConfiguration({
+    tableData,
+    appliedGrouping,
+    columnVisibility,
+    dispatch,
+    isMountedRef,
+    setColumnVisibility,
   });
 
   const handleFilter = () => {
