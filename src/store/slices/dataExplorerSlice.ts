@@ -1,9 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Dimension, Metric, IDateRange } from "@/types/data";
-import { GroupingState } from "@tanstack/react-table";
 
 interface DataExplorerState {
-  selectedDimensions: GroupingState;
+  selectedDimensions: Dimension[];
   selectedMetrics: Metric[];
   selectedDateRange: {
     startDate: string | null;
