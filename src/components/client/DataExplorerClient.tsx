@@ -2,16 +2,16 @@
 import React, { useEffect, useRef, useState } from "react";
 import { GroupingState, VisibilityState } from "@tanstack/react-table";
 import { Dimension, ITypeParsedOmpData, Metric } from "@/types/data";
-import { Filters } from "@/components/client/Filters";
-import { Table } from "@/components/client/Table";
+import { Table } from "@/components/client/table/Table";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { setSelectedDimensions, setSelectedMetrics, setSelectedTable } from "@/store/slices/dataExplorerSlice";
 import { useTableConfiguration } from "@/hooks/useTableConfiguration";
-import { getVisibilityState } from "@/utils/visibilityState";
-import { filterByDateRange } from "@/utils/dataAggregation";
-import { processCampaignDimension, processDateDimension } from "@/utils/dataProcessing";
-import { FilterButtons } from "./FilterButtons";
+import { getVisibilityState } from "@/helpers/helpers";
+import { filterByDateRange } from "@/helpers/dataAggregation";
+import { processCampaignDimension, processDateDimension } from "@/helpers/dataProcessing";
+import { Filters } from "@/components/client/filters/Filters";
+import { FilterButtons } from "@/components/client/filters/FilterButtons";
 
 const INITIAL_COLUMN_VISIBILITY: VisibilityState = {
   date: false,
@@ -31,12 +31,14 @@ interface DataExplorerClientProps {
   initialData: ITypeParsedOmpData[];
 }
 export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialData }) => {
+  // local state
   const [tableData, setTableData] = useState<ITypeParsedOmpData[]>([]);
+  const [appliedGrouping, setAppliedGrouping] = useState<GroupingState>([]);
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(INITIAL_COLUMN_VISIBILITY);
+  // redux store
   const { selectedDimensions, selectedMetrics, selectedDateRange, selectedTable } = useSelector(
     (state: RootState) => state.dataExplorer
   );
-  const [appliedGrouping, setAppliedGrouping] = useState<GroupingState>([]);
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(INITIAL_COLUMN_VISIBILITY);
   const dispatch = useDispatch();
   const isMountedRef = useRef(false);
 
