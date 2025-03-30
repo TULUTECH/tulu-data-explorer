@@ -1,13 +1,9 @@
 import { DataExplorerClient } from "@/components/client/DataExplorerClient";
 import rawDataJson from "@/data/normalized_omp_data.json";
-import { parseOmpDataTypes } from "@/utils/parseNormalizedOmpData";
+import { parseOmpDataTypes } from "@/helpers/helpers";
 
-// This function simulates an API call but currently returns local data
-// In the future, you can replace this with an actual API call
+//Simulate API call
 async function fetchOmpData() {
-  // Simulate network delay
-  await new Promise((resolve) => setTimeout(resolve, 100));
-
   // In the future, replace this with:
   // const response = await fetch('your-api-endpoint');
   // const data = await response.json();

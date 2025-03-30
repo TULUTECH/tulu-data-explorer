@@ -11,7 +11,7 @@ import {
   OnChangeFn,
 } from "@tanstack/react-table";
 import { Dimension, ITypeParsedOmpData } from "@/types/data";
-import { columns } from "@/components/client/Columns";
+import { columns } from "@/helpers/columns";
 import { setSelectedDimensions } from "@/store/slices/dataExplorerSlice";
 import { AppDispatch } from "@/store/store";
 

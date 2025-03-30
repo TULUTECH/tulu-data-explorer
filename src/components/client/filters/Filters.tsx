@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
-import { DateRangePicker } from "@/components/client/DateRangePicker";
-import { DimensionsAndMetricsPicker } from "@/components/client/DimensionsAndMetricsPicker";
+import { DateRangePicker } from "@/components/client/filters/DateRangePicker";
+import { DimensionsAndMetricsPicker } from "@/components/client/filters/DimensionsAndMetricsPicker";
 
 interface FiltersProps {
   hasData: boolean;
