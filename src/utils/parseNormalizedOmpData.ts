@@ -20,7 +20,7 @@ export const parseOmpDataTypes = (rawData: IRawOmpData[]): ITypeParsedOmpData[] 
     campaign_name: item.campaign_name || null,
     ad_group_id: Number(item.ad_group_id) || null,
     ad_group_name: item.ad_group_name || null,
-    date: item.date ? new Date(item.date) : null,
+    date: item.date || null,
     cost_micros: Number(item.cost_micros) || null,
     impressions: Number(item.impressions) || null,
     clicks: Number(item.clicks) || null,
