@@ -11,6 +11,7 @@ import { useTableConfiguration } from "@/hooks/useTableConfiguration";
 import { getVisibilityState } from "@/utils/visibilityState";
 import { filterByDateRange } from "@/utils/dataAggregation";
 import { processCampaignDimension, processDateDimension } from "@/utils/dataProcessing";
+import { FilterButtons } from "./FilterButtons";
 
 const INITIAL_COLUMN_VISIBILITY: VisibilityState = {
   date: false,
@@ -54,6 +55,24 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
     isMountedRef,
     setColumnVisibility,
   });
+
+  const handleReset = () => {
+    setAppliedGrouping([]);
+    table.resetColumnFilters();
+    setColumnVisibility({
+      date: false,
+      campaign_name: false,
+      campaign_id: false,
+      ad_group_name: false,
+      ad_group_id: false,
+      impressions: false,
+      clicks: false,
+      cost_micros: false,
+      sessions: false,
+      leads: false,
+      revenue: false,
+    });
+  };
 
   const handleFilter = () => {
     // Prevent filtering if no dimensions are selected
@@ -140,36 +159,7 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
         </select>
       </div>
       <Filters hasData={tableData.length > 0} />
-      <button
-        className="bg-red-400 hover:bg-red-500 text-white px-8 py-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed ml-auto text-lg font-medium"
-        onClick={handleFilter}
-        disabled={isFilterDisabled}
-      >
-        Apply Filters
-      </button>
-      <button
-        className="bg-gray-300 hover:bg-gray-400 text-black px-8 py-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed ml-auto text-lg font-medium"
-        onClick={() => {
-          setAppliedGrouping([]);
-          table.resetColumnFilters();
-          setColumnVisibility({
-            date: false,
-            campaign_name: false,
-            campaign_id: false,
-            ad_group_name: false,
-            ad_group_id: false,
-            impressions: false,
-            clicks: false,
-            cost_micros: false,
-            sessions: false,
-            leads: false,
-            revenue: false,
-          });
-        }}
-        disabled={isFilterDisabled}
-      >
-        Reset
-      </button>
+      <FilterButtons isFilterDisabled={isFilterDisabled} onFilter={handleFilter} onReset={handleReset} />
       <Table table={table} />
       <div className="h-4" />
     </div>
