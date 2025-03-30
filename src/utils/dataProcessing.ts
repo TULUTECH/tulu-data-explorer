@@ -1,5 +1,5 @@
 import { ITypeParsedOmpData } from "@/types/data";
-import { aggregateByDate, aggregateByCampaign, aggregateByAdGroup } from "@/utils/dataAggregation";
+import { aggregateByDate, aggregateByCampaign, aggregateByAdGroupId } from "@/utils/dataAggregation";
 
 export const processDateDimensionWithCampaign = (
   data: ITypeParsedOmpData[],
@@ -50,7 +50,7 @@ export const processCampaignDimension = (data: ITypeParsedOmpData[]): ITypeParse
 };
 
 export const processAdGroupDimension = (data: ITypeParsedOmpData[]): ITypeParsedOmpData[] => {
-  const aggregatedData = aggregateByAdGroup(data);
+  const aggregatedData = aggregateByAdGroupId(data);
   return sortByAdGroupName(Array.from(aggregatedData.values()));
 };
 
