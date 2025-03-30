@@ -86,19 +86,20 @@ export const aggregateByCampaign = (data: ITypeParsedOmpData[]): Map<string, ITy
   return aggregatedData;
 };
 
-export const aggregateByAdGroup = (data: ITypeParsedOmpData[]): Map<string, ITypeParsedOmpData> => {
+export const aggregateByAdGroupId = (data: ITypeParsedOmpData[]): Map<string, ITypeParsedOmpData> => {
   const aggregatedData = new Map<string, ITypeParsedOmpData>();
 
   data.forEach((row) => {
-    const adGroupName = row.ad_group_name;
-    if (!adGroupName) return;
+    const adGroupId = row.ad_group_id;
+    if (adGroupId === null || adGroupId === undefined) return;
 
-    if (!aggregatedData.has(adGroupName)) {
-      aggregatedData.set(adGroupName, {
+    const key = adGroupId.toString();
+    if (!aggregatedData.has(key)) {
+      aggregatedData.set(key, {
         date: null,
         campaign_name: row.campaign_name,
         campaign_id: row.campaign_id,
-        ad_group_name: adGroupName,
+        ad_group_name: row.ad_group_name,
         ad_group_id: row.ad_group_id,
         impressions: 0,
         clicks: 0,
@@ -109,7 +110,7 @@ export const aggregateByAdGroup = (data: ITypeParsedOmpData[]): Map<string, ITyp
       });
     }
 
-    const aggregatedRow = aggregatedData.get(adGroupName)!;
+    const aggregatedRow = aggregatedData.get(key)!;
     aggregateNumericValues(aggregatedRow, row);
   });
 
