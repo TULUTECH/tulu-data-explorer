@@ -1,5 +1,5 @@
 import { ITypeParsedOmpData } from "@/types/data";
-import { aggregateByDate, aggregateByCampaign, aggregateByAdGroupId } from "@/utils/dataAggregation";
+import { aggregateByDate, aggregateByCampaign, aggregateByAdGroupId } from "@/helpers/dataAggregation";
 
 export const processCampaignDimension = (data: ITypeParsedOmpData[]): ITypeParsedOmpData[] => {
   const aggregatedData = aggregateByCampaign(data);
