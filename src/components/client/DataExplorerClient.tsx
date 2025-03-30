@@ -6,7 +6,7 @@ import { Filters } from "@/components/client/Filters";
 import { Table } from "@/components/client/Table";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import { setSelectedTable } from "@/store/slices/dataExplorerSlice";
+import { setSelectedDimensions, setSelectedMetrics, setSelectedTable } from "@/store/slices/dataExplorerSlice";
 import { useTableConfiguration } from "@/hooks/useTableConfiguration";
 import { getVisibilityState } from "@/utils/visibilityState";
 import { filterByDateRange } from "@/utils/dataAggregation";
@@ -59,19 +59,11 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
   const handleReset = () => {
     setAppliedGrouping([]);
     table.resetColumnFilters();
-    setColumnVisibility({
-      date: false,
-      campaign_name: false,
-      campaign_id: false,
-      ad_group_name: false,
-      ad_group_id: false,
-      impressions: false,
-      clicks: false,
-      cost_micros: false,
-      sessions: false,
-      leads: false,
-      revenue: false,
-    });
+    setColumnVisibility(INITIAL_COLUMN_VISIBILITY);
+    dispatch(setSelectedDimensions([]));
+    dispatch(setSelectedMetrics([]));
+    dispatch(setSelectedTable(""));
+    setTableData([]);
   };
 
   const handleFilter = () => {
@@ -123,34 +115,10 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
             if (e.target.value === "om_proptech") {
               setTableData([...initialData]);
               // Reset column visibility when table is selected
-              setColumnVisibility({
-                date: false,
-                campaign_name: false,
-                campaign_id: false,
-                ad_group_name: false,
-                ad_group_id: false,
-                impressions: false,
-                clicks: false,
-                cost_micros: false,
-                sessions: false,
-                leads: false,
-                revenue: false,
-              });
+              setColumnVisibility(INITIAL_COLUMN_VISIBILITY);
             } else {
               setTableData([]);
-              setColumnVisibility({
-                date: false,
-                campaign_name: false,
-                campaign_id: false,
-                ad_group_name: false,
-                ad_group_id: false,
-                impressions: false,
-                clicks: false,
-                cost_micros: false,
-                sessions: false,
-                leads: false,
-                revenue: false,
-              });
+              setColumnVisibility(INITIAL_COLUMN_VISIBILITY);
             }
           }}
         >
