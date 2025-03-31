@@ -52,7 +52,6 @@ export const aggregateByDate = (data: ITypeParsedOmpData[]): Map<string, ITypePa
     const aggregatedRow = aggregatedData.get(dateStr)!;
     aggregateNumericValues(aggregatedRow, row);
   });
-
   return aggregatedData;
 };
 
@@ -82,7 +81,6 @@ export const aggregateByCampaign = (data: ITypeParsedOmpData[]): Map<string, ITy
     const aggregatedRow = aggregatedData.get(campaignName)!;
     aggregateNumericValues(aggregatedRow, row);
   });
-
   return aggregatedData;
 };
 
@@ -109,8 +107,8 @@ export const aggregateByAdGroupId = (data: ITypeParsedOmpData[]): Map<string, IT
         revenue: 0,
       });
     }
-
     const aggregatedRow = aggregatedData.get(key)!;
+
     aggregateNumericValues(aggregatedRow, row);
   });
 
