@@ -19,6 +19,19 @@ const INITIAL_TABLE_STATE = {
     pageIndex: 0,
     pageSize: 100,
   },
+  columnOrder: [
+    "date",
+    "campaign_id",
+    "campaign_name",
+    "ad_group_id",
+    "ad_group_name",
+    "cost_micros",
+    "impressions",
+    "clicks",
+    "sessions",
+    "leads",
+    "revenue",
+  ],
 };
 
 interface TableConfigurationProps {
