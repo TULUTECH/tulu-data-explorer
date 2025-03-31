@@ -76,19 +76,22 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
     }
     setColumnVisibility(getVisibilityState(selectedDimensions as Dimension[], selectedMetrics as Metric[]));
 
-    // Filter and process data
-    let processedData = filterByDateRange(initialData, selectedDateRange.startDate, selectedDateRange.endDate);
+    // Filter by date range
+    let dataFilteredByDateRange = filterByDateRange(
+      initialData,
+      selectedDateRange.startDate,
+      selectedDateRange.endDate
+    );
 
-    // Process data based on selected dimensions
+    // Group by dimensions
     if (selectedDimensions.includes("date")) {
-      processedData = processDateDimension(processedData, selectedDimensions);
+      dataFilteredByDateRange = processDateDimension(dataFilteredByDateRange, selectedDimensions);
     } else if (selectedDimensions.includes("campaign_name")) {
-      processedData = processCampaignDimension(processedData);
+      dataFilteredByDateRange = processCampaignDimension(dataFilteredByDateRange);
     }
 
     // Update table data
-    setTableData(processedData);
-
+    setTableData(dataFilteredByDateRange);
     // Update grouping state
     updateGrouping();
   };

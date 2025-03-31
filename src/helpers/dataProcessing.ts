@@ -1,19 +1,19 @@
 import { ITypeParsedOmpData } from "@/types/data";
 import { aggregateByDate, aggregateByCampaign, aggregateByAdGroupId } from "@/helpers/dataAggregation";
 
-export const processCampaignDimension = (data: ITypeParsedOmpData[]): ITypeParsedOmpData[] => {
-  const aggregatedData = aggregateByCampaign(data);
+export const processCampaignDimension = (dataFilteredByDateRange: ITypeParsedOmpData[]): ITypeParsedOmpData[] => {
+  const aggregatedData = aggregateByCampaign(dataFilteredByDateRange);
   return sortByCampaignName(Array.from(aggregatedData.values()));
 };
 
 export const processDateDimension = (
-  data: ITypeParsedOmpData[],
+  dataFilteredByDateRange: ITypeParsedOmpData[],
   selectedDimensions: string[]
 ): ITypeParsedOmpData[] => {
-  const aggregatedByDate = aggregateByDate(data);
+  const aggregatedByDate = aggregateByDate(dataFilteredByDateRange);
 
   if (selectedDimensions.includes("campaign_name")) {
-    return processDateDimensionWithCampaign(data, aggregatedByDate);
+    return processDateDimensionWithCampaign(dataFilteredByDateRange, aggregatedByDate);
   }
 
   return sortByDate(Array.from(aggregatedByDate.values()));
