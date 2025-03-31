@@ -1,21 +1,6 @@
 import { ITypeParsedOmpData } from "@/types/data";
 
-export const filterByDateRange = (
-  data: ITypeParsedOmpData[],
-  startDate: string | null,
-  endDate: string | null
-): ITypeParsedOmpData[] => {
-  if (!startDate || !endDate) return data;
 
-  const startDateStr = startDate.split("T")[0];
-  const endDateStr = endDate.split("T")[0];
-
-  return data.filter((row) => {
-    if (!row.date) return false;
-    const rowDateStr = new Date(row.date).toISOString().split("T")[0];
-    return rowDateStr >= startDateStr && rowDateStr <= endDateStr;
-  });
-};
 
 const aggregateNumericValues = (aggregatedRow: ITypeParsedOmpData, row: ITypeParsedOmpData) => {
   aggregatedRow.impressions = (aggregatedRow.impressions || 0) + (row.impressions || 0);

@@ -1,5 +1,6 @@
-import { ITypeParsedOmpData } from "@/types/data";
+import { ITypeParsedOmpData, Metric } from "@/types/data";
 import { aggregateByDate, aggregateByCampaign, aggregateByAdGroupId } from "@/helpers/dataAggregation";
+import { METRICS } from "@/helpers/constants";
 
 export const processCampaignDimension = (filteredData: ITypeParsedOmpData[]): ITypeParsedOmpData[] => {
   const aggregatedData = aggregateByCampaign(filteredData);
@@ -21,83 +22,123 @@ export const processDateDimension = (
   }
   return sortByDate(Array.from(aggregatedByDate.values()));
 };
+
 export const processDateDimensionWithCampaign = (
   data: ITypeParsedOmpData[],
   aggregatedByDate: Map<string, ITypeParsedOmpData>
 ): ITypeParsedOmpData[] => {
-  const uniqueCampaigns = [...new Set(data.map((row) => row.campaign_name))].filter(Boolean) as string[];
-  const allCombinations: ITypeParsedOmpData[] = [];
-
-  aggregatedByDate.forEach((_, dateStr) => {
-    uniqueCampaigns.forEach((campaignName) => {
-      const campaignRows = data.filter(
-        (row) =>
-          row.date && new Date(row.date).toISOString().split("T")[0] === dateStr && row.campaign_name === campaignName
-      );
-
-      const combinedRow: ITypeParsedOmpData =
-        campaignRows.length > 0
-          ? createAggregatedRow(dateStr, campaignName, campaignRows)
-          : createEmptyRow(dateStr, campaignName, data);
-
-      allCombinations.push(combinedRow);
-    });
-  });
-
-  return sortByDateAndCampaign(allCombinations);
+  return processDateDimensionWithField(
+    data,
+    aggregatedByDate,
+    "campaign_name",
+    (row, value) => row.campaign_name === value,
+    createCampaignRow,
+    sortByDateAndCampaign
+  );
 };
+
 export const processDateDimensionWithAdGroup = (
   data: ITypeParsedOmpData[],
   aggregatedByDate: Map<string, ITypeParsedOmpData>
 ): ITypeParsedOmpData[] => {
-  const uniqueAdGroupIds = [...new Set(data.map((row) => row.ad_group_id))].filter(Boolean) as number[];
-  const allCombinations: ITypeParsedOmpData[] = [];
-
-  aggregatedByDate.forEach((_, dateStr) => {
-    uniqueAdGroupIds.forEach((adGroupId) => {
-      const adGroupRows = data.filter(
-        (row) => row.date && new Date(row.date).toISOString().split("T")[0] === dateStr && row.ad_group_id === adGroupId
-      );
-
-      const combinedRow: ITypeParsedOmpData =
-        adGroupRows.length > 0
-          ? createAggregatedAdGroupRow(dateStr, adGroupId, adGroupRows)
-          : createEmptyAdGroupRow(dateStr, adGroupId, data);
-
-      allCombinations.push(combinedRow);
-    });
-  });
-
-  return sortByDateAndAdGroupId(allCombinations);
+  return processDateDimensionWithField(
+    data,
+    aggregatedByDate,
+    "ad_group_id",
+    (row, value) => row.ad_group_id === value,
+    createAdGroupRow,
+    sortByDateAndAdGroupId
+  );
 };
+
 export const processAdGroupDimension = (filteredData: ITypeParsedOmpData[]): ITypeParsedOmpData[] => {
   const aggregatedData = aggregateByAdGroupId(filteredData);
   return sortByAdGroupId(Array.from(aggregatedData.values()));
 };
 
+// Generic function to process date dimension with another field
+function processDateDimensionWithField<T>(
+  data: ITypeParsedOmpData[],
+  aggregatedByDate: Map<string, ITypeParsedOmpData>,
+  fieldName: keyof ITypeParsedOmpData,
+  filterFn: (row: ITypeParsedOmpData, value: T) => boolean,
+  createRowFn: (
+    dateStr: string,
+    fieldValue: T,
+    rows: ITypeParsedOmpData[],
+    allData: ITypeParsedOmpData[]
+  ) => ITypeParsedOmpData,
+  sortFn: (data: ITypeParsedOmpData[]) => ITypeParsedOmpData[]
+): ITypeParsedOmpData[] {
+  // Extract unique values for the field
+  const uniqueValues = [...new Set(data.map((row) => row[fieldName]))].filter(Boolean) as T[];
+
+  const allCombinations: ITypeParsedOmpData[] = [];
+
+  aggregatedByDate.forEach((_, dateStr) => {
+    uniqueValues.forEach((fieldValue) => {
+      const filteredRows = data.filter(
+        (row) => row.date && new Date(row.date).toISOString().split("T")[0] === dateStr && filterFn(row, fieldValue)
+      );
+
+      const combinedRow =
+        filteredRows.length > 0
+          ? createRowFn(dateStr, fieldValue, filteredRows, data)
+          : createRowFn(dateStr, fieldValue, [], data);
+
+      allCombinations.push(combinedRow);
+    });
+  });
+
+  return sortFn(allCombinations);
+}
+
 // Helper functions for creating rows
-const createAggregatedRow = (
+function createCampaignRow(
   dateStr: string,
   campaignName: string,
-  campaignRows: ITypeParsedOmpData[]
-): ITypeParsedOmpData => ({
-  date: dateStr,
-  campaign_name: campaignName,
-  campaign_id: campaignRows[0].campaign_id,
-  ad_group_name: null,
-  ad_group_id: null,
-  impressions: campaignRows.reduce((sum, row) => sum + (row.impressions || 0), 0),
-  clicks: campaignRows.reduce((sum, row) => sum + (row.clicks || 0), 0),
-  cost_micros: campaignRows.reduce((sum, row) => sum + (row.cost_micros || 0), 0),
-  sessions: campaignRows.reduce((sum, row) => sum + (row.sessions || 0), 0),
-  leads: campaignRows.reduce((sum, row) => sum + (row.leads || 0), 0),
-  revenue: campaignRows.reduce((sum, row) => sum + (row.revenue || 0), 0),
-});
-const createAggregatedAdGroupRow = (
+  campaignRows: ITypeParsedOmpData[],
+  allData: ITypeParsedOmpData[]
+): ITypeParsedOmpData {
+  if (campaignRows.length === 0) {
+    return {
+      date: dateStr,
+      campaign_name: campaignName,
+      campaign_id: allData.find((row) => row.campaign_name === campaignName)?.campaign_id || null,
+      ad_group_name: null,
+      ad_group_id: null,
+      ...initializeMetricFields(),
+    };
+  }
+
+  return {
+    date: dateStr,
+    campaign_name: campaignName,
+    campaign_id: campaignRows[0].campaign_id,
+    ad_group_name: null,
+    ad_group_id: null,
+    ...aggregateMetricFields(campaignRows),
+  };
+}
+
+function createAdGroupRow(
   dateStr: string,
   adGroupId: number,
-  adGroupRows: ITypeParsedOmpData[]
-): ITypeParsedOmpData => {
+  adGroupRows: ITypeParsedOmpData[],
+  allData: ITypeParsedOmpData[]
+): ITypeParsedOmpData {
+  if (adGroupRows.length === 0) {
+    const matchingRow = allData.find((row) => row.ad_group_id === adGroupId);
+    return {
+      date: dateStr,
+      campaign_name: matchingRow?.campaign_name || null,
+      campaign_id: matchingRow?.campaign_id || null,
+      ad_group_name: matchingRow?.ad_group_name || null,
+      ad_group_id: adGroupId,
+      ...initializeMetricFields(),
+    };
+  }
+
   const firstRow = adGroupRows[0];
   return {
     date: dateStr,
@@ -105,22 +146,13 @@ const createAggregatedAdGroupRow = (
     campaign_id: firstRow.campaign_id,
     ad_group_name: firstRow.ad_group_name,
     ad_group_id: adGroupId,
-    impressions: adGroupRows.reduce((sum, row) => sum + (row.impressions || 0), 0),
-    clicks: adGroupRows.reduce((sum, row) => sum + (row.clicks || 0), 0),
-    cost_micros: adGroupRows.reduce((sum, row) => sum + (row.cost_micros || 0), 0),
-    sessions: adGroupRows.reduce((sum, row) => sum + (row.sessions || 0), 0),
-    leads: adGroupRows.reduce((sum, row) => sum + (row.leads || 0), 0),
-    revenue: adGroupRows.reduce((sum, row) => sum + (row.revenue || 0), 0),
+    ...aggregateMetricFields(adGroupRows),
   };
-};
-const createEmptyAdGroupRow = (dateStr: string, adGroupId: number, data: ITypeParsedOmpData[]): ITypeParsedOmpData => {
-  const matchingRow = data.find((row) => row.ad_group_id === adGroupId);
+}
+
+// Utility functions for metric field operations
+function initializeMetricFields(): Record<Metric, number> {
   return {
-    date: dateStr,
-    campaign_name: matchingRow?.campaign_name || null,
-    campaign_id: matchingRow?.campaign_id || null,
-    ad_group_name: matchingRow?.ad_group_name || null,
-    ad_group_id: adGroupId,
     impressions: 0,
     clicks: 0,
     cost_micros: 0,
@@ -128,20 +160,18 @@ const createEmptyAdGroupRow = (dateStr: string, adGroupId: number, data: ITypePa
     leads: 0,
     revenue: 0,
   };
-};
-const createEmptyRow = (dateStr: string, campaignName: string, data: ITypeParsedOmpData[]): ITypeParsedOmpData => ({
-  date: dateStr,
-  campaign_name: campaignName,
-  campaign_id: data.find((row) => row.campaign_name === campaignName)?.campaign_id || null,
-  ad_group_name: null,
-  ad_group_id: null,
-  impressions: 0,
-  clicks: 0,
-  cost_micros: 0,
-  sessions: 0,
-  leads: 0,
-  revenue: 0,
-});
+}
+
+function aggregateMetricFields(rows: ITypeParsedOmpData[]): Record<Metric, number> {
+  const result = initializeMetricFields();
+
+  for (const metricObj of METRICS) {
+    const field = metricObj.value;
+    result[field] = rows.reduce((sum, row) => sum + (row[field] || 0), 0);
+  }
+
+  return result;
+}
 
 // Sorting helpers
 const sortByDateAndCampaign = (data: ITypeParsedOmpData[]): ITypeParsedOmpData[] =>
@@ -159,6 +189,7 @@ const sortByDateAndAdGroupId = (data: ITypeParsedOmpData[]): ITypeParsedOmpData[
     if (dateA !== dateB) return dateA - dateB;
     return (a.ad_group_id || 0) - (b.ad_group_id || 0);
   });
+
 const sortByDate = (data: ITypeParsedOmpData[]): ITypeParsedOmpData[] =>
   data.sort((a, b) => {
     const dateA = a.date ? new Date(a.date).getTime() : 0;
