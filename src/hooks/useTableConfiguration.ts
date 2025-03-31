@@ -4,7 +4,6 @@ import {
   getPaginationRowModel,
   getFilteredRowModel,
   getGroupedRowModel,
-  GroupingState,
   getSortedRowModel,
   VisibilityState,
   Updater,
@@ -20,12 +19,10 @@ const INITIAL_TABLE_STATE = {
     pageIndex: 0,
     pageSize: 100,
   },
-  grouping: [],
 };
 
 interface TableConfigurationProps {
   tableData: ITypeParsedOmpData[];
-  appliedGrouping: GroupingState;
   columnVisibility: VisibilityState;
   dispatch: AppDispatch;
   isMountedRef: React.RefObject<boolean>;
@@ -34,7 +31,6 @@ interface TableConfigurationProps {
 
 export const useTableConfiguration = ({
   tableData,
-  appliedGrouping,
   columnVisibility,
   dispatch,
   isMountedRef,
@@ -50,12 +46,7 @@ export const useTableConfiguration = ({
   return useReactTable({
     data: tableData,
     columns,
-    state: { grouping: appliedGrouping, columnVisibility },
-    onGroupingChange: (updatedGrouping) => {
-      if (isMountedRef.current) {
-        dispatch(setSelectedDimensions(updatedGrouping as Dimension[]));
-      }
-    },
+    state: { columnVisibility },
     onColumnVisibilityChange: handleColumnVisibilityChange,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
