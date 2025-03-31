@@ -4,25 +4,11 @@ import { Dimension, Metric } from "@/types/data";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { setSelectedDimensions, setSelectedMetrics } from "@/store/slices/dataExplorerSlice";
+import { DIMENSIONS, METRICS } from "@/helpers/constants";
 
 export const DimensionsAndMetricsPicker: React.FC = () => {
   const dispatch = useDispatch();
   const { selectedDimensions, selectedMetrics } = useSelector((state: RootState) => state.dataExplorer);
-
-  const dimensions: { value: Dimension; label: string }[] = [
-    { value: "date", label: "Date" },
-    { value: "campaign_name", label: "Campaign (name)" },
-    { value: "ad_group_id", label: "Ad Group (id)" },
-  ];
-
-  const metrics: { value: Metric; label: string }[] = [
-    { value: "impressions", label: "Impressions" },
-    { value: "clicks", label: "Clicks" },
-    { value: "cost_micros", label: "Cost (micros)" },
-    { value: "sessions", label: "Sessions" },
-    { value: "leads", label: "Leads" },
-    { value: "revenue", label: "Revenue" },
-  ];
 
   const handleDimensionChange = (dimension: Dimension) => {
     let newDimensions: Dimension[];
@@ -66,7 +52,7 @@ export const DimensionsAndMetricsPicker: React.FC = () => {
       <div>
         <h3 className="font-medium text-gray-700 mb-2">Dimensions</h3>
         <div className="flex flex-wrap gap-4">
-          {dimensions.map((dimension) => (
+          {DIMENSIONS.map((dimension) => (
             <label key={dimension.value} className="flex items-center gap-2">
               <input
                 type="checkbox"
@@ -82,7 +68,7 @@ export const DimensionsAndMetricsPicker: React.FC = () => {
       <div className={`${isMetricsDisabled ? "opacity-50" : ""}`}>
         <h3 className="font-medium text-gray-700 mb-2">Metrics</h3>
         <div className="flex flex-wrap gap-4">
-          {metrics.map((metric) => (
+          {METRICS.map((metric) => (
             <label key={metric.value} className="flex items-center gap-2">
               <input
                 type="checkbox"

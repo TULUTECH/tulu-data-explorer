@@ -8,7 +8,7 @@ import { RootState } from "@/store/store";
 import { setSelectedDimensions, setSelectedMetrics, setSelectedTable } from "@/store/slices/dataExplorerSlice";
 import { useTableConfiguration } from "@/hooks/useTableConfiguration";
 import { getVisibilityState } from "@/helpers/helpers";
-import { filterByDateRange } from "@/helpers/dataAggregation";
+import { filterByDateRange } from "@/helpers/helpers";
 import { processAdGroupDimension, processCampaignDimension, processDateDimension } from "@/helpers/dataProcessing";
 import { Filters } from "@/components/client/filters/Filters";
 import { FilterButtons } from "@/components/client/filters/FilterButtons";
