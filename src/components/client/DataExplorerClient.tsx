@@ -5,7 +5,7 @@ import { VisibilityState } from "@tanstack/react-table";
 import { Dimension, ITypeParsedOmpData, Metric } from "@/types/data";
 import { Table } from "@/components/client/table/Table";
 import { RootState } from "@/store/store";
-import { setSelectedDimensions, setSelectedMetrics, setSelectedTable } from "@/store/slices/dataExplorerSlice";
+import { resetFilters, setSelectedTable } from "@/store/slices/dataExplorerSlice";
 import { useTableConfiguration } from "@/hooks/useTableConfiguration";
 import { getVisibilityState, filterByDateRange } from "@/helpers/helpers";
 import { processAdGroupDimension, processCampaignDimension, processDateDimension } from "@/helpers/dataProcessing";
@@ -41,11 +41,8 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
   });
 
   const handleReset = () => {
-    table.resetColumnFilters();
     setColumnVisibility(INITIAL_COLUMN_VISIBILITY);
-    dispatch(setSelectedDimensions([]));
-    dispatch(setSelectedMetrics([]));
-    dispatch(setSelectedTable(""));
+    dispatch(resetFilters());
     setTableData([]);
   };
 
