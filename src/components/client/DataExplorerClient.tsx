@@ -14,9 +14,9 @@ import { FilterButtons } from "@/components/client/filters/FilterButtons";
 import { INITIAL_COLUMN_VISIBILITY } from "@/helpers/constants";
 
 interface DataExplorerClientProps {
-  initialData: ITypeParsedOmpData[];
+  initialOmpData: ITypeParsedOmpData[];
 }
-export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialData }) => {
+export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialOmpData }) => {
   const [tableData, setTableData] = useState<ITypeParsedOmpData[]>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(INITIAL_COLUMN_VISIBILITY);
   const { selectedDimensions, selectedMetrics, selectedDateRange, selectedTable } = useSelector(
@@ -31,6 +31,11 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
       isMountedRef.current = false;
     };
   }, []);
+  useEffect(() => {
+    const tableToDisplay = selectedTable === "om_proptech" ? [...initialOmpData] : [];
+    setTableData(tableToDisplay);
+    setColumnVisibility(INITIAL_COLUMN_VISIBILITY);
+  }, [selectedTable]);
 
   const table = useTableConfiguration({
     tableData,
@@ -65,7 +70,7 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
       return;
     }
     setColumnVisibility(getVisibilityState(selectedDimensions, selectedMetrics));
-    const filteredData = filterByDateRange(initialData, selectedDateRange.startDate, selectedDateRange.endDate);
+    const filteredData = filterByDateRange(initialOmpData, selectedDateRange.startDate, selectedDateRange.endDate);
     const processedData = getProcessedData(filteredData, selectedDimensions);
     setTableData(processedData);
   };
@@ -81,13 +86,6 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
           value={selectedTable}
           onChange={(e) => {
             dispatch(setSelectedTable(e.target.value));
-            if (e.target.value === "om_proptech") {
-              setTableData([...initialData]);
-              setColumnVisibility(INITIAL_COLUMN_VISIBILITY);
-            } else {
-              setTableData([]);
-              setColumnVisibility(INITIAL_COLUMN_VISIBILITY);
-            }
           }}
         >
           <option value="">-- Choose an option --</option>
