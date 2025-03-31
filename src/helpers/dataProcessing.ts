@@ -23,7 +23,7 @@ export const processDateDimension = (
   return sortByDate(Array.from(aggregatedByDate.values()));
 };
 
-export const processDateDimensionWithCampaign = (
+const processDateDimensionWithCampaign = (
   data: ITypeParsedOmpData[],
   aggregatedByDate: Map<string, ITypeParsedOmpData>
 ): ITypeParsedOmpData[] => {
@@ -37,7 +37,7 @@ export const processDateDimensionWithCampaign = (
   );
 };
 
-export const processDateDimensionWithAdGroup = (
+const processDateDimensionWithAdGroup = (
   data: ITypeParsedOmpData[],
   aggregatedByDate: Map<string, ITypeParsedOmpData>
 ): ITypeParsedOmpData[] => {
