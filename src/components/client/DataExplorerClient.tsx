@@ -1,40 +1,24 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { VisibilityState } from "@tanstack/react-table";
 import { Dimension, ITypeParsedOmpData, Metric } from "@/types/data";
 import { Table } from "@/components/client/table/Table";
-import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { setSelectedDimensions, setSelectedMetrics, setSelectedTable } from "@/store/slices/dataExplorerSlice";
 import { useTableConfiguration } from "@/hooks/useTableConfiguration";
-import { getVisibilityState } from "@/helpers/helpers";
-import { filterByDateRange } from "@/helpers/helpers";
+import { getVisibilityState, filterByDateRange } from "@/helpers/helpers";
 import { processAdGroupDimension, processCampaignDimension, processDateDimension } from "@/helpers/dataProcessing";
 import { Filters } from "@/components/client/filters/Filters";
 import { FilterButtons } from "@/components/client/filters/FilterButtons";
-
-const INITIAL_COLUMN_VISIBILITY: VisibilityState = {
-  date: false,
-  campaign_name: false,
-  campaign_id: false,
-  ad_group_name: false,
-  ad_group_id: false,
-  impressions: false,
-  clicks: false,
-  cost_micros: false,
-  sessions: false,
-  leads: false,
-  revenue: false,
-};
+import { INITIAL_COLUMN_VISIBILITY } from "@/helpers/constants";
 
 interface DataExplorerClientProps {
   initialData: ITypeParsedOmpData[];
 }
 export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialData }) => {
-  // local state
   const [tableData, setTableData] = useState<ITypeParsedOmpData[]>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(INITIAL_COLUMN_VISIBILITY);
-  // redux store
   const { selectedDimensions, selectedMetrics, selectedDateRange, selectedTable } = useSelector(
     (state: RootState) => state.dataExplorer
   );
@@ -47,6 +31,7 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
       isMountedRef.current = false;
     };
   }, []);
+
   const table = useTableConfiguration({
     tableData,
     columnVisibility,
@@ -64,28 +49,28 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
     setTableData([]);
   };
 
+  const getProcessedData = (data: ITypeParsedOmpData[], dimensions: Dimension[]): ITypeParsedOmpData[] => {
+    if (dimensions.includes("date")) {
+      return processDateDimension(data, dimensions);
+    }
+    if (dimensions.includes("ad_group_id")) {
+      return processAdGroupDimension(data);
+    }
+    if (dimensions.includes("campaign_name")) {
+      return processCampaignDimension(data);
+    }
+    return data;
+  };
+
   const handleFilter = () => {
-    // Prevent filtering if no dimensions are selected
     if (selectedDimensions.length === 0) {
       setTableData([]);
       return;
     }
-    setColumnVisibility(getVisibilityState(selectedDimensions as Dimension[], selectedMetrics as Metric[]));
-
-    // Filter by date range
-    let filteredData = filterByDateRange(initialData, selectedDateRange.startDate, selectedDateRange.endDate);
-
-    // Group by dimensions
-    if (selectedDimensions.includes("date")) {
-      filteredData = processDateDimension(filteredData, selectedDimensions);
-    } else if (selectedDimensions.includes("ad_group_id")) {
-      filteredData = processAdGroupDimension(filteredData);
-    } else if (selectedDimensions.includes("campaign_name")) {
-      filteredData = processCampaignDimension(filteredData);
-    }
-
-    // Update table data
-    setTableData(filteredData);
+    setColumnVisibility(getVisibilityState(selectedDimensions, selectedMetrics));
+    const filteredData = filterByDateRange(initialData, selectedDateRange.startDate, selectedDateRange.endDate);
+    const processedData = getProcessedData(filteredData, selectedDimensions);
+    setTableData(processedData);
   };
 
   const isFilterDisabled = selectedDimensions.length === 0;
@@ -101,7 +86,6 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
             dispatch(setSelectedTable(e.target.value));
             if (e.target.value === "om_proptech") {
               setTableData([...initialData]);
-              // Reset column visibility when table is selected
               setColumnVisibility(INITIAL_COLUMN_VISIBILITY);
             } else {
               setTableData([]);
