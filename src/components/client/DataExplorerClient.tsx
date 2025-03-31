@@ -9,7 +9,7 @@ import { setSelectedDimensions, setSelectedMetrics, setSelectedTable } from "@/s
 import { useTableConfiguration } from "@/hooks/useTableConfiguration";
 import { getVisibilityState } from "@/helpers/helpers";
 import { filterByDateRange } from "@/helpers/dataAggregation";
-import { processCampaignDimension, processDateDimension } from "@/helpers/dataProcessing";
+import { processAdGroupDimension, processCampaignDimension, processDateDimension } from "@/helpers/dataProcessing";
 import { Filters } from "@/components/client/filters/Filters";
 import { FilterButtons } from "@/components/client/filters/FilterButtons";
 
@@ -48,7 +48,6 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
       isMountedRef.current = false;
     };
   }, []);
-
   const table = useTableConfiguration({
     tableData,
     appliedGrouping,
@@ -77,35 +76,23 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
     setColumnVisibility(getVisibilityState(selectedDimensions as Dimension[], selectedMetrics as Metric[]));
 
     // Filter by date range
-    let dataFilteredByDateRange = filterByDateRange(
-      initialData,
-      selectedDateRange.startDate,
-      selectedDateRange.endDate
-    );
+    let filteredData = filterByDateRange(initialData, selectedDateRange.startDate, selectedDateRange.endDate);
 
     // Group by dimensions
     if (selectedDimensions.includes("date")) {
-      dataFilteredByDateRange = processDateDimension(dataFilteredByDateRange, selectedDimensions);
+      filteredData = processDateDimension(filteredData, selectedDimensions);
+    } else if (selectedDimensions.includes("ad_group_id")) {
+      filteredData = processAdGroupDimension(filteredData);
     } else if (selectedDimensions.includes("campaign_name")) {
-      dataFilteredByDateRange = processCampaignDimension(dataFilteredByDateRange);
+      filteredData = processCampaignDimension(filteredData);
     }
 
     // Update table data
-    setTableData(dataFilteredByDateRange);
+    setTableData(filteredData);
     // Update grouping state
-    updateGrouping();
+    setAppliedGrouping([]);
   };
 
-  const updateGrouping = () => {
-    if (selectedDimensions.includes("ad_group_id")) {
-      const grouping = selectedDimensions.includes("campaign_name")
-        ? [...selectedDimensions, "campaign_id"]
-        : selectedDimensions;
-      setAppliedGrouping(grouping);
-    } else {
-      setAppliedGrouping([]);
-    }
-  };
   const isFilterDisabled = selectedDimensions.length === 0;
 
   return (
