@@ -38,7 +38,7 @@ export const DimensionsAndMetricsPicker: React.FC = () => {
           : [...selectedDimensions, "ad_group_id"];
       }
     } else if (dimension === "campaign_name") {
-      // If unchecking campaign_name, also uncheck ad_group_nam
+      // If unchecking campaign_name, also uncheck ad_group_id
       newDimensions = selectedDimensions.includes("campaign_name")
         ? selectedDimensions.filter((d) => d !== "campaign_name" && d !== "ad_group_id")
         : [...selectedDimensions, "campaign_name"];
