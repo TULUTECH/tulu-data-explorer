@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import { GroupingState, VisibilityState } from "@tanstack/react-table";
+import { VisibilityState } from "@tanstack/react-table";
 import { Dimension, ITypeParsedOmpData, Metric } from "@/types/data";
 import { Table } from "@/components/client/table/Table";
 import { useDispatch, useSelector } from "react-redux";
@@ -33,7 +33,6 @@ interface DataExplorerClientProps {
 export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialData }) => {
   // local state
   const [tableData, setTableData] = useState<ITypeParsedOmpData[]>([]);
-  const [appliedGrouping, setAppliedGrouping] = useState<GroupingState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(INITIAL_COLUMN_VISIBILITY);
   // redux store
   const { selectedDimensions, selectedMetrics, selectedDateRange, selectedTable } = useSelector(
@@ -50,7 +49,6 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
   }, []);
   const table = useTableConfiguration({
     tableData,
-    appliedGrouping,
     columnVisibility,
     dispatch,
     isMountedRef,
@@ -58,7 +56,6 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
   });
 
   const handleReset = () => {
-    setAppliedGrouping([]);
     table.resetColumnFilters();
     setColumnVisibility(INITIAL_COLUMN_VISIBILITY);
     dispatch(setSelectedDimensions([]));
@@ -89,8 +86,6 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
 
     // Update table data
     setTableData(filteredData);
-    // Update grouping state
-    setAppliedGrouping([]);
   };
 
   const isFilterDisabled = selectedDimensions.length === 0;
