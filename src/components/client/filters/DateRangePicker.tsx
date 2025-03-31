@@ -5,19 +5,13 @@ import React from "react";
 import DatePicker, { DateObject } from "react-multi-date-picker";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import { IDateRange } from "@/types/data";
 
 export const DateRangePicker: React.FC = () => {
   const dispatch = useDispatch();
   const { selectedDateRange } = useSelector((state: RootState) => state.dataExplorer);
 
-  const newRange: { startDate: Date | null; endDate: Date | null } = { startDate: null, endDate: null };
-  const newRangeAsStrings: IDateRange = {
-    startDate: newRange.startDate?.toISOString() || null,
-    endDate: newRange.endDate?.toISOString() || null,
-  };
-
   const handleDateChange = (date: DateObject | DateObject[] | null) => {
+    const newRange: { startDate: Date | null; endDate: Date | null } = { startDate: null, endDate: null };
     if (Array.isArray(date)) {
       newRange.startDate = date[0] ? date[0].toDate() : null;
       newRange.endDate = date[1] ? date[1].toDate() : null;
@@ -28,14 +22,24 @@ export const DateRangePicker: React.FC = () => {
       newRange.endDate = singleDate;
     }
 
-    dispatch(setSelectedDateRange(newRangeAsStrings));
+    dispatch(
+      setSelectedDateRange({
+        startDate: newRange.startDate?.toISOString() || null,
+        endDate: newRange.endDate?.toISOString() || null,
+      })
+    );
   };
 
   const handleClose = () => {
     // When the picker closes, if only one date is selected, treat it as a single-day filter.
     if (Object.values(selectedDateRange).filter(Boolean).length === 1) {
       const date = new Date(selectedDateRange.startDate || selectedDateRange.endDate || "");
-      dispatch(setSelectedDateRange(newRangeAsStrings));
+      dispatch(
+        setSelectedDateRange({
+          startDate: date.toISOString() || null,
+          endDate: date.toISOString() || null,
+        })
+      );
     }
   };
 
