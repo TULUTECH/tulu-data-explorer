@@ -25,11 +25,8 @@ const dataExplorerSlice = createSlice({
   name: "dataExplorer",
   initialState,
   reducers: {
-    setSelectedDimensions: (state, action: PayloadAction<Dimension[]>) => {
-      state.selectedDimensions = action.payload;
-    },
-    setSelectedMetrics: (state, action: PayloadAction<Metric[]>) => {
-      state.selectedMetrics = action.payload;
+    setSelectedTable: (state, action: PayloadAction<string>) => {
+      state.selectedTable = action.payload;
     },
     setSelectedDateRange: (state, action: PayloadAction<IDateRange>) => {
       state.selectedDateRange = {
@@ -37,12 +34,21 @@ const dataExplorerSlice = createSlice({
         endDate: action.payload.endDate || null,
       };
     },
-    setSelectedTable: (state, action: PayloadAction<string>) => {
-      state.selectedTable = action.payload;
+    setSelectedDimensions: (state, action: PayloadAction<Dimension[]>) => {
+      state.selectedDimensions = action.payload;
+    },
+    setSelectedMetrics: (state, action: PayloadAction<Metric[]>) => {
+      state.selectedMetrics = action.payload;
+    },
+    resetFilters: (state) => {
+      state.selectedDimensions = [];
+      state.selectedMetrics = [];
+      state.selectedDateRange = { startDate: null, endDate: null };
+      state.selectedTable = "";
     },
   },
 });
 
-export const { setSelectedDimensions, setSelectedMetrics, setSelectedDateRange, setSelectedTable } =
+export const { setSelectedTable, setSelectedDateRange, setSelectedDimensions, setSelectedMetrics, resetFilters } =
   dataExplorerSlice.actions;
 export default dataExplorerSlice.reducer;
