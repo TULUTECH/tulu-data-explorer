@@ -94,7 +94,7 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
   };
 
   const updateGrouping = () => {
-    if (selectedDimensions.includes("ad_group_name")) {
+    if (selectedDimensions.includes("ad_group_id")) {
       const grouping = selectedDimensions.includes("campaign_name")
         ? [...selectedDimensions, "campaign_id"]
         : selectedDimensions;
