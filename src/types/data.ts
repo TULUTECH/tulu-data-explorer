@@ -31,3 +31,25 @@ export enum Metric {
   Leads = "leads",
   Revenue = "revenue",
 }
+
+const dimensionLabels: Record<Dimension, string> = {
+  [Dimension.Date]: "Date",
+  [Dimension.CampaignName]: "Campaign (name)",
+  [Dimension.AdGroupId]: "Ad Group (id)",
+};
+
+export const DIMENSIONS = Object.entries(dimensionLabels).map(([value, label]) => ({
+  value: value as Dimension,
+  label,
+}));
+
+const metricLabels: Record<Metric, string> = {
+  [Metric.Impressions]: "Impressions",
+  [Metric.Clicks]: "Clicks",
+  [Metric.CostMicros]: "Cost (micros)",
+  [Metric.Sessions]: "Sessions",
+  [Metric.Leads]: "Leads",
+  [Metric.Revenue]: "Revenue",
+};
+
+export const METRICS = Object.entries(metricLabels).map(([value, label]) => ({ value: value as Metric, label }));
