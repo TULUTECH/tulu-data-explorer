@@ -1,6 +1,6 @@
 import { ITypeParsedOmpData } from "@/types/data";
 import { VisibilityState } from "@tanstack/react-table";
-import { Dimension, Metric } from "@/types/data";
+import { DIMENSION_ENUM, METRIC_ENUM } from "@/types/data";
 
 interface IRawOmpData {
   campaign_id: string;
@@ -32,18 +32,21 @@ export const parseOmpDataTypes = (rawData: IRawOmpData[]): ITypeParsedOmpData[] 
   }));
 };
 
-export const getVisibilityState = (selectedDimensions: Dimension[], selectedMetrics: Metric[]): VisibilityState => ({
-  date: selectedDimensions.includes(Dimension.Date),
-  campaign_name: selectedDimensions.includes(Dimension.CampaignName),
-  campaign_id: selectedDimensions.includes(Dimension.CampaignName),
-  ad_group_name: selectedDimensions.includes(Dimension.AdGroupId),
-  ad_group_id: selectedDimensions.includes(Dimension.AdGroupId),
-  impressions: selectedMetrics.includes(Metric.Impressions),
-  clicks: selectedMetrics.includes(Metric.Clicks),
-  cost_micros: selectedMetrics.includes(Metric.CostMicros),
-  sessions: selectedMetrics.includes(Metric.Sessions),
-  leads: selectedMetrics.includes(Metric.Leads),
-  revenue: selectedMetrics.includes(Metric.Revenue),
+export const getVisibilityState = (
+  selectedDimensions: DIMENSION_ENUM[],
+  selectedMetrics: METRIC_ENUM[]
+): VisibilityState => ({
+  date: selectedDimensions.includes(DIMENSION_ENUM.Date),
+  campaign_name: selectedDimensions.includes(DIMENSION_ENUM.CampaignName),
+  campaign_id: selectedDimensions.includes(DIMENSION_ENUM.CampaignName),
+  ad_group_name: selectedDimensions.includes(DIMENSION_ENUM.AdGroupId),
+  ad_group_id: selectedDimensions.includes(DIMENSION_ENUM.AdGroupId),
+  impressions: selectedMetrics.includes(METRIC_ENUM.Impressions),
+  clicks: selectedMetrics.includes(METRIC_ENUM.Clicks),
+  cost_micros: selectedMetrics.includes(METRIC_ENUM.CostMicros),
+  sessions: selectedMetrics.includes(METRIC_ENUM.Sessions),
+  leads: selectedMetrics.includes(METRIC_ENUM.Leads),
+  revenue: selectedMetrics.includes(METRIC_ENUM.Revenue),
 });
 
 export const filterByDateRange = (

@@ -1,5 +1,5 @@
-import { METRICS } from "@/constants";
-import { Dimension, Metric, DIMENSIONS, ITypeParsedOmpData } from "@/types/data";
+import { METRICS_OBJS } from "@/constants";
+import { DIMENSION_ENUM, METRIC_ENUM, DIMENSION_OBJS, ITypeParsedOmpData } from "@/types/data";
 import { FilterFn } from "@tanstack/react-table";
 import { format } from "date-fns";
 
@@ -59,8 +59,8 @@ const customDateRangeFilter: FilterFn<ITypeParsedOmpData> = (row, columnId, filt
 
 export const columnConfigs: ColumnConfig[] = [
   {
-    key: Dimension.CampaignName,
-    header: createHeaderFromLabel(Dimension.CampaignName, DIMENSIONS, "Campaign Name"),
+    key: DIMENSION_ENUM.CampaignName,
+    header: createHeaderFromLabel(DIMENSION_ENUM.CampaignName, DIMENSION_OBJS, "Campaign Name"),
   },
   {
     key: "campaign_id",
@@ -71,52 +71,52 @@ export const columnConfigs: ColumnConfig[] = [
     header: () => "Ad Group Name",
   },
   {
-    key: Dimension.AdGroupId,
-    header: createHeaderFromLabel(Dimension.AdGroupId, DIMENSIONS, "Ad Group ID"),
+    key: DIMENSION_ENUM.AdGroupId,
+    header: createHeaderFromLabel(DIMENSION_ENUM.AdGroupId, DIMENSION_OBJS, "Ad Group ID"),
   },
   {
-    key: Dimension.Date,
-    header: createHeaderFromLabel(Dimension.Date, DIMENSIONS, "Date"),
+    key: DIMENSION_ENUM.Date,
+    header: createHeaderFromLabel(DIMENSION_ENUM.Date, DIMENSION_OBJS, "Date"),
     // Use a custom accessor function to convert date strings to Date objects
     accessorFn: (row) => (row.date ? new Date(row.date) : new Date(0)),
     filterFn: customDateRangeFilter,
   },
   {
-    key: Metric.CostMicros,
-    header: createHeaderFromLabel(Metric.CostMicros, METRICS, "Cost (micros)"),
+    key: METRIC_ENUM.CostMicros,
+    header: createHeaderFromLabel(METRIC_ENUM.CostMicros, METRICS_OBJS, "Cost (micros)"),
   },
   {
-    key: Metric.Impressions,
-    header: createHeaderFromLabel(Metric.Impressions, METRICS, "Impressions"),
+    key: METRIC_ENUM.Impressions,
+    header: createHeaderFromLabel(METRIC_ENUM.Impressions, METRICS_OBJS, "Impressions"),
   },
   {
-    key: Metric.Clicks,
-    header: createHeaderFromLabel(Metric.Clicks, METRICS, "Clicks"),
+    key: METRIC_ENUM.Clicks,
+    header: createHeaderFromLabel(METRIC_ENUM.Clicks, METRICS_OBJS, "Clicks"),
   },
   {
-    key: Metric.Sessions,
-    header: createHeaderFromLabel(Metric.Sessions, METRICS, "Sessions"),
+    key: METRIC_ENUM.Sessions,
+    header: createHeaderFromLabel(METRIC_ENUM.Sessions, METRICS_OBJS, "Sessions"),
   },
   {
-    key: Metric.Leads,
-    header: createHeaderFromLabel(Metric.Leads, METRICS, "Leads"),
+    key: METRIC_ENUM.Leads,
+    header: createHeaderFromLabel(METRIC_ENUM.Leads, METRICS_OBJS, "Leads"),
   },
   {
-    key: Metric.Revenue,
-    header: createHeaderFromLabel(Metric.Revenue, METRICS, "Revenue"),
+    key: METRIC_ENUM.Revenue,
+    header: createHeaderFromLabel(METRIC_ENUM.Revenue, METRICS_OBJS, "Revenue"),
   },
 ];
 
 export const columnOrder = [
-  Dimension.Date,
+  DIMENSION_ENUM.Date,
   "campaign_id",
-  Dimension.CampaignName,
-  Dimension.AdGroupId,
+  DIMENSION_ENUM.CampaignName,
+  DIMENSION_ENUM.AdGroupId,
   "ad_group_name",
-  Metric.CostMicros,
-  Metric.Impressions,
-  Metric.Clicks,
-  Metric.Sessions,
-  Metric.Leads,
-  Metric.Revenue,
+  METRIC_ENUM.CostMicros,
+  METRIC_ENUM.Impressions,
+  METRIC_ENUM.Clicks,
+  METRIC_ENUM.Sessions,
+  METRIC_ENUM.Leads,
+  METRIC_ENUM.Revenue,
 ];
