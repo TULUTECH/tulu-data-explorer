@@ -86,8 +86,7 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
               setTableData([...initialData]);
               setColumnVisibility(INITIAL_COLUMN_VISIBILITY);
             } else {
-              setTableData([]);
-              setColumnVisibility(INITIAL_COLUMN_VISIBILITY);
+              handleReset();
             }
           }}
         >
