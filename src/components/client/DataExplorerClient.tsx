@@ -76,8 +76,8 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
 
   return (
     <div className="bg-gradient-to-br from-slate-50 to-slate-100 p-6 rounded-xl shadow-lg max-w-7xl mx-auto">
-      <div className="mb-8 bg-white p-6 rounded-lg shadow-md border border-indigo-100 transition-all duration-300 hover:shadow-lg">
-        <h2 className="text-2xl font-bold mb-4 text-indigo-700 border-b pb-2 border-indigo-200 inline-block transform transition-transform duration-300 hover:scale-105">
+      <div className="flex gap-4 items-center mb-8 bg-white p-6 rounded-lg shadow-md border border-indigo-100 transition-all duration-300 hover:shadow-lg">
+        <h2 className="text-2xl font-bold text-indigo-700 inline-block transform transition-transform duration-300 hover:scale-105">
           Step 1: Select Table
         </h2>
         <select
@@ -99,14 +99,14 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
           <option value="om_proptech">OM Proptech Normalized Table</option>
         </select>
       </div>
-      <div className={`transition-opacity duration-500 ${tableData.length > 0 ? "opacity-100" : "opacity-50"}`}>
-        <h2 className="text-2xl font-bold mb-4 text-indigo-700 border-b pb-2 border-indigo-200 inline-block transform transition-transform duration-300 hover:scale-105">
-          Step 1: Select Filters
-        </h2>
-        <Filters hasData={tableData.length > 0} />
-      </div>
 
-      <div className="mb-8">
+      <div className="mb-8 bg-white p-6 rounded-lg shadow-md border border-indigo-100 transition-all duration-300 hover:shadow-lg">
+        <h2 className="text-2xl font-bold mb-4 text-indigo-700 inline-block transform transition-transform duration-300 hover:scale-105">
+          Step 2: Select Filters
+        </h2>
+        <div className={`transition-opacity duration-500 ${tableData.length > 0 ? "opacity-100" : "opacity-50"}`}>
+          <Filters hasData={tableData.length > 0} />
+        </div>
         <FilterButtons isFilterDisabled={isFilterDisabled} onFilter={handleFilter} onReset={handleReset} />
       </div>
 

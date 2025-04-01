@@ -26,7 +26,7 @@ export const Table = ({ table }: TableProps) => {
 
   return (
     <div className="w-full">
-      {/* Pagination controls - made more responsive */}
+      {/* Pagination controls */}
       <div className="flex flex-wrap justify-between items-center mb-3 text-xs sm:text-sm">
         <div className="flex items-center space-x-1 sm:space-x-2 mb-2 sm:mb-0">
           <button
@@ -47,12 +47,27 @@ export const Table = ({ table }: TableProps) => {
             {">"}
           </button>
         </div>
-        <div className="text-xs sm:text-sm whitespace-nowrap">
-          Rows {totalRows ? pageIndex * pageSize + 1 : 0}-{Math.min((pageIndex + 1) * pageSize, totalRows)} of{" "}
-          {totalRows}
+        <div className="flex items-center gap-2 text-xs sm:text-sm whitespace-nowrap">
+          {/* Page size selector */}
+          <div className="flex justify-end">
+            <select
+              className="text-xs sm:text-sm border border-indigo-200 rounded p-1 bg-white focus:outline-none focus:ring-1 focus:ring-indigo-500"
+              value={pageSize}
+              onChange={(e) => table.setPageSize(Number(e.target.value))}
+            >
+              {[10, 25, 50, 100].map((size) => (
+                <option key={size} value={size}>
+                  Show {size}
+                </option>
+              ))}
+            </select>
+          </div>
+          <span>
+            Rows {totalRows ? pageIndex * pageSize + 1 : 0}-{Math.min((pageIndex + 1) * pageSize, totalRows)} of{" "}
+            {totalRows}
+          </span>
         </div>
       </div>
-
       {/* Table with horizontal scroll capability */}
       <div className="overflow-x-auto -mx-2 sm:mx-0">
         <table className="min-w-full text-center border-collapse">
@@ -117,21 +132,6 @@ export const Table = ({ table }: TableProps) => {
             ))}
           </tfoot>
         </table>
-      </div>
-
-      {/* Page size selector */}
-      <div className="mt-3 flex justify-end">
-        <select
-          className="text-xs sm:text-sm border border-indigo-200 rounded p-1 bg-white focus:outline-none focus:ring-1 focus:ring-indigo-500"
-          value={pageSize}
-          onChange={(e) => table.setPageSize(Number(e.target.value))}
-        >
-          {[10, 25, 50, 100].map((size) => (
-            <option key={size} value={size}>
-              Show {size}
-            </option>
-          ))}
-        </select>
       </div>
     </div>
   );
