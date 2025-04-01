@@ -1,6 +1,6 @@
 import { DataExplorerClient } from "@/components/client/DataExplorerClient";
 import rawDataJson from "@/data/normalized_omp_data.json";
-import { parseOmpDataTypes } from "@/helpers/helpers";
+import { parseOmpDataTypes } from "@/helpers/dataParsing";
 
 //Simulate API call
 async function fetchOmpData() {

@@ -1,6 +1,6 @@
 import { ITypeParsedOmpData, Metric } from "@/types/data";
 import { aggregateByDate, aggregateByCampaign, aggregateByAdGroupId } from "@/helpers/dataAggregation";
-import { METRICS } from "@/helpers/constants";
+import { METRICS } from "@/constants/dataConfig";
 
 export const processCampaignDimension = (filteredData: ITypeParsedOmpData[]): ITypeParsedOmpData[] => {
   const aggregatedData = aggregateByCampaign(filteredData);
@@ -15,12 +15,15 @@ export const processDateDimension = (
 
   if (selectedDimensions.includes("ad_group_id")) {
     return processDateDimensionWithAdGroup(filteredData, aggregatedByDate);
-  }
-
-  if (selectedDimensions.includes("campaign_name")) {
+  } else if (selectedDimensions.includes("campaign_name")) {
     return processDateDimensionWithCampaign(filteredData, aggregatedByDate);
   }
   return sortByDate(Array.from(aggregatedByDate.values()));
+};
+
+export const processAdGroupDimension = (filteredData: ITypeParsedOmpData[]): ITypeParsedOmpData[] => {
+  const aggregatedData = aggregateByAdGroupId(filteredData);
+  return sortByAdGroupId(Array.from(aggregatedData.values()));
 };
 
 const processDateDimensionWithCampaign = (
@@ -50,12 +53,6 @@ const processDateDimensionWithAdGroup = (
     sortByDateAndAdGroupId
   );
 };
-
-export const processAdGroupDimension = (filteredData: ITypeParsedOmpData[]): ITypeParsedOmpData[] => {
-  const aggregatedData = aggregateByAdGroupId(filteredData);
-  return sortByAdGroupId(Array.from(aggregatedData.values()));
-};
-
 // Generic function to process date dimension with another field
 function processDateDimensionWithField<T>(
   data: ITypeParsedOmpData[],
