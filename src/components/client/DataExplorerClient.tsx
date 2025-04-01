@@ -75,7 +75,29 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
   const isFilterDisabled = selectedDimensions.length === 0;
 
   return (
-    <div className="bg-gradient-to-br from-slate-50 to-slate-100 p-6 rounded-xl shadow-lg max-w-7xl mx-auto">
+    <div className="bg-gradient-to-br from-slate-50 to-slate-100 p-6 rounded-xl shadow-lg max-w-7xl mx-auto relative">
+      <div className="flex flex-col items-center mb-8">
+        <h1 className="text-4xl font-bold text-center mb-2 bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-500 font-sans tracking-normal drop-shadow-sm transform transition-all duration-500 hover:scale-105 hover:drop-shadow-md">
+          TuluData Explorer
+        </h1>
+
+        {/* Data status indicator - positioned below title */}
+        <div
+          className={`flex items-center px-4 py-2 rounded-full text-sm font-medium mt-2 ${
+            tableData.length > 0
+              ? "bg-green-100 text-green-800 border border-green-200"
+              : "bg-amber-100 text-amber-800 border border-amber-200"
+          } transition-all duration-300 shadow-sm`}
+        >
+          <div
+            className={`w-3 h-3 rounded-full mr-2 ${
+              tableData.length > 0 ? "bg-green-500" : "bg-amber-500"
+            } animate-pulse`}
+          ></div>
+          {tableData.length > 0 ? `${tableData.length} records loaded` : "No data loaded"}
+        </div>
+      </div>
+
       <div className="flex gap-4 items-center mb-8 bg-white p-6 rounded-lg shadow-md border border-indigo-100 transition-all duration-300 hover:shadow-lg">
         <h2 className="text-2xl font-bold text-indigo-700 inline-block transform transition-transform duration-300 hover:scale-105">
           Step 1: Select Table
@@ -113,26 +135,6 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
       <div className="bg-white rounded-lg shadow-md overflow-hidden border border-indigo-100 transition-all duration-300 hover:shadow-lg">
         <div className="p-4">
           <Table table={table} />
-        </div>
-      </div>
-
-      <div className="h-8" />
-
-      {/* Data status indicator */}
-      <div className="flex justify-end mt-4">
-        <div
-          className={`flex items-center px-4 py-2 rounded-full text-sm font-medium ${
-            tableData.length > 0
-              ? "bg-green-100 text-green-800 border border-green-200"
-              : "bg-amber-100 text-amber-800 border border-amber-200"
-          } transition-all duration-300`}
-        >
-          <div
-            className={`w-3 h-3 rounded-full mr-2 ${
-              tableData.length > 0 ? "bg-green-500" : "bg-amber-500"
-            } animate-pulse`}
-          ></div>
-          {tableData.length > 0 ? `${tableData.length} records loaded` : "No data loaded"}
         </div>
       </div>
     </div>
