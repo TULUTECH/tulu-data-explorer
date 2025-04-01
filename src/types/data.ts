@@ -17,5 +17,17 @@ export interface IDateRange {
   endDate: string | null;
 }
 
-export type Dimension = "date" | "campaign_name" | "ad_group_id";
-export type Metric = "impressions" | "clicks" | "cost_micros" | "sessions" | "leads" | "revenue";
+export enum Dimension {
+  Date = "date",
+  CampaignName = "campaign_name",
+  AdGroupId = "ad_group_id",
+}
+
+export enum Metric {
+  Impressions = "impressions",
+  Clicks = "clicks",
+  CostMicros = "cost_micros",
+  Sessions = "sessions",
+  Leads = "leads",
+  Revenue = "revenue",
+}

@@ -2,18 +2,18 @@ import { Dimension, Metric } from "@/types/data";
 import { VisibilityState } from "@tanstack/react-table";
 
 export const DIMENSIONS: { value: Dimension; label: string }[] = [
-  { value: "date", label: "Date" },
-  { value: "campaign_name", label: "Campaign (name)" },
-  { value: "ad_group_id", label: "Ad Group (id)" },
+  { value: Dimension.Date, label: "Date" },
+  { value: Dimension.CampaignName, label: "Campaign (name)" },
+  { value: Dimension.AdGroupId, label: "Ad Group (id)" },
 ];
 
 export const METRICS: { value: Metric; label: string }[] = [
-  { value: "impressions", label: "Impressions" },
-  { value: "clicks", label: "Clicks" },
-  { value: "cost_micros", label: "Cost (micros)" },
-  { value: "sessions", label: "Sessions" },
-  { value: "leads", label: "Leads" },
-  { value: "revenue", label: "Revenue" },
+  { value: Metric.Impressions, label: "Impressions" },
+  { value: Metric.Clicks, label: "Clicks" },
+  { value: Metric.CostMicros, label: "Cost (micros)" },
+  { value: Metric.Sessions, label: "Sessions" },
+  { value: Metric.Leads, label: "Leads" },
+  { value: Metric.Revenue, label: "Revenue" },
 ];
 
 export const INITIAL_COLUMN_VISIBILITY: VisibilityState = {
