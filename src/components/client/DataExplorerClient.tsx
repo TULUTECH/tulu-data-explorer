@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { VisibilityState } from "@tanstack/react-table";
-import { Dimension, ITypeParsedOmpData, Metric } from "@/types/data";
+import { DIMENSION_ENUM, ITypeParsedOmpData, METRIC_ENUM } from "@/types/data";
 import { Table } from "@/components/client/table/Table";
 import { RootState } from "@/store/store";
 import { resetFilters, setSelectedTable } from "@/store/slices/dataExplorerSlice";
@@ -48,14 +48,14 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
     setTableData([]);
   };
 
-  const getProcessedData = (data: ITypeParsedOmpData[], dimensions: Dimension[]): ITypeParsedOmpData[] => {
-    if (dimensions.includes(Dimension.Date)) {
+  const getProcessedData = (data: ITypeParsedOmpData[], dimensions: DIMENSION_ENUM[]): ITypeParsedOmpData[] => {
+    if (dimensions.includes(DIMENSION_ENUM.Date)) {
       return processDateDimension(data, dimensions);
     }
-    if (dimensions.includes(Dimension.AdGroupId)) {
+    if (dimensions.includes(DIMENSION_ENUM.AdGroupId)) {
       return processAdGroupDimension(data);
     }
-    if (dimensions.includes(Dimension.CampaignName)) {
+    if (dimensions.includes(DIMENSION_ENUM.CampaignName)) {
       return processCampaignDimension(data);
     }
     return data;

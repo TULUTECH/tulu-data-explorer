@@ -1,9 +1,9 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Dimension, Metric, IDateRange } from "@/types/data";
+import { DIMENSION_ENUM, METRIC_ENUM, IDateRange } from "@/types/data";
 
 interface DataExplorerState {
-  selectedDimensions: Dimension[];
-  selectedMetrics: Metric[];
+  selectedDimensions: DIMENSION_ENUM[];
+  selectedMetrics: METRIC_ENUM[];
   selectedDateRange: {
     startDate: string | null;
     endDate: string | null;
@@ -34,10 +34,10 @@ const dataExplorerSlice = createSlice({
         endDate: action.payload.endDate || null,
       };
     },
-    setSelectedDimensions: (state, action: PayloadAction<Dimension[]>) => {
+    setSelectedDimensions: (state, action: PayloadAction<DIMENSION_ENUM[]>) => {
       state.selectedDimensions = action.payload;
     },
-    setSelectedMetrics: (state, action: PayloadAction<Metric[]>) => {
+    setSelectedMetrics: (state, action: PayloadAction<METRIC_ENUM[]>) => {
       state.selectedMetrics = action.payload;
     },
     resetFilters: (state) => {

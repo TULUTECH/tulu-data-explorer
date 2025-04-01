@@ -1,33 +1,33 @@
 "use client";
 import React from "react";
-import { Dimension, Metric } from "@/types/data";
+import { DIMENSION_ENUM, METRIC_ENUM } from "@/types/data";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { setSelectedDimensions, setSelectedMetrics } from "@/store/slices/dataExplorerSlice";
-import { DIMENSIONS, METRICS } from "@/constants/dataConfig";
+import { DIMENSION_OBJS, METRICS_OBJS } from "@/constants/dataConfig";
 
 export const DimensionsAndMetricsPicker: React.FC = () => {
   const dispatch = useDispatch();
   const { selectedDimensions, selectedMetrics } = useSelector((state: RootState) => state.dataExplorer);
 
-  const handleDimensionChange = (dimension: Dimension) => {
-    let newDimensions: Dimension[];
+  const handleDimensionChange = (dimension: DIMENSION_ENUM) => {
+    let newDimensions: DIMENSION_ENUM[];
 
-    if (dimension === Dimension.AdGroupId) {
+    if (dimension === DIMENSION_ENUM.AdGroupId) {
       // If trying to select ad_group_id, ensure campaign_name is selected
-      if (!selectedDimensions.includes(Dimension.CampaignName)) {
-        newDimensions = [...selectedDimensions, Dimension.CampaignName, Dimension.AdGroupId];
+      if (!selectedDimensions.includes(DIMENSION_ENUM.CampaignName)) {
+        newDimensions = [...selectedDimensions, DIMENSION_ENUM.CampaignName, DIMENSION_ENUM.AdGroupId];
       } else {
         // If campaign_name is already selected, just toggle ad_group_id
-        newDimensions = selectedDimensions.includes(Dimension.AdGroupId)
-          ? selectedDimensions.filter((d) => d !== Dimension.AdGroupId)
-          : [...selectedDimensions, Dimension.AdGroupId];
+        newDimensions = selectedDimensions.includes(DIMENSION_ENUM.AdGroupId)
+          ? selectedDimensions.filter((d) => d !== DIMENSION_ENUM.AdGroupId)
+          : [...selectedDimensions, DIMENSION_ENUM.AdGroupId];
       }
-    } else if (dimension === Dimension.CampaignName) {
+    } else if (dimension === DIMENSION_ENUM.CampaignName) {
       // If unchecking campaign_name, also uncheck ad_group_id
-      newDimensions = selectedDimensions.includes(Dimension.CampaignName)
-        ? selectedDimensions.filter((d) => d !== Dimension.CampaignName && d !== Dimension.AdGroupId)
-        : [...selectedDimensions, Dimension.CampaignName];
+      newDimensions = selectedDimensions.includes(DIMENSION_ENUM.CampaignName)
+        ? selectedDimensions.filter((d) => d !== DIMENSION_ENUM.CampaignName && d !== DIMENSION_ENUM.AdGroupId)
+        : [...selectedDimensions, DIMENSION_ENUM.CampaignName];
     } else {
       // For other dimensions (like date), handle normal toggle
       newDimensions = selectedDimensions.includes(dimension)
@@ -38,7 +38,7 @@ export const DimensionsAndMetricsPicker: React.FC = () => {
     dispatch(setSelectedDimensions(newDimensions));
   };
 
-  const handleMetricChange = (metric: Metric) => {
+  const handleMetricChange = (metric: METRIC_ENUM) => {
     const newMetrics = selectedMetrics.includes(metric)
       ? selectedMetrics.filter((m) => m !== metric)
       : [...selectedMetrics, metric];
@@ -52,7 +52,7 @@ export const DimensionsAndMetricsPicker: React.FC = () => {
       <div>
         <h3 className="font-medium text-gray-700 mb-2">Dimensions</h3>
         <div className="flex flex-wrap gap-4">
-          {DIMENSIONS.map((dimension) => (
+          {DIMENSION_OBJS.map((dimension) => (
             <label key={dimension.value} className="flex items-center gap-2">
               <input
                 type="checkbox"
@@ -68,7 +68,7 @@ export const DimensionsAndMetricsPicker: React.FC = () => {
       <div className={`${isMetricsDisabled ? "opacity-50" : ""}`}>
         <h3 className="font-medium text-gray-700 mb-2">Metrics</h3>
         <div className="flex flex-wrap gap-4">
-          {METRICS.map((metric) => (
+          {METRICS_OBJS.map((metric) => (
             <label key={metric.value} className="flex items-center gap-2">
               <input
                 type="checkbox"

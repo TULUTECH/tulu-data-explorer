@@ -17,13 +17,13 @@ export interface IDateRange {
   endDate: string | null;
 }
 
-export enum Dimension {
+export enum DIMENSION_ENUM {
   Date = "date",
   CampaignName = "campaign_name",
   AdGroupId = "ad_group_id",
 }
 
-export enum Metric {
+export enum METRIC_ENUM {
   Impressions = "impressions",
   Clicks = "clicks",
   CostMicros = "cost_micros",
@@ -32,24 +32,27 @@ export enum Metric {
   Revenue = "revenue",
 }
 
-const dimensionLabels: Record<Dimension, string> = {
-  [Dimension.Date]: "Date",
-  [Dimension.CampaignName]: "Campaign (name)",
-  [Dimension.AdGroupId]: "Ad Group (id)",
+const dimensionLabels: Record<DIMENSION_ENUM, string> = {
+  [DIMENSION_ENUM.Date]: "Date",
+  [DIMENSION_ENUM.CampaignName]: "Campaign (name)",
+  [DIMENSION_ENUM.AdGroupId]: "Ad Group (id)",
 };
 
-export const DIMENSIONS = Object.entries(dimensionLabels).map(([value, label]) => ({
-  value: value as Dimension,
+export const DIMENSION_OBJS = Object.entries(dimensionLabels).map(([value, label]) => ({
+  value: value as DIMENSION_ENUM,
   label,
 }));
 
-const metricLabels: Record<Metric, string> = {
-  [Metric.Impressions]: "Impressions",
-  [Metric.Clicks]: "Clicks",
-  [Metric.CostMicros]: "Cost (micros)",
-  [Metric.Sessions]: "Sessions",
-  [Metric.Leads]: "Leads",
-  [Metric.Revenue]: "Revenue",
+const metricLabels: Record<METRIC_ENUM, string> = {
+  [METRIC_ENUM.Impressions]: "Impressions",
+  [METRIC_ENUM.Clicks]: "Clicks",
+  [METRIC_ENUM.CostMicros]: "Cost (micros)",
+  [METRIC_ENUM.Sessions]: "Sessions",
+  [METRIC_ENUM.Leads]: "Leads",
+  [METRIC_ENUM.Revenue]: "Revenue",
 };
 
-export const METRICS = Object.entries(metricLabels).map(([value, label]) => ({ value: value as Metric, label }));
+export const METRICS_OBJS = Object.entries(metricLabels).map(([value, label]) => ({
+  value: value as METRIC_ENUM,
+  label,
+}));
