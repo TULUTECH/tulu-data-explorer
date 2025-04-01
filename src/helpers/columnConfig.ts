@@ -8,7 +8,6 @@ type ColumnConfig = {
   header: () => string;
   accessorFn?: (row: ITypeParsedOmpData) => any;
   filterFn?: FilterFn<ITypeParsedOmpData>;
-  enableGrouping?: boolean;
 };
 
 const createHeaderFromLabel = <T extends string>(
@@ -106,4 +105,18 @@ export const columnConfigs: ColumnConfig[] = [
     key: Metric.Revenue,
     header: createHeaderFromLabel(Metric.Revenue, METRICS, "Revenue"),
   },
+];
+
+export const columnOrder = [
+  Dimension.Date,
+  "campaign_id",
+  Dimension.CampaignName,
+  Dimension.AdGroupId,
+  "ad_group_name",
+  Metric.CostMicros,
+  Metric.Impressions,
+  Metric.Clicks,
+  Metric.Sessions,
+  Metric.Leads,
+  Metric.Revenue,
 ];
