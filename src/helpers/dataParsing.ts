@@ -33,17 +33,17 @@ export const parseOmpDataTypes = (rawData: IRawOmpData[]): ITypeParsedOmpData[] 
 };
 
 export const getVisibilityState = (selectedDimensions: Dimension[], selectedMetrics: Metric[]): VisibilityState => ({
-  date: selectedDimensions.includes("date"),
-  campaign_name: selectedDimensions.includes("campaign_name"),
-  campaign_id: selectedDimensions.includes("campaign_name"),
-  ad_group_name: selectedDimensions.includes("ad_group_id"),
-  ad_group_id: selectedDimensions.includes("ad_group_id"),
-  impressions: selectedMetrics.includes("impressions"),
-  clicks: selectedMetrics.includes("clicks"),
-  cost_micros: selectedMetrics.includes("cost_micros"),
-  sessions: selectedMetrics.includes("sessions"),
-  leads: selectedMetrics.includes("leads"),
-  revenue: selectedMetrics.includes("revenue"),
+  date: selectedDimensions.includes(Dimension.Date),
+  campaign_name: selectedDimensions.includes(Dimension.CampaignName),
+  campaign_id: selectedDimensions.includes(Dimension.CampaignName),
+  ad_group_name: selectedDimensions.includes(Dimension.AdGroupId),
+  ad_group_id: selectedDimensions.includes(Dimension.AdGroupId),
+  impressions: selectedMetrics.includes(Metric.Impressions),
+  clicks: selectedMetrics.includes(Metric.Clicks),
+  cost_micros: selectedMetrics.includes(Metric.CostMicros),
+  sessions: selectedMetrics.includes(Metric.Sessions),
+  leads: selectedMetrics.includes(Metric.Leads),
+  revenue: selectedMetrics.includes(Metric.Revenue),
 });
 
 export const filterByDateRange = (

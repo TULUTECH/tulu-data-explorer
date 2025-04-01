@@ -1,4 +1,4 @@
-import { ITypeParsedOmpData, Metric } from "@/types/data";
+import { Dimension, ITypeParsedOmpData, Metric } from "@/types/data";
 import { aggregateByDate, aggregateByCampaign, aggregateByAdGroupId } from "@/helpers/dataAggregation";
 import { METRICS } from "@/constants/dataConfig";
 
@@ -13,7 +13,7 @@ export const processDateDimension = (
 ): ITypeParsedOmpData[] => {
   const aggregatedByDate = aggregateByDate(filteredData);
 
-  if (selectedDimensions.includes("ad_group_id")) {
+  if (selectedDimensions.includes(Dimension.AdGroupId)) {
     return processDateDimensionWithAdGroup(filteredData, aggregatedByDate);
   } else if (selectedDimensions.includes("campaign_name")) {
     return processDateDimensionWithCampaign(filteredData, aggregatedByDate);
@@ -47,7 +47,7 @@ const processDateDimensionWithAdGroup = (
   return processDateDimensionWithField(
     data,
     aggregatedByDate,
-    "ad_group_id",
+    Dimension.AdGroupId,
     (row, value) => row.ad_group_id === value,
     createAdGroupRow,
     sortByDateAndAdGroupId

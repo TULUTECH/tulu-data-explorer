@@ -9,7 +9,7 @@ import {
   Updater,
   OnChangeFn,
 } from "@tanstack/react-table";
-import { Dimension, ITypeParsedOmpData } from "@/types/data";
+import { Dimension, Metric, ITypeParsedOmpData } from "@/types/data";
 import { columns } from "@/helpers/columns";
 import { setSelectedDimensions } from "@/store/slices/dataExplorerSlice";
 import { AppDispatch } from "@/store/store";
@@ -20,17 +20,17 @@ const INITIAL_TABLE_STATE = {
     pageSize: 100,
   },
   columnOrder: [
-    "date",
+    Dimension.Date,
     "campaign_id",
-    "campaign_name",
-    "ad_group_id",
+    Dimension.CampaignName,
+    Dimension.AdGroupId,
     "ad_group_name",
-    "cost_micros",
-    "impressions",
-    "clicks",
-    "sessions",
-    "leads",
-    "revenue",
+    Metric.CostMicros,
+    Metric.Impressions,
+    Metric.Clicks,
+    Metric.Sessions,
+    Metric.Leads,
+    Metric.Revenue,
   ],
 };
 
