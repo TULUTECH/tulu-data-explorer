@@ -49,13 +49,13 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
   };
 
   const getProcessedData = (data: ITypeParsedOmpData[], dimensions: Dimension[]): ITypeParsedOmpData[] => {
-    if (dimensions.includes("date")) {
+    if (dimensions.includes(Dimension.Date)) {
       return processDateDimension(data, dimensions);
     }
-    if (dimensions.includes("ad_group_id")) {
+    if (dimensions.includes(Dimension.AdGroupId)) {
       return processAdGroupDimension(data);
     }
-    if (dimensions.includes("campaign_name")) {
+    if (dimensions.includes(Dimension.CampaignName)) {
       return processCampaignDimension(data);
     }
     return data;

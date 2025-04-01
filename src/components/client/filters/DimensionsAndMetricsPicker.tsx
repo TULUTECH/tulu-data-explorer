@@ -13,21 +13,21 @@ export const DimensionsAndMetricsPicker: React.FC = () => {
   const handleDimensionChange = (dimension: Dimension) => {
     let newDimensions: Dimension[];
 
-    if (dimension === "ad_group_id") {
+    if (dimension === Dimension.AdGroupId) {
       // If trying to select ad_group_id, ensure campaign_name is selected
-      if (!selectedDimensions.includes("campaign_name")) {
-        newDimensions = [...selectedDimensions, "campaign_name", "ad_group_id"];
+      if (!selectedDimensions.includes(Dimension.CampaignName)) {
+        newDimensions = [...selectedDimensions, Dimension.CampaignName, Dimension.AdGroupId];
       } else {
         // If campaign_name is already selected, just toggle ad_group_id
-        newDimensions = selectedDimensions.includes("ad_group_id")
-          ? selectedDimensions.filter((d) => d !== "ad_group_id")
-          : [...selectedDimensions, "ad_group_id"];
+        newDimensions = selectedDimensions.includes(Dimension.AdGroupId)
+          ? selectedDimensions.filter((d) => d !== Dimension.AdGroupId)
+          : [...selectedDimensions, Dimension.AdGroupId];
       }
-    } else if (dimension === "campaign_name") {
+    } else if (dimension === Dimension.CampaignName) {
       // If unchecking campaign_name, also uncheck ad_group_id
-      newDimensions = selectedDimensions.includes("campaign_name")
-        ? selectedDimensions.filter((d) => d !== "campaign_name" && d !== "ad_group_id")
-        : [...selectedDimensions, "campaign_name"];
+      newDimensions = selectedDimensions.includes(Dimension.CampaignName)
+        ? selectedDimensions.filter((d) => d !== Dimension.CampaignName && d !== Dimension.AdGroupId)
+        : [...selectedDimensions, Dimension.CampaignName];
     } else {
       // For other dimensions (like date), handle normal toggle
       newDimensions = selectedDimensions.includes(dimension)
