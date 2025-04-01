@@ -78,12 +78,10 @@ function processDateDimensionWithField<T>(
         (row) => row.date && new Date(row.date).toISOString().split("T")[0] === dateStr && filterFn(row, fieldValue)
       );
 
-      const combinedRow =
-        filteredRows.length > 0
-          ? createRowFn(dateStr, fieldValue, filteredRows, data)
-          : createRowFn(dateStr, fieldValue, [], data);
-
-      allCombinations.push(combinedRow);
+      if (filteredRows.length > 0) {
+        const combinedRow = createRowFn(dateStr, fieldValue, filteredRows, data);
+        allCombinations.push(combinedRow);
+      }
     });
   });
 
