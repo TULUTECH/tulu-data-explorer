@@ -17,88 +17,122 @@ export const Table = ({ table }: TableProps) => {
   const { selectedTable } = useSelector((state: RootState) => state.dataExplorer);
 
   if (!selectedTable) {
-    return <div className="text-center py-4">Please select a table from the menu</div>;
+    return <div className="text-center py-4 text-gray-500 italic">Please select a table from the menu</div>;
   }
 
   if (visibleColumns === 0) {
-    return <div className="text-center py-4">Please select dimensions and/or metrics</div>;
+    return <div className="text-center py-4 text-gray-500 italic">Please select dimensions and/or metrics</div>;
   }
 
   return (
-    <div>
-      {/* Pagination controls */}
-      <div className="flex justify-left items-center mt-2 space-x-2 text-sm">
-        <button
-          className="px-2 py-1 bg-gray-300 rounded disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          {"<"}
-        </button>
-        <span>
-          Page {pageIndex + 1} of {table.getPageCount()}
-        </span>
-        <button
-          className="px-2 py-1 bg-gray-300 rounded disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          {">"}
-        </button>
-        <span>
-          Rows {pageIndex * pageSize + 1}-{Math.min((pageIndex + 1) * pageSize, totalRows)} of {totalRows}
-        </span>
+    <div className="w-full">
+      {/* Pagination controls - made more responsive */}
+      <div className="flex flex-wrap justify-between items-center mb-3 text-xs sm:text-sm">
+        <div className="flex items-center space-x-1 sm:space-x-2 mb-2 sm:mb-0">
+          <button
+            className="px-1 sm:px-2 py-1 bg-indigo-200 hover:bg-indigo-300 rounded disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed transition-colors duration-200"
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+          >
+            {"<"}
+          </button>
+          <span className="whitespace-nowrap">
+            Page {pageIndex + 1} of {table.getPageCount() || 1}
+          </span>
+          <button
+            className="px-1 sm:px-2 py-1 bg-indigo-200 hover:bg-indigo-300 rounded disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed transition-colors duration-200"
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+          >
+            {">"}
+          </button>
+        </div>
+        <div className="text-xs sm:text-sm whitespace-nowrap">
+          Rows {totalRows ? pageIndex * pageSize + 1 : 0}-{Math.min((pageIndex + 1) * pageSize, totalRows)} of{" "}
+          {totalRows}
+        </div>
       </div>
-      <table className="text-center">
-        <thead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id} className="bg-gray-100">
-              <th className="border border-gray-300 px-4 py-2">#</th>
-              {headerGroup.headers.map((header) => (
-                <th key={header.id} className="border border-gray-300 px-4 py-2">
-                  {header.isPlaceholder ? null : (
-                    <div
-                      onClick={header.column.getToggleSortingHandler()}
-                      className={header.column.getCanSort() ? "cursor-pointer select-none" : ""}
-                    >
-                      {flexRender(header.column.columnDef.header, header.getContext())}
-                      {header.column.getIsSorted() === "asc"
-                        ? " 🔼"
-                        : header.column.getIsSorted() === "desc"
-                        ? " 🔽"
-                        : ""}
-                    </div>
-                  )}
+
+      {/* Table with horizontal scroll capability */}
+      <div className="overflow-x-auto -mx-2 sm:mx-0">
+        <table className="min-w-full text-center border-collapse">
+          <thead>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <tr key={headerGroup.id} className="bg-indigo-50">
+                <th className="border border-indigo-200 px-2 py-2 sm:px-4 text-xs sm:text-sm font-semibold text-indigo-800 sticky left-0 bg-indigo-50 z-10">
+                  #
                 </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody>
-          {table.getRowModel().rows.map((row, rowIndex) => (
-            <tr key={row.id}>
-              <td className="border border-gray-300 px-4 py-2 font-bold">{rowIndex + 1}</td>
-              {row.getVisibleCells().map((cell) => (
-                <td key={cell.id} className="border border-gray-300 px-4 py-2">
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                {headerGroup.headers.map((header) => (
+                  <th
+                    key={header.id}
+                    className="border border-indigo-200 px-2 py-2 sm:px-4 text-xs sm:text-sm font-semibold text-indigo-800"
+                  >
+                    {header.isPlaceholder ? null : (
+                      <div
+                        onClick={header.column.getToggleSortingHandler()}
+                        className={header.column.getCanSort() ? "cursor-pointer select-none" : ""}
+                      >
+                        {flexRender(header.column.columnDef.header, header.getContext())}
+                        {header.column.getIsSorted() === "asc"
+                          ? " 🔼"
+                          : header.column.getIsSorted() === "desc"
+                            ? " 🔽"
+                            : ""}
+                      </div>
+                    )}
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody>
+            {table.getRowModel().rows.map((row, rowIndex) => (
+              <tr key={row.id} className="hover:bg-indigo-50 transition-colors duration-150">
+                <td className="border border-indigo-200 px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-sm font-bold sticky left-0 bg-white z-10 hover:bg-indigo-50">
+                  {rowIndex + 1}
                 </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-        <tfoot>
-          {table.getFooterGroups().map((footerGroup) => (
-            <tr key={footerGroup.id} className="bg-gray-100">
-              <th className="border border-gray-300 px-4 py-2">#</th>
-              {footerGroup.headers.map((header) => (
-                <th key={header.id} className="border border-gray-300 px-4 py-2">
-                  {header.isPlaceholder ? null : flexRender(header.column.columnDef.footer, header.getContext())}
+                {row.getVisibleCells().map((cell) => (
+                  <td key={cell.id} className="border border-indigo-200 px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-sm">
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+          <tfoot>
+            {table.getFooterGroups().map((footerGroup) => (
+              <tr key={footerGroup.id} className="bg-indigo-50">
+                <th className="border border-indigo-200 px-2 py-2 sm:px-4 text-xs sm:text-sm font-semibold text-indigo-800 sticky left-0 bg-indigo-50 z-10">
+                  #
                 </th>
-              ))}
-            </tr>
+                {footerGroup.headers.map((header) => (
+                  <th
+                    key={header.id}
+                    className="border border-indigo-200 px-2 py-2 sm:px-4 text-xs sm:text-sm font-semibold text-indigo-800"
+                  >
+                    {header.isPlaceholder ? null : flexRender(header.column.columnDef.footer, header.getContext())}
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </tfoot>
+        </table>
+      </div>
+
+      {/* Page size selector */}
+      <div className="mt-3 flex justify-end">
+        <select
+          className="text-xs sm:text-sm border border-indigo-200 rounded p-1 bg-white focus:outline-none focus:ring-1 focus:ring-indigo-500"
+          value={pageSize}
+          onChange={(e) => table.setPageSize(Number(e.target.value))}
+        >
+          {[10, 25, 50, 100].map((size) => (
+            <option key={size} value={size}>
+              Show {size}
+            </option>
           ))}
-        </tfoot>
-      </table>
+        </select>
+      </div>
     </div>
   );
 };

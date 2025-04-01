@@ -16,6 +16,7 @@ import { INITIAL_COLUMN_VISIBILITY } from "@/helpers/constants";
 interface DataExplorerClientProps {
   initialData: ITypeParsedOmpData[];
 }
+
 export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialData }) => {
   const [tableData, setTableData] = useState<ITypeParsedOmpData[]>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(INITIAL_COLUMN_VISIBILITY);
@@ -74,11 +75,15 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
   const isFilterDisabled = selectedDimensions.length === 0;
 
   return (
-    <div className="p-2">
-      <div className="mb-4">
-        <h2 className="text-xl font-bold mb-4">Step 1: Select Table</h2>
+    <div className="bg-gradient-to-br from-slate-50 to-slate-100 p-6 rounded-xl shadow-lg max-w-7xl mx-auto">
+      <div className="mb-8 bg-white p-6 rounded-lg shadow-md border border-indigo-100 transition-all duration-300 hover:shadow-lg">
+        <h2 className="text-2xl font-bold mb-4 text-indigo-700 border-b pb-2 border-indigo-200 inline-block transform transition-transform duration-300 hover:scale-105">
+          Step 1: Select Table
+        </h2>
         <select
-          className="border p-2 rounded"
+          className="w-full md:w-1/2 border border-indigo-300 p-3 rounded-lg bg-white text-gray-700 shadow-sm 
+                    focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 
+                    transition-all duration-300"
           value={selectedTable}
           onChange={(e) => {
             dispatch(setSelectedTable(e.target.value));
@@ -94,10 +99,42 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
           <option value="om_proptech">OM Proptech Normalized Table</option>
         </select>
       </div>
-      <Filters hasData={tableData.length > 0} />
-      <FilterButtons isFilterDisabled={isFilterDisabled} onFilter={handleFilter} onReset={handleReset} />
-      <Table table={table} />
-      <div className="h-4" />
+      <div className={`transition-opacity duration-500 ${tableData.length > 0 ? "opacity-100" : "opacity-50"}`}>
+        <h2 className="text-2xl font-bold mb-4 text-indigo-700 border-b pb-2 border-indigo-200 inline-block transform transition-transform duration-300 hover:scale-105">
+          Step 1: Select Filters
+        </h2>
+        <Filters hasData={tableData.length > 0} />
+      </div>
+
+      <div className="mb-8">
+        <FilterButtons isFilterDisabled={isFilterDisabled} onFilter={handleFilter} onReset={handleReset} />
+      </div>
+
+      <div className="bg-white rounded-lg shadow-md overflow-hidden border border-indigo-100 transition-all duration-300 hover:shadow-lg">
+        <div className="p-4">
+          <Table table={table} />
+        </div>
+      </div>
+
+      <div className="h-8" />
+
+      {/* Data status indicator */}
+      <div className="flex justify-end mt-4">
+        <div
+          className={`flex items-center px-4 py-2 rounded-full text-sm font-medium ${
+            tableData.length > 0
+              ? "bg-green-100 text-green-800 border border-green-200"
+              : "bg-amber-100 text-amber-800 border border-amber-200"
+          } transition-all duration-300`}
+        >
+          <div
+            className={`w-3 h-3 rounded-full mr-2 ${
+              tableData.length > 0 ? "bg-green-500" : "bg-amber-500"
+            } animate-pulse`}
+          ></div>
+          {tableData.length > 0 ? `${tableData.length} records loaded` : "No data loaded"}
+        </div>
+      </div>
     </div>
   );
 };
