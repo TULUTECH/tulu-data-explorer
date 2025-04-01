@@ -12,7 +12,6 @@ export const Filters: React.FC<FiltersProps> = ({ hasData }) => {
 
   return (
     <div className="flex flex-col gap-4 mb-4">
-      <h2 className="text-xl font-bold mb-4">Step 2: Select Filters</h2>
       <div className="flex items-start gap-8">
         <DateRangePicker />
         <div className="h-full w-px bg-gray-300" />
