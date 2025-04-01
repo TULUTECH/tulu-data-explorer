@@ -9,29 +9,17 @@ import {
   Updater,
   OnChangeFn,
 } from "@tanstack/react-table";
-import { Dimension, Metric, ITypeParsedOmpData } from "@/types/data";
+import { ITypeParsedOmpData } from "@/types/data";
 import { columns } from "@/helpers/columns";
-import { setSelectedDimensions } from "@/store/slices/dataExplorerSlice";
 import { AppDispatch } from "@/store/store";
+import { columnOrder } from "@/helpers/columnConfig";
 
 const INITIAL_TABLE_STATE = {
   pagination: {
     pageIndex: 0,
     pageSize: 100,
   },
-  columnOrder: [
-    Dimension.Date,
-    "campaign_id",
-    Dimension.CampaignName,
-    Dimension.AdGroupId,
-    "ad_group_name",
-    Metric.CostMicros,
-    Metric.Impressions,
-    Metric.Clicks,
-    Metric.Sessions,
-    Metric.Leads,
-    Metric.Revenue,
-  ],
+  columnOrder,
 };
 
 interface TableConfigurationProps {
