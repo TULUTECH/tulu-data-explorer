@@ -7,11 +7,11 @@ import { Table } from "@/components/client/table/Table";
 import { RootState } from "@/store/store";
 import { resetFilters, setSelectedTable } from "@/store/slices/dataExplorerSlice";
 import { useTableConfiguration } from "@/hooks/useTableConfiguration";
-import { getVisibilityState, filterByDateRange } from "@/helpers/helpers";
+import { getVisibilityState, filterByDateRange } from "@/helpers/dataParsing";
 import { processAdGroupDimension, processCampaignDimension, processDateDimension } from "@/helpers/dataProcessing";
 import { Filters } from "@/components/client/filters/Filters";
 import { FilterButtons } from "@/components/client/filters/FilterButtons";
-import { INITIAL_COLUMN_VISIBILITY } from "@/helpers/constants";
+import { INITIAL_COLUMN_VISIBILITY } from "@/constants/dataConfig";
 
 interface DataExplorerClientProps {
   initialData: ITypeParsedOmpData[];
@@ -78,10 +78,9 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
     <div className="bg-gradient-to-br from-slate-50 to-slate-100 p-6 rounded-xl shadow-lg max-w-7xl mx-auto relative">
       <div className="flex flex-col items-center mb-8">
         <h1 className="text-4xl font-bold text-center mb-2 bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-500 font-sans tracking-normal drop-shadow-sm transform transition-all duration-500 hover:scale-105 hover:drop-shadow-md">
-          TuluData Explorer
+          TULU Data Explorer
         </h1>
-
-        {/* Data status indicator - positioned below title */}
+        {/* Data status indicator */}
         <div
           className={`flex items-center px-4 py-2 rounded-full text-sm font-medium mt-2 ${
             tableData.length > 0
@@ -97,7 +96,6 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
           {tableData.length > 0 ? `${tableData.length} records loaded` : "No data loaded"}
         </div>
       </div>
-
       <div className="flex gap-4 items-center mb-8 bg-white p-6 rounded-lg shadow-md border border-indigo-100 transition-all duration-300 hover:shadow-lg">
         <h2 className="text-2xl font-bold text-indigo-700 inline-block transform transition-transform duration-300 hover:scale-105">
           Step 1: Select Table

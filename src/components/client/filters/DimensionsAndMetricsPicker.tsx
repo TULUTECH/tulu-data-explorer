@@ -4,7 +4,7 @@ import { Dimension, Metric } from "@/types/data";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { setSelectedDimensions, setSelectedMetrics } from "@/store/slices/dataExplorerSlice";
-import { DIMENSIONS, METRICS } from "@/helpers/constants";
+import { DIMENSIONS, METRICS } from "@/constants/dataConfig";
 
 export const DimensionsAndMetricsPicker: React.FC = () => {
   const dispatch = useDispatch();

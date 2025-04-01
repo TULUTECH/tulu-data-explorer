@@ -5,6 +5,7 @@ import { ITypeParsedOmpData } from "@/types/data";
 import { flexRender, Table as TanstackTable } from "@tanstack/react-table";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
+import { UI_MESSAGES } from "@/constants/uiMessages";
 
 interface TableProps {
   table: TanstackTable<ITypeParsedOmpData>;
@@ -15,13 +16,12 @@ export const Table = ({ table }: TableProps) => {
   const totalRows = table.getFilteredRowModel().rows.length;
   const visibleColumns = table.getVisibleFlatColumns().length;
   const { selectedTable } = useSelector((state: RootState) => state.dataExplorer);
-
   if (!selectedTable) {
-    return <div className="text-center py-4 text-gray-500 italic">Please select a table from the menu</div>;
+    return <div className="text-center py-4 text-gray-500 italic">{UI_MESSAGES.NO_TABLE_SELECTED}</div>;
   }
 
   if (visibleColumns === 0) {
-    return <div className="text-center py-4 text-gray-500 italic">Please select dimensions and/or metrics</div>;
+    return <div className="text-center py-4 text-gray-500 italic">{UI_MESSAGES.NO_FILTERS_SELECTED}</div>;
   }
 
   return (
