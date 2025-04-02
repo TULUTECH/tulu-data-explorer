@@ -5,82 +5,117 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { setSelectedDimensions, setSelectedMetrics } from "@/store/slices/dataExplorerSlice";
 import { DIMENSION_OBJS, METRICS_OBJS } from "@/constants/dataConfig";
+import Select, { MultiValue } from "react-select";
+
+type OptionType = {
+  value: DIMENSION_ENUM | METRIC_ENUM;
+  label: string;
+};
 
 export const DimensionsAndMetricsPicker: React.FC = () => {
   const dispatch = useDispatch();
   const { selectedDimensions, selectedMetrics } = useSelector((state: RootState) => state.dataExplorer);
 
-  const handleDimensionChange = (dimension: DIMENSION_ENUM) => {
-    let newDimensions: DIMENSION_ENUM[];
+  const handleDimensionChange = (selectedOptions: MultiValue<OptionType>) => {
+    const selectedValues = selectedOptions.map((option) => option.value as DIMENSION_ENUM);
+    let newDimensions: DIMENSION_ENUM[] = [...selectedValues];
 
-    if (dimension === DIMENSION_ENUM.AdGroupId) {
-      // If trying to select ad_group_id, ensure campaign_name is selected
-      if (!selectedDimensions.includes(DIMENSION_ENUM.CampaignName)) {
-        newDimensions = [...selectedDimensions, DIMENSION_ENUM.CampaignName, DIMENSION_ENUM.AdGroupId];
-      } else {
-        // If campaign_name is already selected, just toggle ad_group_id
-        newDimensions = selectedDimensions.includes(DIMENSION_ENUM.AdGroupId)
-          ? selectedDimensions.filter((d) => d !== DIMENSION_ENUM.AdGroupId)
-          : [...selectedDimensions, DIMENSION_ENUM.AdGroupId];
-      }
-    } else if (dimension === DIMENSION_ENUM.CampaignName) {
-      // If unchecking campaign_name, also uncheck ad_group_id
-      newDimensions = selectedDimensions.includes(DIMENSION_ENUM.CampaignName)
-        ? selectedDimensions.filter((d) => d !== DIMENSION_ENUM.CampaignName && d !== DIMENSION_ENUM.AdGroupId)
-        : [...selectedDimensions, DIMENSION_ENUM.CampaignName];
-    } else {
-      // For other dimensions (like date), handle normal toggle
-      newDimensions = selectedDimensions.includes(dimension)
-        ? selectedDimensions.filter((d) => d !== dimension)
-        : [...selectedDimensions, dimension];
+    // Handle the special case for AdGroupId and CampaignName
+    if (selectedValues.includes(DIMENSION_ENUM.AdGroupId) && !selectedValues.includes(DIMENSION_ENUM.CampaignName)) {
+      // If AdGroupId is selected but CampaignName is not, add CampaignName
+      newDimensions = [...newDimensions, DIMENSION_ENUM.CampaignName];
     }
 
     dispatch(setSelectedDimensions(newDimensions));
   };
 
-  const handleMetricChange = (metric: METRIC_ENUM) => {
-    const newMetrics = selectedMetrics.includes(metric)
-      ? selectedMetrics.filter((m) => m !== metric)
-      : [...selectedMetrics, metric];
-    dispatch(setSelectedMetrics(newMetrics));
+  const handleMetricChange = (selectedOptions: MultiValue<OptionType>) => {
+    const selectedValues = selectedOptions.map((option) => option.value as METRIC_ENUM);
+    dispatch(setSelectedMetrics(selectedValues));
   };
+
+  // Convert selected dimensions to the format expected by react-select
+  const selectedDimensionOptions = DIMENSION_OBJS.filter((dimension) => selectedDimensions.includes(dimension.value));
+
+  // Convert selected metrics to the format expected by react-select
+  const selectedMetricOptions = METRICS_OBJS.filter((metric) => selectedMetrics.includes(metric.value));
 
   const isMetricsDisabled = selectedDimensions.length === 0;
 
+  // Custom styles for the Select components
+  const customStyles = {
+    control: (provided: any) => ({
+      ...provided,
+      borderColor: "#e5e7eb",
+      borderRadius: "0.375rem",
+      boxShadow: "none",
+      "&:hover": {
+        borderColor: "#d1d5db",
+      },
+    }),
+    multiValue: (provided: any) => ({
+      ...provided,
+      backgroundColor: "#f3f4f6",
+      borderRadius: "0.25rem",
+    }),
+    multiValueLabel: (provided: any) => ({
+      ...provided,
+      color: "#374151",
+      fontWeight: 500,
+    }),
+    multiValueRemove: (provided: any) => ({
+      ...provided,
+      color: "#6b7280",
+      "&:hover": {
+        backgroundColor: "#e5e7eb",
+        color: "#1f2937",
+      },
+    }),
+  };
+
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-6 w-full">
       <div>
         <h3 className="font-medium text-gray-700 mb-2">Dimensions</h3>
-        <div className="flex flex-wrap gap-4">
-          {DIMENSION_OBJS.map((dimension) => (
-            <label key={dimension.value} className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                checked={selectedDimensions.includes(dimension.value)}
-                onChange={() => handleDimensionChange(dimension.value)}
-                className="rounded border-gray-300"
-              />
-              {dimension.label}
-            </label>
-          ))}
-        </div>
+        <Select
+          isMulti
+          name="dimensions"
+          options={DIMENSION_OBJS}
+          className="basic-multi-select"
+          classNamePrefix="select"
+          value={selectedDimensionOptions}
+          onChange={handleDimensionChange}
+          placeholder="Select dimensions..."
+          styles={customStyles}
+          closeMenuOnSelect={false}
+        />
+        {selectedDimensions.includes(DIMENSION_ENUM.AdGroupId) && (
+          <p className="text-xs text-gray-500 mt-1">
+            Note: Campaign Name is automatically selected when Ad Group is selected.
+          </p>
+        )}
       </div>
-      <div className={`${isMetricsDisabled ? "opacity-50" : ""}`}>
+
+      <div>
         <h3 className="font-medium text-gray-700 mb-2">Metrics</h3>
-        <div className="flex flex-wrap gap-4">
-          {METRICS_OBJS.map((metric) => (
-            <label key={metric.value} className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                checked={selectedMetrics.includes(metric.value)}
-                onChange={() => handleMetricChange(metric.value)}
-                disabled={isMetricsDisabled}
-                className="rounded border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
-              />
-              <span className={isMetricsDisabled ? "text-gray-500" : ""}>{metric.label}</span>
-            </label>
-          ))}
-        </div>
+        <Select
+          isMulti
+          name="metrics"
+          options={METRICS_OBJS}
+          className="basic-multi-select"
+          classNamePrefix="select"
+          value={selectedMetricOptions}
+          onChange={handleMetricChange}
+          placeholder="Select metrics..."
+          styles={customStyles}
+          isDisabled={isMetricsDisabled}
+          closeMenuOnSelect={false}
+        />
+        {isMetricsDisabled && (
+          <p className="text-xs text-gray-500 mt-1">
+            Please select at least one dimension to enable metrics selection.
+          </p>
+        )}
       </div>
     </div>
   );
