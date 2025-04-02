@@ -1,6 +1,6 @@
 import { METRICS_OBJS } from "@/constants";
 import { DIMENSION_ENUM, METRIC_ENUM, DIMENSION_OBJS, ITypeParsedOmpData } from "@/types/data";
-import { FilterFn } from "@tanstack/react-table";
+import { FilterFn, CellContext } from "@tanstack/react-table";
 import { format } from "date-fns";
 
 type ColumnConfig = {
@@ -8,6 +8,7 @@ type ColumnConfig = {
   header: () => string;
   accessorFn?: (row: ITypeParsedOmpData) => any;
   filterFn?: FilterFn<ITypeParsedOmpData>;
+  cell?: (props: CellContext<ITypeParsedOmpData, any>) => React.ReactNode;
 };
 
 const createHeaderFromLabel = <T extends string>(
@@ -80,6 +81,17 @@ export const columnConfigs: ColumnConfig[] = [
     // Use a custom accessor function to convert date strings to Date objects
     accessorFn: (row) => (row.date ? new Date(row.date) : new Date(0)),
     filterFn: customDateRangeFilter,
+    cell: (props) => {
+      const dateValue = props.getValue();
+      if (!(dateValue instanceof Date) || isNaN(dateValue.getTime()) || dateValue.getTime() === 0) {
+        return "-";
+      }
+      return dateValue.toLocaleDateString("en-GB", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+      });
+    },
   },
   {
     key: METRIC_ENUM.CostMicros,
