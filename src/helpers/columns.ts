@@ -30,7 +30,6 @@ export const columns = columnConfigs.map((config) => {
     cell: (props) => props.getValue() ?? "0",
     footer: (props) => props.column.id,
     aggregationFn: config.aggregationFn,
-    aggregatedCell: config.aggregatedCell,
     enableGrouping: config.enableGrouping,
   });
 });
