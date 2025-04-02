@@ -1,6 +1,6 @@
 import { METRICS_OBJS } from "@/constants";
 import { DIMENSION_ENUM, METRIC_ENUM, DIMENSION_OBJS, ITypeParsedOmpData } from "@/types/data";
-import { AggregationFn, AggregationFns, FilterFn } from "@tanstack/react-table";
+import { FilterFn } from "@tanstack/react-table";
 import { format } from "date-fns";
 
 type ColumnConfig = {
@@ -8,8 +8,6 @@ type ColumnConfig = {
   header: () => string;
   accessorFn?: (row: ITypeParsedOmpData) => any;
   filterFn?: FilterFn<ITypeParsedOmpData>;
-  enableGrouping?: boolean;
-  aggregationFn?: AggregationFn<ITypeParsedOmpData> | keyof AggregationFns;
 };
 
 const createHeaderFromLabel = <T extends string>(
@@ -63,26 +61,18 @@ export const columnConfigs: ColumnConfig[] = [
   {
     key: DIMENSION_ENUM.CampaignName,
     header: createHeaderFromLabel(DIMENSION_ENUM.CampaignName, DIMENSION_OBJS, "Campaign Name"),
-    enableGrouping: true,
-    aggregationFn: "unique" as keyof AggregationFns,
   },
   {
     key: "campaign_id",
     header: () => "Campaign ID",
-    enableGrouping: true,
-    aggregationFn: "unique" as keyof AggregationFns,
   },
   {
     key: "ad_group_name",
     header: () => "Ad Group Name",
-    enableGrouping: true,
-    aggregationFn: "unique" as keyof AggregationFns,
   },
   {
     key: DIMENSION_ENUM.AdGroupId,
     header: createHeaderFromLabel(DIMENSION_ENUM.AdGroupId, DIMENSION_OBJS, "Ad Group ID"),
-    enableGrouping: true,
-    aggregationFn: "unique" as keyof AggregationFns,
   },
   {
     key: DIMENSION_ENUM.Date,
@@ -94,32 +84,26 @@ export const columnConfigs: ColumnConfig[] = [
   {
     key: METRIC_ENUM.CostMicros,
     header: createHeaderFromLabel(METRIC_ENUM.CostMicros, METRICS_OBJS, "Cost (micros)"),
-    aggregationFn: "sum" as keyof AggregationFns,
   },
   {
     key: METRIC_ENUM.Impressions,
     header: createHeaderFromLabel(METRIC_ENUM.Impressions, METRICS_OBJS, "Impressions"),
-    aggregationFn: "sum" as keyof AggregationFns,
   },
   {
     key: METRIC_ENUM.Clicks,
     header: createHeaderFromLabel(METRIC_ENUM.Clicks, METRICS_OBJS, "Clicks"),
-    aggregationFn: "sum" as keyof AggregationFns,
   },
   {
     key: METRIC_ENUM.Sessions,
     header: createHeaderFromLabel(METRIC_ENUM.Sessions, METRICS_OBJS, "Sessions"),
-    aggregationFn: "sum" as keyof AggregationFns,
   },
   {
     key: METRIC_ENUM.Leads,
     header: createHeaderFromLabel(METRIC_ENUM.Leads, METRICS_OBJS, "Leads"),
-    aggregationFn: "sum" as keyof AggregationFns,
   },
   {
     key: METRIC_ENUM.Revenue,
     header: createHeaderFromLabel(METRIC_ENUM.Revenue, METRICS_OBJS, "Revenue"),
-    aggregationFn: "sum" as keyof AggregationFns,
   },
 ];
 
