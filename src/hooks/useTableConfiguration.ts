@@ -8,7 +8,6 @@ import {
   VisibilityState,
   Updater,
   OnChangeFn,
-  getExpandedRowModel,
 } from "@tanstack/react-table";
 import { ITypeParsedOmpData } from "@/types/data";
 import { columns } from "@/helpers/columns";
@@ -54,7 +53,6 @@ export const useTableConfiguration = ({
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getGroupedRowModel: getGroupedRowModel(),
-    getExpandedRowModel: getExpandedRowModel(),
     initialState: INITIAL_TABLE_STATE,
   });
 };
