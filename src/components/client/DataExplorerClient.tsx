@@ -20,7 +20,9 @@ interface DataExplorerClientProps {
 export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialData }) => {
   const [tableData, setTableData] = useState<ITypeParsedOmpData[]>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(INITIAL_COLUMN_VISIBILITY);
-  const { selectedDimensions, selectedMetrics, selectedTable } = useSelector((state: RootState) => state.dataExplorer);
+  const { selectedDimensions, selectedMetrics, selectedDateRange, selectedTable } = useSelector(
+    (state: RootState) => state.dataExplorer
+  );
   const dispatch = useDispatch();
   const isMountedRef = useRef(false);
 
@@ -41,10 +43,9 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
   });
 
   const handleReset = () => {
-    table.resetGrouping();
     setColumnVisibility(INITIAL_COLUMN_VISIBILITY);
     dispatch(resetFilters());
-    // setTableData([]);
+    setTableData([]);
   };
 
   const getProcessedData = (data: ITypeParsedOmpData[], dimensions: DIMENSION_ENUM[]): ITypeParsedOmpData[] => {
@@ -62,24 +63,13 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
 
   const handleFilter = () => {
     if (selectedDimensions.length === 0) {
+      setTableData([]);
       return;
     }
     setColumnVisibility(getVisibilityState(selectedDimensions, selectedMetrics));
-    let grouping: string[] = [];
-    if (selectedDimensions.includes(DIMENSION_ENUM.Date && DIMENSION_ENUM.CampaignName)) {
-      console.log("campaign and date 203");
-      grouping = [DIMENSION_ENUM.CampaignName, DIMENSION_ENUM.Date];
-    } else if (selectedDimensions.includes(DIMENSION_ENUM.AdGroupId)) {
-      grouping = [DIMENSION_ENUM.AdGroupId];
-    } else if (selectedDimensions.includes(DIMENSION_ENUM.CampaignName)) {
-      grouping = [DIMENSION_ENUM.CampaignName];
-    } else if (selectedDimensions.includes(DIMENSION_ENUM.Date)) {
-      grouping = [DIMENSION_ENUM.Date];
-    }
-    table.setGrouping(grouping);
-    // const filteredData = filterByDateRange(initialData, selectedDateRange.startDate, selectedDateRange.endDate);
-    // const processedData = getProcessedData(filteredData, selectedDimensions);
-    // setTableData(processedData);
+    const filteredData = filterByDateRange(initialData, selectedDateRange.startDate, selectedDateRange.endDate);
+    const processedData = getProcessedData(filteredData, selectedDimensions);
+    setTableData(processedData);
   };
 
   const isFilterDisabled = selectedDimensions.length === 0;

@@ -13,7 +13,7 @@ interface TableProps {
 
 export const Table = ({ table }: TableProps) => {
   const { pageIndex, pageSize } = table.getState().pagination;
-  const totalRows = table.getGroupedRowModel().rows.length;
+  const totalRows = table.getFilteredRowModel().rows.length;
   const visibleColumns = table.getVisibleFlatColumns().length;
   const { selectedTable } = useSelector((state: RootState) => state.dataExplorer);
   if (!selectedTable) {

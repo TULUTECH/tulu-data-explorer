@@ -19,7 +19,6 @@ const INITIAL_TABLE_STATE = {
     pageIndex: 0,
     pageSize: 100,
   },
-  grouping: [],
   columnOrder,
 };
 
@@ -34,6 +33,8 @@ interface TableConfigurationProps {
 export const useTableConfiguration = ({
   tableData,
   columnVisibility,
+  dispatch,
+  isMountedRef,
   setColumnVisibility,
 }: TableConfigurationProps) => {
   const handleColumnVisibilityChange: OnChangeFn<VisibilityState> = (updaterOrValue: Updater<VisibilityState>) => {
@@ -54,6 +55,5 @@ export const useTableConfiguration = ({
     getPaginationRowModel: getPaginationRowModel(),
     getGroupedRowModel: getGroupedRowModel(),
     initialState: INITIAL_TABLE_STATE,
-    groupedColumnMode: false,
   });
 };
