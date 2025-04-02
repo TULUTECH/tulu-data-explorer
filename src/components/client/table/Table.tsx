@@ -68,19 +68,21 @@ export const Table = ({ table }: TableProps) => {
           </span>
         </div>
       </div>
-      {/* Table with horizontal scroll capability */}
-      <div className="overflow-x-auto -mx-2 sm:mx-0">
-        <table className="min-w-full text-center border-collapse">
+      {/* Table with improved horizontal scroll capability */}
+      <div className="overflow-x-auto w-full">
+        <div className="min-w-full inline-block align-middle">
+          <div className="overflow-hidden">
+            <table className="min-w-full divide-y divide-indigo-200 table-auto">
           <thead>
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id} className="bg-indigo-50">
-                <th className="border border-indigo-200 px-2 py-2 sm:px-4 text-xs sm:text-sm font-semibold text-indigo-800 sticky left-0 bg-indigo-50 z-10">
+                <th className="border border-indigo-200 px-2 py-2 sm:px-3 text-xs sm:text-sm font-semibold text-indigo-800 sticky left-0 bg-indigo-50 z-10 whitespace-nowrap">
                   #
                 </th>
                 {headerGroup.headers.map((header) => (
                   <th
                     key={header.id}
-                    className="border border-indigo-200 px-2 py-2 sm:px-4 text-xs sm:text-sm font-semibold text-indigo-800"
+                    className="border border-indigo-200 px-2 py-2 sm:px-3 text-xs sm:text-sm font-semibold text-indigo-800 whitespace-nowrap"
                   >
                     {header.isPlaceholder ? null : (
                       <div
@@ -100,14 +102,14 @@ export const Table = ({ table }: TableProps) => {
               </tr>
             ))}
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-indigo-100">
             {table.getRowModel().rows.map((row, rowIndex) => (
               <tr key={row.id} className="hover:bg-indigo-50 transition-colors duration-150">
-                <td className="border border-indigo-200 px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-sm font-bold sticky left-0 bg-white z-10 hover:bg-indigo-50">
+                <td className="border border-indigo-200 px-2 py-1 sm:px-3 sm:py-2 text-xs sm:text-sm font-bold sticky left-0 bg-white z-10 hover:bg-indigo-50 whitespace-nowrap">
                   {rowIndex + 1}
                 </td>
                 {row.getVisibleCells().map((cell) => (
-                  <td key={cell.id} className="border border-indigo-200 px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-sm">
+                  <td key={cell.id} className="border border-indigo-200 px-2 py-1 sm:px-3 sm:py-2 text-xs sm:text-sm">
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </td>
                 ))}
@@ -117,13 +119,13 @@ export const Table = ({ table }: TableProps) => {
           <tfoot>
             {table.getFooterGroups().map((footerGroup) => (
               <tr key={footerGroup.id} className="bg-indigo-50">
-                <th className="border border-indigo-200 px-2 py-2 sm:px-4 text-xs sm:text-sm font-semibold text-indigo-800 sticky left-0 bg-indigo-50 z-10">
+                <th className="border border-indigo-200 px-2 py-2 sm:px-3 text-xs sm:text-sm font-semibold text-indigo-800 sticky left-0 bg-indigo-50 z-10 whitespace-nowrap">
                   #
                 </th>
                 {footerGroup.headers.map((header) => (
                   <th
                     key={header.id}
-                    className="border border-indigo-200 px-2 py-2 sm:px-4 text-xs sm:text-sm font-semibold text-indigo-800"
+                    className="border border-indigo-200 px-2 py-2 sm:px-3 text-xs sm:text-sm font-semibold text-indigo-800 whitespace-nowrap"
                   >
                     {header.isPlaceholder ? null : flexRender(header.column.columnDef.footer, header.getContext())}
                   </th>
@@ -131,7 +133,9 @@ export const Table = ({ table }: TableProps) => {
               </tr>
             ))}
           </tfoot>
-        </table>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
   );
