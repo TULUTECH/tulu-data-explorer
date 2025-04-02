@@ -8,6 +8,9 @@ type ColumnConfig = {
   header: () => string;
   accessorFn?: (row: ITypeParsedOmpData) => any;
   filterFn?: FilterFn<ITypeParsedOmpData>;
+  enableGrouping?: boolean;
+  aggregationFn?: string;
+  aggregatedCell?: (value: any) => string;
 };
 
 const createHeaderFromLabel = <T extends string>(
@@ -61,10 +64,12 @@ export const columnConfigs: ColumnConfig[] = [
   {
     key: DIMENSION_ENUM.CampaignName,
     header: createHeaderFromLabel(DIMENSION_ENUM.CampaignName, DIMENSION_OBJS, "Campaign Name"),
+    enableGrouping: true,
   },
   {
     key: "campaign_id",
     header: () => "Campaign ID",
+    enableGrouping: true,
   },
   {
     key: "ad_group_name",
@@ -88,22 +93,32 @@ export const columnConfigs: ColumnConfig[] = [
   {
     key: METRIC_ENUM.Impressions,
     header: createHeaderFromLabel(METRIC_ENUM.Impressions, METRICS_OBJS, "Impressions"),
+    aggregationFn: "sum",
+    aggregatedCell: ({ getValue }) => getValue()?.toLocaleString(),
   },
   {
     key: METRIC_ENUM.Clicks,
     header: createHeaderFromLabel(METRIC_ENUM.Clicks, METRICS_OBJS, "Clicks"),
+    aggregationFn: "sum",
+    aggregatedCell: ({ getValue }) => getValue()?.toLocaleString(),
   },
   {
     key: METRIC_ENUM.Sessions,
     header: createHeaderFromLabel(METRIC_ENUM.Sessions, METRICS_OBJS, "Sessions"),
+    aggregationFn: "sum",
+    aggregatedCell: ({ getValue }) => getValue()?.toLocaleString(),
   },
   {
     key: METRIC_ENUM.Leads,
     header: createHeaderFromLabel(METRIC_ENUM.Leads, METRICS_OBJS, "Leads"),
+    aggregationFn: "sum",
+    aggregatedCell: ({ getValue }) => getValue()?.toLocaleString(),
   },
   {
     key: METRIC_ENUM.Revenue,
     header: createHeaderFromLabel(METRIC_ENUM.Revenue, METRICS_OBJS, "Revenue"),
+    aggregationFn: "sum",
+    aggregatedCell: ({ getValue }) => getValue()?.toLocaleString(),
   },
 ];
 

@@ -43,9 +43,10 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
   });
 
   const handleReset = () => {
+    table.resetGrouping();
     setColumnVisibility(INITIAL_COLUMN_VISIBILITY);
     dispatch(resetFilters());
-    setTableData([]);
+    // setTableData([]);
   };
 
   const getProcessedData = (data: ITypeParsedOmpData[], dimensions: DIMENSION_ENUM[]): ITypeParsedOmpData[] => {
@@ -67,9 +68,10 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
       return;
     }
     setColumnVisibility(getVisibilityState(selectedDimensions, selectedMetrics));
-    const filteredData = filterByDateRange(initialData, selectedDateRange.startDate, selectedDateRange.endDate);
-    const processedData = getProcessedData(filteredData, selectedDimensions);
-    setTableData(processedData);
+    table.setGrouping(selectedDimensions);
+    // const filteredData = filterByDateRange(initialData, selectedDateRange.startDate, selectedDateRange.endDate);
+    // const processedData = getProcessedData(filteredData, selectedDimensions);
+    // setTableData(processedData);
   };
 
   const isFilterDisabled = selectedDimensions.length === 0;
