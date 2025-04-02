@@ -66,7 +66,7 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
     }
     setColumnVisibility(getVisibilityState(selectedDimensions, selectedMetrics));
     let grouping: string[] = [];
-    if (selectedDimensions.includes(DIMENSION_ENUM.Date && DIMENSION_ENUM.CampaignName)) {
+    if (selectedDimensions.includes(DIMENSION_ENUM.Date) && selectedDimensions.includes(DIMENSION_ENUM.CampaignName)) {
       console.log("campaign and date 203");
       grouping = [DIMENSION_ENUM.CampaignName, DIMENSION_ENUM.Date];
     } else if (selectedDimensions.includes(DIMENSION_ENUM.AdGroupId)) {
