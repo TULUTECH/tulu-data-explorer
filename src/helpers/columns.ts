@@ -29,5 +29,8 @@ export const columns = columnConfigs.map((config) => {
     header: config.header,
     cell: (props) => props.getValue() ?? "0",
     footer: (props) => props.column.id,
+    aggregationFn: config.aggregationFn,
+    aggregatedCell: config.aggregatedCell,
+    enableGrouping: config.enableGrouping,
   });
 });
