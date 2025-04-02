@@ -54,5 +54,6 @@ export const useTableConfiguration = ({
     getPaginationRowModel: getPaginationRowModel(),
     getGroupedRowModel: getGroupedRowModel(),
     initialState: INITIAL_TABLE_STATE,
+    groupedColumnMode: false,
   });
 };
