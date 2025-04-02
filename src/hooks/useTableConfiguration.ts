@@ -8,6 +8,7 @@ import {
   VisibilityState,
   Updater,
   OnChangeFn,
+  getExpandedRowModel,
 } from "@tanstack/react-table";
 import { ITypeParsedOmpData } from "@/types/data";
 import { columns } from "@/helpers/columns";
@@ -19,6 +20,7 @@ const INITIAL_TABLE_STATE = {
     pageIndex: 0,
     pageSize: 100,
   },
+  grouping: [],
   columnOrder,
 };
 
@@ -33,8 +35,6 @@ interface TableConfigurationProps {
 export const useTableConfiguration = ({
   tableData,
   columnVisibility,
-  dispatch,
-  isMountedRef,
   setColumnVisibility,
 }: TableConfigurationProps) => {
   const handleColumnVisibilityChange: OnChangeFn<VisibilityState> = (updaterOrValue: Updater<VisibilityState>) => {
@@ -54,6 +54,7 @@ export const useTableConfiguration = ({
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getGroupedRowModel: getGroupedRowModel(),
+    getExpandedRowModel: getExpandedRowModel(),
     initialState: INITIAL_TABLE_STATE,
   });
 };
