@@ -127,6 +127,17 @@ export const columnConfigs: ColumnConfig[] = [
   {
     key: METRIC_ENUM.Revenue,
     header: createHeaderFromLabel(METRIC_ENUM.Revenue, METRICS_OBJS, "Revenue"),
+    cell: (props) => {
+      const value = props.getValue();
+      return value != null
+        ? Number(value).toLocaleString("de-DE", {
+            style: "currency",
+            currency: "EUR",
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })
+        : "-";
+    },
   },
 ];
 
