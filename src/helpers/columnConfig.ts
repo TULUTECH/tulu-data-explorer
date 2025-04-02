@@ -96,6 +96,17 @@ export const columnConfigs: ColumnConfig[] = [
   {
     key: METRIC_ENUM.CostMicros,
     header: createHeaderFromLabel(METRIC_ENUM.CostMicros, METRICS_OBJS, "Cost (micros)"),
+    cell: (props) => {
+      const value = props.getValue();
+      return value != null
+        ? (Number(value) / 1000000).toLocaleString("de-DE", {
+            style: "currency",
+            currency: "EUR",
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })
+        : "-";
+    },
   },
   {
     key: METRIC_ENUM.Impressions,
