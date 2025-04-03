@@ -96,10 +96,9 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
           {tableData.length > 0 ? `${tableData.length} records loaded` : "No data loaded"}
         </div>
       </div>
-      {/* Step 1 and Step 2 boxes side by side */}
       <div className="flex flex-col md:flex-row gap-4 md:gap-6 mb-6 md:mb-8">
         {/* Step 1: Select Table */}
-        <div className="bg-white p-4 md:p-6 rounded-lg shadow-md border border-indigo-100 transition-all duration-300 hover:shadow-lg md:flex-1">
+        <div className="md:w-1/3 bg-white p-4 md:p-6 rounded-lg shadow-md border border-indigo-100 transition-all duration-300 hover:shadow-lg ">
           <h2 className="text-xl md:text-2xl font-bold mb-3 md:mb-4 text-indigo-700 inline-block transform transition-transform duration-300 hover:scale-105">
             Step 1: Select Table
           </h2>
@@ -124,7 +123,7 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
         </div>
 
         {/* Step 2: Select Filters */}
-        <div className="bg-white p-4 md:p-6 rounded-lg shadow-md border border-indigo-100 transition-all duration-300 hover:shadow-lg md:flex-1">
+        <div className="md:w-2/3 bg-white p-4 md:p-6 rounded-lg shadow-md border border-indigo-100 transition-all duration-300 hover:shadow-lg ">
           <h2 className="text-xl md:text-2xl font-bold mb-3 md:mb-4 text-indigo-700 inline-block transform transition-transform duration-300 hover:scale-105">
             Step 2: Select Filters
           </h2>
