@@ -1,6 +1,19 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { NextAuthOptions } from "next-auth";
+import { UserRoles } from "@/types/userTypes";
+
+// TODO: Move to a real database
+const users = [
+  {
+    id: "1",
+    username: process.env.NEXTAUTH_USERNAME,
+    password: process.env.NEXTAUTH_PASSWORD,
+    name: process.env.NEXTAUTH_NAME,
+    email: process.env.NEXTAUTH_EMAIL,
+    role: UserRoles.Admin,
+  },
+];
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -11,15 +24,17 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        // This is where you would typically validate against your database
-        // For demo purposes, we're using hardcoded credentials
-        if (credentials?.username === "tuluadmin" && credentials?.password === "2loo") {
-          return {
-            id: "1",
-            name: "Admin User",
-            email: "admin@example.com",
-          };
+        // Find the user in our "database"
+        const user = users.find(
+          (user) => user.username === credentials?.username && user.password === credentials?.password
+        );
+
+        if (user) {
+          // Return user data without the password
+          const { password, ...userWithoutPassword } = user;
+          return userWithoutPassword;
         }
+
         return null;
       },
     }),
@@ -29,14 +44,28 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     async jwt({ token, user }) {
+      // When signing in, add user data to the token
       if (user) {
         token.id = user.id;
+        token.name = user.name;
+        token.email = user.email;
+        // Fix for TypeScript error - only assign if role exists and is not null
+        if (user.role) {
+          token.role = user.role;
+        }
       }
       return token;
     },
     async session({ session, token }) {
+      // Add user data from token to the session
       if (session.user) {
         session.user.id = token.id as string;
+        session.user.name = token.name as string;
+        session.user.email = token.email as string;
+        // Only assign role if it exists in the token
+        if (token.role) {
+          session.user.role = token.role;
+        }
       }
       return session;
     },
