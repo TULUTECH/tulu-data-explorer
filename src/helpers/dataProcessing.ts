@@ -1,6 +1,6 @@
-import { DIMENSION_ENUM, ITypeParsedOmpData, METRIC_ENUM } from "@/types/data";
+import { DIMENSION_DATA_ENUM, ITypeParsedOmpData, METRIC_DATA_ENUM } from "@/types/data";
 import { aggregateByDate, aggregateByCampaign, aggregateByAdGroupId } from "@/helpers/dataAggregation";
-import { METRICS_OBJS } from "@/constants/dataConfig";
+import { METRIC_OBJS } from "@/constants";
 
 export const processCampaignDimension = (filteredData: ITypeParsedOmpData[]): ITypeParsedOmpData[] => {
   const aggregatedData = aggregateByCampaign(filteredData);
@@ -13,7 +13,7 @@ export const processDateDimension = (
 ): ITypeParsedOmpData[] => {
   const aggregatedByDate = aggregateByDate(filteredData);
 
-  if (selectedDimensions.includes(DIMENSION_ENUM.AdGroupId)) {
+  if (selectedDimensions.includes(DIMENSION_DATA_ENUM.AdGroupId)) {
     return processDateDimensionWithAdGroup(filteredData, aggregatedByDate);
   } else if (selectedDimensions.includes("campaign_name")) {
     return processDateDimensionWithCampaign(filteredData, aggregatedByDate);
@@ -47,7 +47,7 @@ const processDateDimensionWithAdGroup = (
   return processDateDimensionWithField(
     data,
     aggregatedByDate,
-    DIMENSION_ENUM.AdGroupId,
+    DIMENSION_DATA_ENUM.AdGroupId,
     (row, value) => row.ad_group_id === value,
     createAdGroupRow,
     sortByDateAndAdGroupId
@@ -146,7 +146,7 @@ function createAdGroupRow(
 }
 
 // Utility functions for metric field operations
-function initializeMetricFields(): Record<METRIC_ENUM, number> {
+function initializeMetricFields(): Record<METRIC_DATA_ENUM, number> {
   return {
     impressions: 0,
     clicks: 0,
@@ -157,10 +157,10 @@ function initializeMetricFields(): Record<METRIC_ENUM, number> {
   };
 }
 
-function aggregateMetricFields(rows: ITypeParsedOmpData[]): Record<METRIC_ENUM, number> {
+function aggregateMetricFields(rows: ITypeParsedOmpData[]): Record<METRIC_DATA_ENUM, number> {
   const result = initializeMetricFields();
 
-  for (const metricObj of METRICS_OBJS) {
+  for (const metricObj of METRIC_OBJS) {
     const field = metricObj.value;
     result[field] = rows.reduce((sum, row) => sum + (row[field] || 0), 0);
   }
