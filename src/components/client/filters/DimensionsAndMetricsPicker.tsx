@@ -1,14 +1,14 @@
 "use client";
 import React from "react";
-import { DIMENSION_ENUM, METRIC_ENUM } from "@/types/data";
+import { DIMENSION_DATA_ENUM, METRIC_DATA_ENUM } from "@/types/data";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { setSelectedDimensions, setSelectedMetrics } from "@/store/slices/dataExplorerSlice";
-import { DIMENSION_OBJS, METRICS_OBJS } from "@/constants/dataConfig";
+import { DIMENSION_OBJS, METRIC_OBJS } from "@/constants";
 import Select, { MultiValue } from "react-select";
 
 type OptionType = {
-  value: DIMENSION_ENUM | METRIC_ENUM;
+  value: DIMENSION_DATA_ENUM | METRIC_DATA_ENUM;
   label: string;
 };
 
@@ -17,20 +17,23 @@ export const DimensionsAndMetricsPicker: React.FC = () => {
   const { selectedDimensions, selectedMetrics } = useSelector((state: RootState) => state.dataExplorer);
 
   const handleDimensionChange = (selectedOptions: MultiValue<OptionType>) => {
-    const selectedValues = selectedOptions.map((option) => option.value as DIMENSION_ENUM);
-    let newDimensions: DIMENSION_ENUM[] = [...selectedValues];
+    const selectedValues = selectedOptions.map((option) => option.value as DIMENSION_DATA_ENUM);
+    let newDimensions: DIMENSION_DATA_ENUM[] = [...selectedValues];
 
     // Handle the special case for AdGroupId and CampaignName
-    if (selectedValues.includes(DIMENSION_ENUM.AdGroupId) && !selectedValues.includes(DIMENSION_ENUM.CampaignName)) {
+    if (
+      selectedValues.includes(DIMENSION_DATA_ENUM.AdGroupId) &&
+      !selectedValues.includes(DIMENSION_DATA_ENUM.CampaignName)
+    ) {
       // If AdGroupId is selected but CampaignName is not, add CampaignName
-      newDimensions = [...newDimensions, DIMENSION_ENUM.CampaignName];
+      newDimensions = [...newDimensions, DIMENSION_DATA_ENUM.CampaignName];
     }
 
     dispatch(setSelectedDimensions(newDimensions));
   };
 
   const handleMetricChange = (selectedOptions: MultiValue<OptionType>) => {
-    const selectedValues = selectedOptions.map((option) => option.value as METRIC_ENUM);
+    const selectedValues = selectedOptions.map((option) => option.value as METRIC_DATA_ENUM);
     dispatch(setSelectedMetrics(selectedValues));
   };
 
@@ -38,7 +41,7 @@ export const DimensionsAndMetricsPicker: React.FC = () => {
   const selectedDimensionOptions = DIMENSION_OBJS.filter((dimension) => selectedDimensions.includes(dimension.value));
 
   // Convert selected metrics to the format expected by react-select
-  const selectedMetricOptions = METRICS_OBJS.filter((metric) => selectedMetrics.includes(metric.value));
+  const selectedMetricOptions = METRIC_OBJS.filter((metric) => selectedMetrics.includes(metric.value));
 
   const isMetricsDisabled = selectedDimensions.length === 0;
 
@@ -80,7 +83,7 @@ export const DimensionsAndMetricsPicker: React.FC = () => {
         <Select
           isMulti
           name="dimensions"
-          options={DIMENSION_OBJS}
+          options={DIMENSION_OBJS.filter((option) => option.isSelectableForTable)}
           className="basic-multi-select"
           classNamePrefix="select"
           value={selectedDimensionOptions}
@@ -89,7 +92,7 @@ export const DimensionsAndMetricsPicker: React.FC = () => {
           styles={customStyles}
           closeMenuOnSelect={false}
         />
-        {selectedDimensions.includes(DIMENSION_ENUM.AdGroupId) && (
+        {selectedDimensions.includes(DIMENSION_DATA_ENUM.AdGroupId) && (
           <p className="text-xs text-gray-500 mt-1">
             Note: Campaign Name is automatically selected when Ad Group is selected.
           </p>
@@ -101,7 +104,7 @@ export const DimensionsAndMetricsPicker: React.FC = () => {
         <Select
           isMulti
           name="metrics"
-          options={METRICS_OBJS}
+          options={METRIC_OBJS}
           className="basic-multi-select"
           classNamePrefix="select"
           value={selectedMetricOptions}

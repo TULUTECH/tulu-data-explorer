@@ -17,13 +17,15 @@ export interface IDateRange {
   endDate: string | null;
 }
 
-export enum DIMENSION_ENUM {
+export enum DIMENSION_DATA_ENUM {
   Date = "date",
   CampaignName = "campaign_name",
+  CampaignId = "campaign_id",
+  AdGroupName = "ad_group_name",
   AdGroupId = "ad_group_id",
 }
 
-export enum METRIC_ENUM {
+export enum METRIC_DATA_ENUM {
   Impressions = "impressions",
   Clicks = "clicks",
   CostMicros = "cost_micros",
@@ -32,27 +34,14 @@ export enum METRIC_ENUM {
   Revenue = "revenue",
 }
 
-const dimensionLabels: Record<DIMENSION_ENUM, string> = {
-  [DIMENSION_ENUM.Date]: "Date",
-  [DIMENSION_ENUM.CampaignName]: "Campaign (name)",
-  [DIMENSION_ENUM.AdGroupId]: "Ad Group (id)",
-};
+export interface IDimensionObj {
+  value: DIMENSION_DATA_ENUM;
+  label: string;
+  isSelectableForTable: boolean;
+}
 
-export const DIMENSION_OBJS = Object.entries(dimensionLabels).map(([value, label]) => ({
-  value: value as DIMENSION_ENUM,
-  label,
-}));
-
-const metricLabels: Record<METRIC_ENUM, string> = {
-  [METRIC_ENUM.Impressions]: "Impressions",
-  [METRIC_ENUM.Clicks]: "Clicks",
-  [METRIC_ENUM.CostMicros]: "Cost (micros)",
-  [METRIC_ENUM.Sessions]: "Sessions",
-  [METRIC_ENUM.Leads]: "Leads",
-  [METRIC_ENUM.Revenue]: "Revenue",
-};
-
-export const METRICS_OBJS = Object.entries(metricLabels).map(([value, label]) => ({
-  value: value as METRIC_ENUM,
-  label,
-}));
+export interface IMetricObj {
+  value: METRIC_DATA_ENUM;
+  label: string;
+  isSelectableForTable: boolean;
+}

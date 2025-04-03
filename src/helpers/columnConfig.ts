@@ -1,5 +1,5 @@
-import { METRICS_OBJS } from "@/constants";
-import { DIMENSION_ENUM, METRIC_ENUM, DIMENSION_OBJS, ITypeParsedOmpData } from "@/types/data";
+import { DIMENSION_OBJS, METRIC_OBJS } from "@/constants";
+import { DIMENSION_DATA_ENUM, METRIC_DATA_ENUM, ITypeParsedOmpData } from "@/types/data";
 import { FilterFn, CellContext } from "@tanstack/react-table";
 import { format } from "date-fns";
 
@@ -27,7 +27,7 @@ const formatCurrency =
   (props: CellContext<ITypeParsedOmpData, any>): React.ReactNode => {
     const value = props.getValue();
     if (value == null) return "-";
-    const adjustedValue = key === METRIC_ENUM.CostMicros ? Number(value) / 1000000 : Number(value);
+    const adjustedValue = key === METRIC_DATA_ENUM.CostMicros ? Number(value) / 1000000 : Number(value);
     return adjustedValue.toLocaleString("de-DE", {
       style: "currency",
       currency: "EUR",
@@ -85,8 +85,8 @@ type ColumnConfig = {
 };
 export const columnConfigs: ColumnConfig[] = [
   {
-    key: DIMENSION_ENUM.CampaignName,
-    header: createHeaderFromLabel(DIMENSION_ENUM.CampaignName, DIMENSION_OBJS, "Campaign Name"),
+    key: DIMENSION_DATA_ENUM.CampaignName,
+    header: createHeaderFromLabel(DIMENSION_DATA_ENUM.CampaignName, DIMENSION_OBJS, "Campaign Name"),
   },
   {
     key: "campaign_id",
@@ -97,12 +97,12 @@ export const columnConfigs: ColumnConfig[] = [
     header: () => "Ad Group Name",
   },
   {
-    key: DIMENSION_ENUM.AdGroupId,
-    header: createHeaderFromLabel(DIMENSION_ENUM.AdGroupId, DIMENSION_OBJS, "Ad Group ID"),
+    key: DIMENSION_DATA_ENUM.AdGroupId,
+    header: createHeaderFromLabel(DIMENSION_DATA_ENUM.AdGroupId, DIMENSION_OBJS, "Ad Group ID"),
   },
   {
-    key: DIMENSION_ENUM.Date,
-    header: createHeaderFromLabel(DIMENSION_ENUM.Date, DIMENSION_OBJS, "Date"),
+    key: DIMENSION_DATA_ENUM.Date,
+    header: createHeaderFromLabel(DIMENSION_DATA_ENUM.Date, DIMENSION_OBJS, "Date"),
     // Use a custom accessor function to convert date strings to Date objects
     accessorFn: (row) => (row.date ? new Date(row.date) : new Date(0)),
     filterFn: customDateRangeFilter,
@@ -119,47 +119,47 @@ export const columnConfigs: ColumnConfig[] = [
     },
   },
   {
-    key: METRIC_ENUM.CostMicros,
-    header: createHeaderFromLabel(METRIC_ENUM.CostMicros, METRICS_OBJS, "Cost (micros)"),
-    cell: formatCurrency(METRIC_ENUM.CostMicros),
+    key: METRIC_DATA_ENUM.CostMicros,
+    header: createHeaderFromLabel(METRIC_DATA_ENUM.CostMicros, METRIC_OBJS, "Cost (micros)"),
+    cell: formatCurrency(METRIC_DATA_ENUM.CostMicros),
   },
   {
-    key: METRIC_ENUM.Impressions,
-    header: createHeaderFromLabel(METRIC_ENUM.Impressions, METRICS_OBJS, "Impressions"),
+    key: METRIC_DATA_ENUM.Impressions,
+    header: createHeaderFromLabel(METRIC_DATA_ENUM.Impressions, METRIC_OBJS, "Impressions"),
     cell: formatNumberEuropean,
   },
   {
-    key: METRIC_ENUM.Clicks,
-    header: createHeaderFromLabel(METRIC_ENUM.Clicks, METRICS_OBJS, "Clicks"),
+    key: METRIC_DATA_ENUM.Clicks,
+    header: createHeaderFromLabel(METRIC_DATA_ENUM.Clicks, METRIC_OBJS, "Clicks"),
     cell: formatNumberEuropean,
   },
   {
-    key: METRIC_ENUM.Sessions,
-    header: createHeaderFromLabel(METRIC_ENUM.Sessions, METRICS_OBJS, "Sessions"),
+    key: METRIC_DATA_ENUM.Sessions,
+    header: createHeaderFromLabel(METRIC_DATA_ENUM.Sessions, METRIC_OBJS, "Sessions"),
     cell: formatNumberEuropean,
   },
   {
-    key: METRIC_ENUM.Leads,
-    header: createHeaderFromLabel(METRIC_ENUM.Leads, METRICS_OBJS, "Leads"),
+    key: METRIC_DATA_ENUM.Leads,
+    header: createHeaderFromLabel(METRIC_DATA_ENUM.Leads, METRIC_OBJS, "Leads"),
     cell: formatNumberEuropean,
   },
   {
-    key: METRIC_ENUM.Revenue,
-    header: createHeaderFromLabel(METRIC_ENUM.Revenue, METRICS_OBJS, "Revenue"),
-    cell: formatCurrency(METRIC_ENUM.Revenue),
+    key: METRIC_DATA_ENUM.Revenue,
+    header: createHeaderFromLabel(METRIC_DATA_ENUM.Revenue, METRIC_OBJS, "Revenue"),
+    cell: formatCurrency(METRIC_DATA_ENUM.Revenue),
   },
 ];
 
 export const columnOrder = [
-  DIMENSION_ENUM.Date,
+  DIMENSION_DATA_ENUM.Date,
   "campaign_id",
-  DIMENSION_ENUM.CampaignName,
-  DIMENSION_ENUM.AdGroupId,
+  DIMENSION_DATA_ENUM.CampaignName,
+  DIMENSION_DATA_ENUM.AdGroupId,
   "ad_group_name",
-  METRIC_ENUM.CostMicros,
-  METRIC_ENUM.Impressions,
-  METRIC_ENUM.Clicks,
-  METRIC_ENUM.Sessions,
-  METRIC_ENUM.Leads,
-  METRIC_ENUM.Revenue,
+  METRIC_DATA_ENUM.CostMicros,
+  METRIC_DATA_ENUM.Impressions,
+  METRIC_DATA_ENUM.Clicks,
+  METRIC_DATA_ENUM.Sessions,
+  METRIC_DATA_ENUM.Leads,
+  METRIC_DATA_ENUM.Revenue,
 ];

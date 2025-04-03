@@ -1,6 +1,6 @@
 import { ITypeParsedOmpData } from "@/types/data";
 import { VisibilityState } from "@tanstack/react-table";
-import { DIMENSION_ENUM, METRIC_ENUM } from "@/types/data";
+import { DIMENSION_DATA_ENUM, METRIC_DATA_ENUM } from "@/types/data";
 
 interface IRawOmpData {
   campaign_id: string;
@@ -33,20 +33,20 @@ export const parseOmpDataTypes = (rawData: IRawOmpData[]): ITypeParsedOmpData[] 
 };
 
 export const getVisibilityState = (
-  selectedDimensions: DIMENSION_ENUM[],
-  selectedMetrics: METRIC_ENUM[]
+  selectedDimensions: DIMENSION_DATA_ENUM[],
+  selectedMetrics: METRIC_DATA_ENUM[]
 ): VisibilityState => ({
-  date: selectedDimensions.includes(DIMENSION_ENUM.Date),
-  campaign_name: selectedDimensions.includes(DIMENSION_ENUM.CampaignName),
-  campaign_id: selectedDimensions.includes(DIMENSION_ENUM.CampaignName),
-  ad_group_name: selectedDimensions.includes(DIMENSION_ENUM.AdGroupId),
-  ad_group_id: selectedDimensions.includes(DIMENSION_ENUM.AdGroupId),
-  impressions: selectedMetrics.includes(METRIC_ENUM.Impressions),
-  clicks: selectedMetrics.includes(METRIC_ENUM.Clicks),
-  cost_micros: selectedMetrics.includes(METRIC_ENUM.CostMicros),
-  sessions: selectedMetrics.includes(METRIC_ENUM.Sessions),
-  leads: selectedMetrics.includes(METRIC_ENUM.Leads),
-  revenue: selectedMetrics.includes(METRIC_ENUM.Revenue),
+  date: selectedDimensions.includes(DIMENSION_DATA_ENUM.Date),
+  campaign_name: selectedDimensions.includes(DIMENSION_DATA_ENUM.CampaignName),
+  campaign_id: selectedDimensions.includes(DIMENSION_DATA_ENUM.CampaignName),
+  ad_group_name: selectedDimensions.includes(DIMENSION_DATA_ENUM.AdGroupId),
+  ad_group_id: selectedDimensions.includes(DIMENSION_DATA_ENUM.AdGroupId),
+  impressions: selectedMetrics.includes(METRIC_DATA_ENUM.Impressions),
+  clicks: selectedMetrics.includes(METRIC_DATA_ENUM.Clicks),
+  cost_micros: selectedMetrics.includes(METRIC_DATA_ENUM.CostMicros),
+  sessions: selectedMetrics.includes(METRIC_DATA_ENUM.Sessions),
+  leads: selectedMetrics.includes(METRIC_DATA_ENUM.Leads),
+  revenue: selectedMetrics.includes(METRIC_DATA_ENUM.Revenue),
 });
 
 export const filterByDateRange = (
