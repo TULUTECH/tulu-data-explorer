@@ -1,17 +1,9 @@
-import { DIMENSION_OBJS, METRIC_OBJS } from "@/constants";
+import { DIMENSION_LABEL_MAP, DIMENSION_OBJS, METRIC_LABEL_MAP, METRIC_OBJS } from "@/constants";
 import { DIMENSION_DATA_ENUM, METRIC_DATA_ENUM, ITypeParsedOmpData } from "@/types/data";
 import { FilterFn, CellContext } from "@tanstack/react-table";
 import { format } from "date-fns";
 
 // Helper Functions
-const createHeaderFromLabel = <T extends string>(
-  value: T,
-  arrayOfDimensionsOrMetrics: { value: T; label: string }[],
-  fallbackLabel: string
-): (() => string) => {
-  return () => arrayOfDimensionsOrMetrics.find((item) => item.value === value)?.label || fallbackLabel;
-};
-
 const formatNumberEuropean = (props: CellContext<ITypeParsedOmpData, any>): React.ReactNode => {
   const value = props.getValue();
   return value != null
@@ -74,6 +66,7 @@ const customDateRangeFilter: FilterFn<ITypeParsedOmpData> = (row, columnId, filt
   if (addMeta) addMeta({ isInRange });
   return isInRange;
 };
+
 //
 
 type ColumnConfig = {
@@ -86,23 +79,23 @@ type ColumnConfig = {
 export const columnConfigs: ColumnConfig[] = [
   {
     key: DIMENSION_DATA_ENUM.CampaignName,
-    header: createHeaderFromLabel(DIMENSION_DATA_ENUM.CampaignName, DIMENSION_OBJS, "Campaign Name"),
+    header: () => DIMENSION_LABEL_MAP[DIMENSION_DATA_ENUM.CampaignName] || "Campaign Name",
   },
   {
     key: "campaign_id",
-    header: () => "Campaign ID",
+    header: () => DIMENSION_LABEL_MAP[DIMENSION_DATA_ENUM.CampaignId] || "Campaign ID",
   },
   {
     key: "ad_group_name",
-    header: () => "Ad Group Name",
+    header: () => DIMENSION_LABEL_MAP[DIMENSION_DATA_ENUM.AdGroupName] || "Ad-Group Name",
   },
   {
     key: DIMENSION_DATA_ENUM.AdGroupId,
-    header: createHeaderFromLabel(DIMENSION_DATA_ENUM.AdGroupId, DIMENSION_OBJS, "Ad Group ID"),
+    header: () => DIMENSION_LABEL_MAP[DIMENSION_DATA_ENUM.AdGroupId] || "Ad-Group ID",
   },
   {
     key: DIMENSION_DATA_ENUM.Date,
-    header: createHeaderFromLabel(DIMENSION_DATA_ENUM.Date, DIMENSION_OBJS, "Date"),
+    header: () => DIMENSION_LABEL_MAP[DIMENSION_DATA_ENUM.Date] || "Date",
     // Use a custom accessor function to convert date strings to Date objects
     accessorFn: (row) => (row.date ? new Date(row.date) : new Date(0)),
     filterFn: customDateRangeFilter,
@@ -120,32 +113,32 @@ export const columnConfigs: ColumnConfig[] = [
   },
   {
     key: METRIC_DATA_ENUM.CostMicros,
-    header: createHeaderFromLabel(METRIC_DATA_ENUM.CostMicros, METRIC_OBJS, "Cost (micros)"),
+    header: () => METRIC_LABEL_MAP[METRIC_DATA_ENUM.CostMicros] || "Cost",
     cell: formatCurrency(METRIC_DATA_ENUM.CostMicros),
   },
   {
     key: METRIC_DATA_ENUM.Impressions,
-    header: createHeaderFromLabel(METRIC_DATA_ENUM.Impressions, METRIC_OBJS, "Impressions"),
+    header: () => METRIC_LABEL_MAP[METRIC_DATA_ENUM.Impressions] || "Impressions",
     cell: formatNumberEuropean,
   },
   {
     key: METRIC_DATA_ENUM.Clicks,
-    header: createHeaderFromLabel(METRIC_DATA_ENUM.Clicks, METRIC_OBJS, "Clicks"),
+    header: () => METRIC_LABEL_MAP[METRIC_DATA_ENUM.Clicks] || "Clicks",
     cell: formatNumberEuropean,
   },
   {
     key: METRIC_DATA_ENUM.Sessions,
-    header: createHeaderFromLabel(METRIC_DATA_ENUM.Sessions, METRIC_OBJS, "Sessions"),
+    header: () => METRIC_LABEL_MAP[METRIC_DATA_ENUM.Sessions] || "Sessions",
     cell: formatNumberEuropean,
   },
   {
     key: METRIC_DATA_ENUM.Leads,
-    header: createHeaderFromLabel(METRIC_DATA_ENUM.Leads, METRIC_OBJS, "Leads"),
+    header: () => METRIC_LABEL_MAP[METRIC_DATA_ENUM.Leads] || "Leads",
     cell: formatNumberEuropean,
   },
   {
     key: METRIC_DATA_ENUM.Revenue,
-    header: createHeaderFromLabel(METRIC_DATA_ENUM.Revenue, METRIC_OBJS, "Revenue"),
+    header: () => METRIC_LABEL_MAP[METRIC_DATA_ENUM.Revenue] || "Revenue",
     cell: formatCurrency(METRIC_DATA_ENUM.Revenue),
   },
 ];

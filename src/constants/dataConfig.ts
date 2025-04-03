@@ -9,12 +9,6 @@ const DIMENSION_CONFIG: Record<DIMENSION_DATA_ENUM, { label: string; isSelectabl
   [DIMENSION_DATA_ENUM.AdGroupName]: { label: "Ad-Group Name", isSelectableForTable: false },
 };
 
-export const DIMENSION_OBJS: IDimensionObj[] = Object.values(DIMENSION_DATA_ENUM).map((value) => ({
-  value,
-  label: DIMENSION_CONFIG[value].label,
-  isSelectableForTable: DIMENSION_CONFIG[value].isSelectableForTable,
-}));
-
 const METRIC_CONFIG: Record<METRIC_DATA_ENUM, { label: string; isSelectableForTable: boolean }> = {
   [METRIC_DATA_ENUM.Impressions]: { label: "Impressions", isSelectableForTable: true },
   [METRIC_DATA_ENUM.Clicks]: { label: "Clicks", isSelectableForTable: true },
@@ -24,11 +18,33 @@ const METRIC_CONFIG: Record<METRIC_DATA_ENUM, { label: string; isSelectableForTa
   [METRIC_DATA_ENUM.Revenue]: { label: "Revenue", isSelectableForTable: true },
 };
 
+export const DIMENSION_OBJS: IDimensionObj[] = Object.values(DIMENSION_DATA_ENUM).map((value) => ({
+  value,
+  label: DIMENSION_CONFIG[value].label,
+  isSelectableForTable: DIMENSION_CONFIG[value].isSelectableForTable,
+}));
+
 export const METRIC_OBJS: IMetricObj[] = Object.values(METRIC_DATA_ENUM).map((value) => ({
   value,
   label: METRIC_CONFIG[value].label,
   isSelectableForTable: METRIC_CONFIG[value].isSelectableForTable,
 }));
+
+export const DIMENSION_LABEL_MAP = DIMENSION_OBJS.reduce(
+  (acc, { value, label }) => {
+    acc[value] = label;
+    return acc;
+  },
+  {} as Record<string, string>
+);
+
+export const METRIC_LABEL_MAP = METRIC_OBJS.reduce(
+  (acc, { value, label }) => {
+    acc[value] = label;
+    return acc;
+  },
+  {} as Record<string, string>
+);
 
 export const INITIAL_COLUMN_VISIBILITY: VisibilityState = {
   date: false,
