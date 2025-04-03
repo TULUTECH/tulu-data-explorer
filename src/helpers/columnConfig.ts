@@ -3,14 +3,7 @@ import { DIMENSION_ENUM, METRIC_ENUM, DIMENSION_OBJS, ITypeParsedOmpData } from 
 import { FilterFn, CellContext } from "@tanstack/react-table";
 import { format } from "date-fns";
 
-type ColumnConfig = {
-  key: string;
-  header: () => string;
-  accessorFn?: (row: ITypeParsedOmpData) => any;
-  filterFn?: FilterFn<ITypeParsedOmpData>;
-  cell?: (props: CellContext<ITypeParsedOmpData, any>) => React.ReactNode;
-};
-
+// Helper Functions
 const createHeaderFromLabel = <T extends string>(
   value: T,
   arrayOfDimensionsOrMetrics: { value: T; label: string }[],
@@ -19,7 +12,6 @@ const createHeaderFromLabel = <T extends string>(
   return () => arrayOfDimensionsOrMetrics.find((item) => item.value === value)?.label || fallbackLabel;
 };
 
-// Reusable function to format numbers in European style (with period as thousand separator)
 const formatNumberEuropean = (props: CellContext<ITypeParsedOmpData, any>): React.ReactNode => {
   const value = props.getValue();
   return value != null
@@ -29,6 +21,20 @@ const formatNumberEuropean = (props: CellContext<ITypeParsedOmpData, any>): Reac
       })
     : "-";
 };
+
+const formatCurrency =
+  (key: string) =>
+  (props: CellContext<ITypeParsedOmpData, any>): React.ReactNode => {
+    const value = props.getValue();
+    if (value == null) return "-";
+    const adjustedValue = key === METRIC_ENUM.CostMicros ? Number(value) / 1000000 : Number(value);
+    return adjustedValue.toLocaleString("de-DE", {
+      style: "currency",
+      currency: "EUR",
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+  };
 
 const customDateRangeFilter: FilterFn<ITypeParsedOmpData> = (row, columnId, filterValue, addMeta) => {
   const { startDate, endDate } = filterValue || {};
@@ -68,7 +74,15 @@ const customDateRangeFilter: FilterFn<ITypeParsedOmpData> = (row, columnId, filt
   if (addMeta) addMeta({ isInRange });
   return isInRange;
 };
+//
 
+type ColumnConfig = {
+  key: string;
+  header: () => string;
+  accessorFn?: (row: ITypeParsedOmpData) => any;
+  filterFn?: FilterFn<ITypeParsedOmpData>;
+  cell?: (props: CellContext<ITypeParsedOmpData, any>) => React.ReactNode;
+};
 export const columnConfigs: ColumnConfig[] = [
   {
     key: DIMENSION_ENUM.CampaignName,
@@ -107,17 +121,7 @@ export const columnConfigs: ColumnConfig[] = [
   {
     key: METRIC_ENUM.CostMicros,
     header: createHeaderFromLabel(METRIC_ENUM.CostMicros, METRICS_OBJS, "Cost (micros)"),
-    cell: (props) => {
-      const value = props.getValue();
-      return value != null
-        ? (Number(value) / 1000000).toLocaleString("de-DE", {
-            style: "currency",
-            currency: "EUR",
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          })
-        : "-";
-    },
+    cell: formatCurrency(METRIC_ENUM.CostMicros),
   },
   {
     key: METRIC_ENUM.Impressions,
@@ -142,17 +146,7 @@ export const columnConfigs: ColumnConfig[] = [
   {
     key: METRIC_ENUM.Revenue,
     header: createHeaderFromLabel(METRIC_ENUM.Revenue, METRICS_OBJS, "Revenue"),
-    cell: (props) => {
-      const value = props.getValue();
-      return value != null
-        ? Number(value).toLocaleString("de-DE", {
-            style: "currency",
-            currency: "EUR",
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          })
-        : "-";
-    },
+    cell: formatCurrency(METRIC_ENUM.Revenue),
   },
 ];
 
