@@ -100,7 +100,7 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
         {/* Step 1: Select Table */}
         <div className="md:w-1/3 bg-white p-4 md:p-6 rounded-lg shadow-md border border-indigo-100 transition-all duration-300 hover:shadow-lg ">
           <h2 className="text-xl md:text-2xl font-bold mb-3 md:mb-4 text-indigo-700 inline-block transform transition-transform duration-300 hover:scale-105">
-            Step 1: Select Table
+            Step 1: Please Select Table
           </h2>
           <select
             className="w-full border border-indigo-300 p-2 md:p-3 rounded-lg bg-white text-gray-700 shadow-sm 
@@ -125,7 +125,7 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
         {/* Step 2: Select Filters */}
         <div className="md:w-2/3 bg-white p-4 md:p-6 rounded-lg shadow-md border border-indigo-100 transition-all duration-300 hover:shadow-lg ">
           <h2 className="text-xl md:text-2xl font-bold mb-3 md:mb-4 text-indigo-700 inline-block transform transition-transform duration-300 hover:scale-105">
-            Step 2: Select Filters
+            Step 2: Please Select Filters
           </h2>
           <div className={`transition-opacity duration-500 ${tableData.length > 0 ? "opacity-100" : "opacity-50"}`}>
             <Filters hasData={tableData.length > 0} />
