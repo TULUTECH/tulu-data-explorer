@@ -1,6 +1,7 @@
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 import { FlatCompat } from "@eslint/eslintrc";
+import eslintPluginPrettier from "eslint-plugin-prettier"; // Import the plugin module
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -11,13 +12,12 @@ const compat = new FlatCompat({
 
 const eslintConfig = [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
-  // Enable Prettier via ESLint (formatting with linting)
   {
     plugins: {
-      prettier: "eslint-plugin-prettier",
+      prettier: eslintPluginPrettier,
     },
     rules: {
-      "prettier/prettier": "error", // Show Prettier issues as ESLint errors
+      "prettier/prettier": "error",
     },
   },
   // Optional: Disable formatting rules that may conflict with Prettier
