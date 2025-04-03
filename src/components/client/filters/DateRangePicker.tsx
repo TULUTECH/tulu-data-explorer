@@ -51,7 +51,7 @@ export const DateRangePicker: React.FC = () => {
         onChange={handleDateChange}
         onClose={handleClose}
         range
-        inputClass="w-50 px-2 py-1 border"
+        inputClass="w-60 px-2 py-1 border"
       />
     </div>
   );

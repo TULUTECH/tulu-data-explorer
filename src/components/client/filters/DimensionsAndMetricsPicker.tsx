@@ -77,7 +77,7 @@ export const DimensionsAndMetricsPicker: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col gap-6 w-full">
+    <div className="flex flex-col gap-4 w-full">
       <div>
         <h3 className="font-medium text-gray-700 mb-2">Dimensions</h3>
         <Select
