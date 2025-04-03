@@ -1,11 +1,8 @@
 import { DataExplorerClient } from "@/components/client/DataExplorerClient";
 import rawDataJson from "@/data/normalized_omp_data.json";
 import { parseOmpDataTypes } from "@/helpers/dataParsing";
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "./api/auth/[...nextauth]/route";
-import { redirect } from "next/navigation";
 
-//Simulate API call
+// Simulate API call
 async function fetchOmpData() {
   // In the future, replace this with:
   // const response = await fetch('your-api-endpoint');
@@ -15,14 +12,6 @@ async function fetchOmpData() {
 }
 
 export default async function DataExplorerPage() {
-  // Check authentication on the server
-  const session = await getServerSession(authOptions);
-
-  // If not authenticated, redirect to login
-  if (!session) {
-    redirect("/login");
-  }
-
   // Fetch data on the server
   const initialData = await fetchOmpData();
 
