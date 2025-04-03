@@ -73,66 +73,72 @@ export const Table = ({ table }: TableProps) => {
         <div className="min-w-full inline-block align-middle">
           <div className="overflow-hidden">
             <table className="min-w-full divide-y divide-indigo-200 table-auto">
-          <thead>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <tr key={headerGroup.id} className="bg-indigo-50">
-                <th className="border border-indigo-200 px-2 py-2 sm:px-3 text-xs sm:text-sm font-semibold text-indigo-800 sticky left-0 bg-indigo-50 z-10 whitespace-nowrap">
-                  #
-                </th>
-                {headerGroup.headers.map((header) => (
-                  <th
-                    key={header.id}
-                    className="border border-indigo-200 px-2 py-2 sm:px-3 text-xs sm:text-sm font-semibold text-indigo-800 whitespace-nowrap"
-                  >
-                    {header.isPlaceholder ? null : (
-                      <div
-                        onClick={header.column.getToggleSortingHandler()}
-                        className={header.column.getCanSort() ? "cursor-pointer select-none" : ""}
+              <thead>
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <tr key={headerGroup.id} className="bg-indigo-50">
+                    <th className="border border-indigo-200 px-2 py-2 sm:px-3 text-xs sm:text-sm font-semibold text-indigo-800 sticky left-0 bg-indigo-50 z-10 whitespace-nowrap">
+                      #
+                    </th>
+                    {headerGroup.headers.map((header) => (
+                      <th
+                        key={header.id}
+                        className="border border-indigo-200 px-2 py-2 sm:px-3 text-xs sm:text-sm font-semibold text-indigo-800 whitespace-nowrap"
                       >
-                        {flexRender(header.column.columnDef.header, header.getContext())}
-                        {header.column.getIsSorted() === "asc"
-                          ? " 🔼"
-                          : header.column.getIsSorted() === "desc"
-                            ? " 🔽"
-                            : ""}
-                      </div>
-                    )}
-                  </th>
+                        {header.isPlaceholder ? null : (
+                          <div
+                            onClick={header.column.getToggleSortingHandler()}
+                            className={header.column.getCanSort() ? "cursor-pointer select-none" : ""}
+                          >
+                            {flexRender(header.column.columnDef.header, header.getContext())}
+                            {header.column.getIsSorted() === "asc"
+                              ? " 🔼"
+                              : header.column.getIsSorted() === "desc"
+                                ? " 🔽"
+                                : ""}
+                          </div>
+                        )}
+                      </th>
+                    ))}
+                  </tr>
                 ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody className="divide-y divide-indigo-100">
-            {table.getRowModel().rows.map((row, rowIndex) => (
-              <tr key={row.id} className="hover:bg-indigo-50 transition-colors duration-150">
-                <td className="border border-indigo-200 px-2 py-1 sm:px-3 sm:py-2 text-xs sm:text-sm font-bold sticky left-0 bg-white z-10 hover:bg-indigo-50 whitespace-nowrap">
-                  {rowIndex + 1}
-                </td>
-                {row.getVisibleCells().map((cell) => (
-                  <td key={cell.id} className="border border-indigo-200 px-2 py-1 sm:px-3 sm:py-2 text-xs sm:text-sm">
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
+              </thead>
+              <tbody className="divide-y divide-indigo-100">
+                {table.getRowModel().rows.map((row, rowIndex) => (
+                  <tr key={row.id} className="hover:bg-indigo-50">
+                    <td
+                      className="border border-indigo-200 px-2 py-1 sm:px-3 sm:py-2 text-xs sm:text-sm font-bold sticky left-0 whitespace-nowrap"
+                      style={{ backgroundColor: "inherit" }}
+                    >
+                      {rowIndex + 1}
+                    </td>
+                    {row.getVisibleCells().map((cell) => (
+                      <td
+                        key={cell.id}
+                        className="border border-indigo-200 px-2 py-1 sm:px-3 sm:py-2 text-xs sm:text-sm"
+                      >
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </td>
+                    ))}
+                  </tr>
                 ))}
-              </tr>
-            ))}
-          </tbody>
-          <tfoot>
-            {table.getFooterGroups().map((footerGroup) => (
-              <tr key={footerGroup.id} className="bg-indigo-50">
-                <th className="border border-indigo-200 px-2 py-2 sm:px-3 text-xs sm:text-sm font-semibold text-indigo-800 sticky left-0 bg-indigo-50 z-10 whitespace-nowrap">
-                  #
-                </th>
-                {footerGroup.headers.map((header) => (
-                  <th
-                    key={header.id}
-                    className="border border-indigo-200 px-2 py-2 sm:px-3 text-xs sm:text-sm font-semibold text-indigo-800 whitespace-nowrap"
-                  >
-                    {header.isPlaceholder ? null : flexRender(header.column.columnDef.footer, header.getContext())}
-                  </th>
+              </tbody>
+              <tfoot>
+                {table.getFooterGroups().map((footerGroup) => (
+                  <tr key={footerGroup.id} className="bg-indigo-50">
+                    <th className="border border-indigo-200 px-2 py-2 sm:px-3 text-xs sm:text-sm font-semibold text-indigo-800 sticky left-0 bg-indigo-50 z-10 whitespace-nowrap">
+                      #
+                    </th>
+                    {footerGroup.headers.map((header) => (
+                      <th
+                        key={header.id}
+                        className="border border-indigo-200 px-2 py-2 sm:px-3 text-xs sm:text-sm font-semibold text-indigo-800 whitespace-nowrap"
+                      >
+                        {header.isPlaceholder ? null : flexRender(header.column.columnDef.footer, header.getContext())}
+                      </th>
+                    ))}
+                  </tr>
                 ))}
-              </tr>
-            ))}
-          </tfoot>
+              </tfoot>
             </table>
           </div>
         </div>
