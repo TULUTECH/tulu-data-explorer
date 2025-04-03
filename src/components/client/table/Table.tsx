@@ -25,9 +25,10 @@ export const Table = ({ table }: TableProps) => {
   }
 
   return (
-    <div className="w-full">
+    <section className="w-full">
       {/* Pagination controls */}
-      <div className="flex flex-wrap justify-between items-center mb-3 text-xs sm:text-sm">
+      <nav className="flex flex-wrap justify-between items-center mb-3 text-xs sm:text-sm">
+        {/* Previous/Next buttons */}
         <div className="flex items-center space-x-1 sm:space-x-2 mb-2 sm:mb-0">
           <button
             className="px-1 sm:px-2 py-1 bg-indigo-200 hover:bg-indigo-300 rounded disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed transition-colors duration-200"
@@ -47,32 +48,30 @@ export const Table = ({ table }: TableProps) => {
             {">"}
           </button>
         </div>
+        
+        {/* Page size selector and row count */}
         <div className="flex items-center gap-2 text-xs sm:text-sm whitespace-nowrap">
-          {/* Page size selector */}
-          <div className="flex justify-end">
-            <select
-              className="text-xs sm:text-sm border border-indigo-200 rounded p-1 bg-white focus:outline-none focus:ring-1 focus:ring-indigo-500"
-              value={pageSize}
-              onChange={(e) => table.setPageSize(Number(e.target.value))}
-            >
-              {[10, 25, 50, 100].map((size) => (
-                <option key={size} value={size}>
-                  Show {size}
-                </option>
-              ))}
-            </select>
-          </div>
+          <select
+            className="text-xs sm:text-sm border border-indigo-200 rounded p-1 bg-white focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            value={pageSize}
+            onChange={(e) => table.setPageSize(Number(e.target.value))}
+          >
+            {[10, 25, 50, 100].map((size) => (
+              <option key={size} value={size}>
+                Show {size}
+              </option>
+            ))}
+          </select>
           <span>
             Rows {totalRows ? pageIndex * pageSize + 1 : 0}-{Math.min((pageIndex + 1) * pageSize, totalRows)} of{" "}
             {totalRows}
           </span>
         </div>
-      </div>
-      {/* Table with improved horizontal scroll capability */}
+      </nav>
+      
+      {/* Table container with horizontal scroll */}
       <div className="overflow-x-auto w-full">
-        <div className="min-w-full inline-block align-middle">
-          <div className="overflow-hidden">
-            <table className="min-w-full divide-y divide-indigo-200 table-auto">
+        <table className="min-w-full divide-y divide-indigo-200 table-auto">
               <thead>
                 {table.getHeaderGroups().map((headerGroup) => (
                   <tr key={headerGroup.id} className="bg-indigo-50">
@@ -140,9 +139,7 @@ export const Table = ({ table }: TableProps) => {
                 ))}
               </tfoot>
             </table>
-          </div>
-        </div>
       </div>
-    </div>
+    </section>
   );
 };
