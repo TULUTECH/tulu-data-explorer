@@ -19,6 +19,17 @@ const createHeaderFromLabel = <T extends string>(
   return () => arrayOfDimensionsOrMetrics.find((item) => item.value === value)?.label || fallbackLabel;
 };
 
+// Reusable function to format numbers in European style (with period as thousand separator)
+const formatNumberEuropean = (props: CellContext<ITypeParsedOmpData, any>): React.ReactNode => {
+  const value = props.getValue();
+  return value != null
+    ? Number(value).toLocaleString("de-DE", {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      })
+    : "-";
+};
+
 const customDateRangeFilter: FilterFn<ITypeParsedOmpData> = (row, columnId, filterValue, addMeta) => {
   const { startDate, endDate } = filterValue || {};
 
@@ -111,18 +122,22 @@ export const columnConfigs: ColumnConfig[] = [
   {
     key: METRIC_ENUM.Impressions,
     header: createHeaderFromLabel(METRIC_ENUM.Impressions, METRICS_OBJS, "Impressions"),
+    cell: formatNumberEuropean,
   },
   {
     key: METRIC_ENUM.Clicks,
     header: createHeaderFromLabel(METRIC_ENUM.Clicks, METRICS_OBJS, "Clicks"),
+    cell: formatNumberEuropean,
   },
   {
     key: METRIC_ENUM.Sessions,
     header: createHeaderFromLabel(METRIC_ENUM.Sessions, METRICS_OBJS, "Sessions"),
+    cell: formatNumberEuropean,
   },
   {
     key: METRIC_ENUM.Leads,
     header: createHeaderFromLabel(METRIC_ENUM.Leads, METRICS_OBJS, "Leads"),
+    cell: formatNumberEuropean,
   },
   {
     key: METRIC_ENUM.Revenue,
