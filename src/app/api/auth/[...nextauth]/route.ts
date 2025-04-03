@@ -49,7 +49,7 @@ export const authOptions: NextAuthOptions = {
         token.id = user.id;
         token.name = user.name;
         token.email = user.email;
-        // Fix for TypeScript error - only assign if role exists and is not null
+        // Only assign if role exists
         if (user.role) {
           token.role = user.role;
         }
@@ -62,7 +62,6 @@ export const authOptions: NextAuthOptions = {
         session.user.id = token.id as string;
         session.user.name = token.name as string;
         session.user.email = token.email as string;
-        // Only assign role if it exists in the token
         if (token.role) {
           session.user.role = token.role;
         }
