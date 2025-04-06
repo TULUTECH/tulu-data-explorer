@@ -1,6 +1,7 @@
 import { authOptions } from "@/lib/authOptions";
 import { getServerSession } from "next-auth/next";
 import { redirect } from "next/navigation";
+import { Suspense } from "react";
 
 export default async function AuthenticatedLayout({
   children,
@@ -17,7 +18,9 @@ export default async function AuthenticatedLayout({
 
   return (
     <div className="min-h-screen flex flex-col">
-      <main className="flex-grow">{children}</main>
+      <Suspense fallback={<div>Loading...</div>}>
+        <main className="flex-grow">{children}</main>
+      </Suspense>
     </div>
   );
 }
