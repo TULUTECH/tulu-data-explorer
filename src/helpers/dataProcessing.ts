@@ -1,15 +1,25 @@
-import { DIMENSION_DATA_ENUM, ITypeParsedOmpData, METRIC_DATA_ENUM } from "@/types/data";
-import { aggregateByDate, aggregateByCampaign, aggregateByAdGroupId } from "@/helpers/dataAggregation";
+import {
+  DIMENSION_DATA_ENUM,
+  ITypeParsedOmpData,
+  METRIC_DATA_ENUM,
+} from "@/types/data";
+import {
+  aggregateByDate,
+  aggregateByCampaign,
+  aggregateByAdGroupId,
+} from "@/helpers/dataAggregation";
 import { METRIC_OBJS } from "@/constants";
 
-export const processCampaignDimension = (filteredData: ITypeParsedOmpData[]): ITypeParsedOmpData[] => {
+export const processCampaignDimension = (
+  filteredData: ITypeParsedOmpData[],
+): ITypeParsedOmpData[] => {
   const aggregatedData = aggregateByCampaign(filteredData);
   return sortByCampaignName(Array.from(aggregatedData.values()));
 };
 
 export const processDateDimension = (
   filteredData: ITypeParsedOmpData[],
-  selectedDimensions: string[]
+  selectedDimensions: string[],
 ): ITypeParsedOmpData[] => {
   const aggregatedByDate = aggregateByDate(filteredData);
 
@@ -21,14 +31,16 @@ export const processDateDimension = (
   return sortByDate(Array.from(aggregatedByDate.values()));
 };
 
-export const processAdGroupDimension = (filteredData: ITypeParsedOmpData[]): ITypeParsedOmpData[] => {
+export const processAdGroupDimension = (
+  filteredData: ITypeParsedOmpData[],
+): ITypeParsedOmpData[] => {
   const aggregatedData = aggregateByAdGroupId(filteredData);
   return sortByAdGroupId(Array.from(aggregatedData.values()));
 };
 
 const processDateDimensionWithCampaign = (
   data: ITypeParsedOmpData[],
-  aggregatedByDate: Map<string, ITypeParsedOmpData>
+  aggregatedByDate: Map<string, ITypeParsedOmpData>,
 ): ITypeParsedOmpData[] => {
   return processDateDimensionWithField(
     data,
@@ -36,13 +48,13 @@ const processDateDimensionWithCampaign = (
     "campaign_name",
     (row, value) => row.campaign_name === value,
     createCampaignRow,
-    sortByDateAndCampaign
+    sortByDateAndCampaign,
   );
 };
 
 const processDateDimensionWithAdGroup = (
   data: ITypeParsedOmpData[],
-  aggregatedByDate: Map<string, ITypeParsedOmpData>
+  aggregatedByDate: Map<string, ITypeParsedOmpData>,
 ): ITypeParsedOmpData[] => {
   return processDateDimensionWithField(
     data,
@@ -50,7 +62,7 @@ const processDateDimensionWithAdGroup = (
     DIMENSION_DATA_ENUM.AdGroupId,
     (row, value) => row.ad_group_id === value,
     createAdGroupRow,
-    sortByDateAndAdGroupId
+    sortByDateAndAdGroupId,
   );
 };
 // Generic function to process date dimension with another field
@@ -63,23 +75,33 @@ function processDateDimensionWithField<T>(
     dateStr: string,
     fieldValue: T,
     rows: ITypeParsedOmpData[],
-    allData: ITypeParsedOmpData[]
+    allData: ITypeParsedOmpData[],
   ) => ITypeParsedOmpData,
-  sortFn: (data: ITypeParsedOmpData[]) => ITypeParsedOmpData[]
+  sortFn: (data: ITypeParsedOmpData[]) => ITypeParsedOmpData[],
 ): ITypeParsedOmpData[] {
   // Extract unique values for the field
-  const uniqueValues = [...new Set(data.map((row) => row[fieldName]))].filter(Boolean) as T[];
+  const uniqueValues = [...new Set(data.map((row) => row[fieldName]))].filter(
+    Boolean,
+  ) as T[];
 
   const allCombinations: ITypeParsedOmpData[] = [];
 
   aggregatedByDate.forEach((_, dateStr) => {
     uniqueValues.forEach((fieldValue) => {
       const filteredRows = data.filter(
-        (row) => row.date && new Date(row.date).toISOString().split("T")[0] === dateStr && filterFn(row, fieldValue)
+        (row) =>
+          row.date &&
+          new Date(row.date).toISOString().split("T")[0] === dateStr &&
+          filterFn(row, fieldValue),
       );
 
       if (filteredRows.length > 0) {
-        const combinedRow = createRowFn(dateStr, fieldValue, filteredRows, data);
+        const combinedRow = createRowFn(
+          dateStr,
+          fieldValue,
+          filteredRows,
+          data,
+        );
         allCombinations.push(combinedRow);
       }
     });
@@ -93,13 +115,15 @@ function createCampaignRow(
   dateStr: string,
   campaignName: string,
   campaignRows: ITypeParsedOmpData[],
-  allData: ITypeParsedOmpData[]
+  allData: ITypeParsedOmpData[],
 ): ITypeParsedOmpData {
   if (campaignRows.length === 0) {
     return {
       date: dateStr,
       campaign_name: campaignName,
-      campaign_id: allData.find((row) => row.campaign_name === campaignName)?.campaign_id || null,
+      campaign_id:
+        allData.find((row) => row.campaign_name === campaignName)
+          ?.campaign_id || null,
       ad_group_name: null,
       ad_group_id: null,
       ...initializeMetricFields(),
@@ -120,7 +144,7 @@ function createAdGroupRow(
   dateStr: string,
   adGroupId: number,
   adGroupRows: ITypeParsedOmpData[],
-  allData: ITypeParsedOmpData[]
+  allData: ITypeParsedOmpData[],
 ): ITypeParsedOmpData {
   if (adGroupRows.length === 0) {
     const matchingRow = allData.find((row) => row.ad_group_id === adGroupId);
@@ -157,7 +181,9 @@ function initializeMetricFields(): Record<METRIC_DATA_ENUM, number> {
   };
 }
 
-function aggregateMetricFields(rows: ITypeParsedOmpData[]): Record<METRIC_DATA_ENUM, number> {
+function aggregateMetricFields(
+  rows: ITypeParsedOmpData[],
+): Record<METRIC_DATA_ENUM, number> {
   const result = initializeMetricFields();
 
   for (const metricObj of METRIC_OBJS) {
@@ -169,7 +195,9 @@ function aggregateMetricFields(rows: ITypeParsedOmpData[]): Record<METRIC_DATA_E
 }
 
 // Sorting helpers
-const sortByDateAndCampaign = (data: ITypeParsedOmpData[]): ITypeParsedOmpData[] =>
+const sortByDateAndCampaign = (
+  data: ITypeParsedOmpData[],
+): ITypeParsedOmpData[] =>
   data.sort((a, b) => {
     const dateA = a.date ? new Date(a.date).getTime() : 0;
     const dateB = b.date ? new Date(b.date).getTime() : 0;
@@ -177,7 +205,9 @@ const sortByDateAndCampaign = (data: ITypeParsedOmpData[]): ITypeParsedOmpData[]
     return (a.campaign_name || "").localeCompare(b.campaign_name || "");
   });
 
-const sortByDateAndAdGroupId = (data: ITypeParsedOmpData[]): ITypeParsedOmpData[] =>
+const sortByDateAndAdGroupId = (
+  data: ITypeParsedOmpData[],
+): ITypeParsedOmpData[] =>
   data.sort((a, b) => {
     const dateA = a.date ? new Date(a.date).getTime() : 0;
     const dateB = b.date ? new Date(b.date).getTime() : 0;
@@ -193,7 +223,9 @@ const sortByDate = (data: ITypeParsedOmpData[]): ITypeParsedOmpData[] =>
   });
 
 const sortByCampaignName = (data: ITypeParsedOmpData[]): ITypeParsedOmpData[] =>
-  data.sort((a, b) => (a.campaign_name || "").localeCompare(b.campaign_name || ""));
+  data.sort((a, b) =>
+    (a.campaign_name || "").localeCompare(b.campaign_name || ""),
+  );
 
 const sortByAdGroupId = (data: ITypeParsedOmpData[]): ITypeParsedOmpData[] =>
   data.sort((a, b) => (a.ad_group_id || 0) - (b.ad_group_id || 0));

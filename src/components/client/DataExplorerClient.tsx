@@ -2,13 +2,20 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { VisibilityState } from "@tanstack/react-table";
-import { DIMENSION_DATA_ENUM, ITypeParsedOmpData, METRIC_DATA_ENUM } from "@/types/data";
+import { DIMENSION_DATA_ENUM, ITypeParsedOmpData } from "@/types/data";
 import { Table } from "@/components/client/table/Table";
 import { RootState } from "@/store/store";
-import { resetFilters, setSelectedTable } from "@/store/slices/dataExplorerSlice";
+import {
+  resetFilters,
+  setSelectedTable,
+} from "@/store/slices/dataExplorerSlice";
 import { useTableConfiguration } from "@/hooks/useTableConfiguration";
 import { getVisibilityState, filterByDateRange } from "@/helpers/dataParsing";
-import { processAdGroupDimension, processCampaignDimension, processDateDimension } from "@/helpers/dataProcessing";
+import {
+  processAdGroupDimension,
+  processCampaignDimension,
+  processDateDimension,
+} from "@/helpers/dataProcessing";
 import { Filters } from "@/components/client/filters/Filters";
 import { FilterButtons } from "@/components/client/filters/FilterButtons";
 import { INITIAL_COLUMN_VISIBILITY } from "@/constants";
@@ -17,12 +24,19 @@ interface DataExplorerClientProps {
   initialData: ITypeParsedOmpData[];
 }
 
-export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialData }) => {
+export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({
+  initialData,
+}) => {
   const [tableData, setTableData] = useState<ITypeParsedOmpData[]>([]);
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(INITIAL_COLUMN_VISIBILITY);
-  const { selectedDimensions, selectedMetrics, selectedDateRange, selectedTable } = useSelector(
-    (state: RootState) => state.dataExplorer
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
+    INITIAL_COLUMN_VISIBILITY,
   );
+  const {
+    selectedDimensions,
+    selectedMetrics,
+    selectedDateRange,
+    selectedTable,
+  } = useSelector((state: RootState) => state.dataExplorer);
   const dispatch = useDispatch();
   const isMountedRef = useRef(false);
 
@@ -48,7 +62,10 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
     setTableData([]);
   };
 
-  const getProcessedData = (data: ITypeParsedOmpData[], dimensions: DIMENSION_DATA_ENUM[]): ITypeParsedOmpData[] => {
+  const getProcessedData = (
+    data: ITypeParsedOmpData[],
+    dimensions: DIMENSION_DATA_ENUM[],
+  ): ITypeParsedOmpData[] => {
     if (dimensions.includes(DIMENSION_DATA_ENUM.Date)) {
       return processDateDimension(data, dimensions);
     }
@@ -66,8 +83,14 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
       setTableData([]);
       return;
     }
-    setColumnVisibility(getVisibilityState(selectedDimensions, selectedMetrics));
-    const filteredData = filterByDateRange(initialData, selectedDateRange.startDate, selectedDateRange.endDate);
+    setColumnVisibility(
+      getVisibilityState(selectedDimensions, selectedMetrics),
+    );
+    const filteredData = filterByDateRange(
+      initialData,
+      selectedDateRange.startDate,
+      selectedDateRange.endDate,
+    );
     const processedData = getProcessedData(filteredData, selectedDimensions);
     setTableData(processedData);
   };
@@ -93,7 +116,9 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
               tableData.length > 0 ? "bg-green-500" : "bg-amber-500"
             } animate-pulse`}
           ></div>
-          {tableData.length > 0 ? `${tableData.length} records loaded` : "No data loaded"}
+          {tableData.length > 0
+            ? `${tableData.length} records loaded`
+            : "No data loaded"}
         </div>
       </div>
       <div className="flex flex-col md:flex-row gap-4 md:gap-6 mb-6 md:mb-8">
@@ -127,10 +152,16 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({ initialD
           <h2 className="text-xl md:text-2xl font-bold mb-3 md:mb-4 text-indigo-700 inline-block transform transition-transform duration-300 hover:scale-105">
             Step 2: Please Select Filters
           </h2>
-          <div className={`transition-opacity duration-500 ${tableData.length > 0 ? "opacity-100" : "opacity-50"}`}>
+          <div
+            className={`transition-opacity duration-500 ${tableData.length > 0 ? "opacity-100" : "opacity-50"}`}
+          >
             <Filters hasData={tableData.length > 0} />
           </div>
-          <FilterButtons isFilterDisabled={isFilterDisabled} onFilter={handleFilter} onReset={handleReset} />
+          <FilterButtons
+            isFilterDisabled={isFilterDisabled}
+            onFilter={handleFilter}
+            onReset={handleReset}
+          />
         </div>
       </div>
 

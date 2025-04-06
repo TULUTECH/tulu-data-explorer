@@ -16,7 +16,9 @@ interface IRawOmpData {
   revenue: string | number;
 }
 
-export const parseOmpDataTypes = (rawData: IRawOmpData[]): ITypeParsedOmpData[] => {
+export const parseOmpDataTypes = (
+  rawData: IRawOmpData[],
+): ITypeParsedOmpData[] => {
   return rawData.map((item) => ({
     campaign_id: Number(item.campaign_id) || null,
     campaign_name: item.campaign_name || null,
@@ -34,7 +36,7 @@ export const parseOmpDataTypes = (rawData: IRawOmpData[]): ITypeParsedOmpData[] 
 
 export const getVisibilityState = (
   selectedDimensions: DIMENSION_DATA_ENUM[],
-  selectedMetrics: METRIC_DATA_ENUM[]
+  selectedMetrics: METRIC_DATA_ENUM[],
 ): VisibilityState => ({
   date: selectedDimensions.includes(DIMENSION_DATA_ENUM.Date),
   campaign_name: selectedDimensions.includes(DIMENSION_DATA_ENUM.CampaignName),
@@ -52,7 +54,7 @@ export const getVisibilityState = (
 export const filterByDateRange = (
   data: ITypeParsedOmpData[],
   startDate: string | null,
-  endDate: string | null
+  endDate: string | null,
 ): ITypeParsedOmpData[] => {
   if (!startDate || !endDate) return data;
 

@@ -15,7 +15,9 @@ export default function Navbar() {
 
         {session && (
           <div className="flex items-center gap-4">
-            <span className="text-sm text-gray-700">Signed in as: {session.user?.name || session.user?.email}</span>
+            <span className="text-sm text-gray-700">
+              Signed in as: {session.user?.name || session.user?.email}
+            </span>
             <button
               onClick={() => signOut({ callbackUrl: "/login" })}
               className="px-4 py-2 text-sm text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"

@@ -33,11 +33,12 @@ interface TableConfigurationProps {
 export const useTableConfiguration = ({
   tableData,
   columnVisibility,
-  dispatch,
-  isMountedRef,
+
   setColumnVisibility,
 }: TableConfigurationProps) => {
-  const handleColumnVisibilityChange: OnChangeFn<VisibilityState> = (updaterOrValue: Updater<VisibilityState>) => {
+  const handleColumnVisibilityChange: OnChangeFn<VisibilityState> = (
+    updaterOrValue: Updater<VisibilityState>,
+  ) => {
     if (typeof updaterOrValue === "function") {
       setColumnVisibility(updaterOrValue(columnVisibility));
     } else {

@@ -33,6 +33,7 @@ export default function LoginPage() {
         router.push(callbackUrl);
       }
     } catch (error) {
+      console.log(error);
       setError("An error occurred during sign in");
       setIsLoading(false);
     }
@@ -41,13 +42,22 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100">
       <div className="w-full max-w-md rounded-lg bg-white p-8 shadow-md">
-        <h1 className="mb-6 text-center text-2xl font-bold text-gray-800">Data Explorer Login</h1>
+        <h1 className="mb-6 text-center text-2xl font-bold text-gray-800">
+          Data Explorer Login
+        </h1>
 
-        {error && <div className="mb-4 rounded-md bg-red-50 p-4 text-sm text-red-700">{error}</div>}
+        {error && (
+          <div className="mb-4 rounded-md bg-red-50 p-4 text-sm text-red-700">
+            {error}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="username"
+              className="block text-sm font-medium text-gray-700"
+            >
               Username
             </label>
             <input
@@ -61,7 +71,10 @@ export default function LoginPage() {
           </div>
 
           <div className="mb-6">
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-700"
+            >
               Password
             </label>
             <input
