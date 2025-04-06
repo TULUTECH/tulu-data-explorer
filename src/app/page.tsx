@@ -1,8 +1,8 @@
 import { DataExplorerClient } from "@/components/client/DataExplorerClient";
 import rawDataJson from "@/data/normalized_omp_data.json";
 import { parseOmpDataTypes } from "@/helpers/dataParsing";
+import { authOptions } from "@/lib/authOptions";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "./api/auth/[...nextauth]/route";
 import { redirect } from "next/navigation";
 
 //Simulate API call

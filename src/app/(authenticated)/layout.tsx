@@ -1,5 +1,5 @@
+import { authOptions } from "@/lib/authOptions";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "../api/auth/[...nextauth]/route";
 import { redirect } from "next/navigation";
 
 export default async function AuthenticatedLayout({
@@ -9,17 +9,15 @@ export default async function AuthenticatedLayout({
 }) {
   // Check authentication on the server
   const session = await getServerSession(authOptions);
-  
+
   // If not authenticated, redirect to login
   if (!session) {
-    redirect('/login');
+    redirect("/login");
   }
-  
+
   return (
     <div className="min-h-screen flex flex-col">
-      <main className="flex-grow">
-        {children}
-      </main>
+      <main className="flex-grow">{children}</main>
     </div>
   );
 }

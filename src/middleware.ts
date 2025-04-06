@@ -4,14 +4,14 @@ import { NextResponse } from "next/server";
 // This function can be marked `async` if using `await` inside
 export default withAuth(
   // `withAuth` augments your `Request` with the user's token.
-  function middleware(req) {
+  function middleware() {
     return NextResponse.next();
   },
   {
     callbacks: {
       authorized: ({ token }) => !!token,
     },
-  }
+  },
 );
 
 // Specify which routes should be protected

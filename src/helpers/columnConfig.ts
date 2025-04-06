@@ -1,10 +1,18 @@
-import { DIMENSION_LABEL_MAP, DIMENSION_OBJS, METRIC_LABEL_MAP, METRIC_OBJS } from "@/constants";
-import { DIMENSION_DATA_ENUM, METRIC_DATA_ENUM, ITypeParsedOmpData } from "@/types/data";
+import { DIMENSION_LABEL_MAP, METRIC_LABEL_MAP } from "@/constants";
+import {
+  DIMENSION_DATA_ENUM,
+  METRIC_DATA_ENUM,
+  ITypeParsedOmpData,
+} from "@/types/data";
 import { FilterFn, CellContext } from "@tanstack/react-table";
 import { format } from "date-fns";
 
+type CellValue = string | number | Date | null;
+
 // Helper Functions
-const formatNumberEuropean = (props: CellContext<ITypeParsedOmpData, any>): React.ReactNode => {
+const formatNumberEuropean = (
+  props: CellContext<ITypeParsedOmpData, CellValue>,
+): React.ReactNode => {
   const value = props.getValue();
   return value != null
     ? Number(value).toLocaleString("de-DE", {
@@ -16,10 +24,13 @@ const formatNumberEuropean = (props: CellContext<ITypeParsedOmpData, any>): Reac
 
 const formatCurrency =
   (key: string) =>
-  (props: CellContext<ITypeParsedOmpData, any>): React.ReactNode => {
+  (props: CellContext<ITypeParsedOmpData, CellValue>): React.ReactNode => {
     const value = props.getValue();
     if (value == null) return "-";
-    const adjustedValue = key === METRIC_DATA_ENUM.CostMicros ? Number(value) / 1000000 : Number(value);
+    const adjustedValue =
+      key === METRIC_DATA_ENUM.CostMicros
+        ? Number(value) / 1000000
+        : Number(value);
     return adjustedValue.toLocaleString("de-DE", {
       style: "currency",
       currency: "EUR",
@@ -28,7 +39,12 @@ const formatCurrency =
     });
   };
 
-const customDateRangeFilter: FilterFn<ITypeParsedOmpData> = (row, columnId, filterValue, addMeta) => {
+const customDateRangeFilter: FilterFn<ITypeParsedOmpData> = (
+  row,
+  columnId,
+  filterValue,
+  addMeta,
+) => {
   const { startDate, endDate } = filterValue || {};
 
   // If no complete range is provided, don't filter out any rows.
@@ -44,12 +60,19 @@ const customDateRangeFilter: FilterFn<ITypeParsedOmpData> = (row, columnId, filt
   }
 
   // Only proceed if cellValue is a string, number, or Date
-  if (typeof cellValue !== "string" && typeof cellValue !== "number" && !(cellValue instanceof Date)) {
+  if (
+    typeof cellValue !== "string" &&
+    typeof cellValue !== "number" &&
+    !(cellValue instanceof Date)
+  ) {
     if (addMeta) addMeta({ filtered: false });
     return false;
   }
 
-  const cellDate = cellValue instanceof Date ? cellValue : new Date(cellValue as string | number);
+  const cellDate =
+    cellValue instanceof Date
+      ? cellValue
+      : new Date(cellValue as string | number);
   if (isNaN(cellDate.getTime())) {
     if (addMeta) addMeta({ filtered: false });
     return false;
@@ -72,26 +95,30 @@ const customDateRangeFilter: FilterFn<ITypeParsedOmpData> = (row, columnId, filt
 type ColumnConfig = {
   key: string;
   header: () => string;
-  accessorFn?: (row: ITypeParsedOmpData) => any;
+  accessorFn?: (row: ITypeParsedOmpData) => CellValue;
   filterFn?: FilterFn<ITypeParsedOmpData>;
-  cell?: (props: CellContext<ITypeParsedOmpData, any>) => React.ReactNode;
+  cell?: (props: CellContext<ITypeParsedOmpData, CellValue>) => React.ReactNode;
 };
 export const columnConfigs: ColumnConfig[] = [
   {
     key: DIMENSION_DATA_ENUM.CampaignName,
-    header: () => DIMENSION_LABEL_MAP[DIMENSION_DATA_ENUM.CampaignName] || "Campaign Name",
+    header: () =>
+      DIMENSION_LABEL_MAP[DIMENSION_DATA_ENUM.CampaignName] || "Campaign Name",
   },
   {
     key: "campaign_id",
-    header: () => DIMENSION_LABEL_MAP[DIMENSION_DATA_ENUM.CampaignId] || "Campaign ID",
+    header: () =>
+      DIMENSION_LABEL_MAP[DIMENSION_DATA_ENUM.CampaignId] || "Campaign ID",
   },
   {
     key: "ad_group_name",
-    header: () => DIMENSION_LABEL_MAP[DIMENSION_DATA_ENUM.AdGroupName] || "Ad-Group Name",
+    header: () =>
+      DIMENSION_LABEL_MAP[DIMENSION_DATA_ENUM.AdGroupName] || "Ad-Group Name",
   },
   {
     key: DIMENSION_DATA_ENUM.AdGroupId,
-    header: () => DIMENSION_LABEL_MAP[DIMENSION_DATA_ENUM.AdGroupId] || "Ad-Group ID",
+    header: () =>
+      DIMENSION_LABEL_MAP[DIMENSION_DATA_ENUM.AdGroupId] || "Ad-Group ID",
   },
   {
     key: DIMENSION_DATA_ENUM.Date,
@@ -101,7 +128,11 @@ export const columnConfigs: ColumnConfig[] = [
     filterFn: customDateRangeFilter,
     cell: (props) => {
       const dateValue = props.getValue();
-      if (!(dateValue instanceof Date) || isNaN(dateValue.getTime()) || dateValue.getTime() === 0) {
+      if (
+        !(dateValue instanceof Date) ||
+        isNaN(dateValue.getTime()) ||
+        dateValue.getTime() === 0
+      ) {
         return "-";
       }
       return dateValue.toLocaleDateString("en-GB", {
@@ -118,7 +149,8 @@ export const columnConfigs: ColumnConfig[] = [
   },
   {
     key: METRIC_DATA_ENUM.Impressions,
-    header: () => METRIC_LABEL_MAP[METRIC_DATA_ENUM.Impressions] || "Impressions",
+    header: () =>
+      METRIC_LABEL_MAP[METRIC_DATA_ENUM.Impressions] || "Impressions",
     cell: formatNumberEuropean,
   },
   {

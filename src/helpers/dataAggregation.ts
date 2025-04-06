@@ -1,31 +1,50 @@
 import { ITypeParsedOmpData } from "@/types/data";
 
-export const aggregateByDate = (data: ITypeParsedOmpData[]): Map<string, ITypeParsedOmpData> =>
+export const aggregateByDate = (
+  data: ITypeParsedOmpData[],
+): Map<string, ITypeParsedOmpData> =>
   aggregateBy(
     data,
     (row) => (row.date ? new Date(row.date).toISOString().split("T")[0] : null),
-    (row) => initAggregatedRow({ date: row.date ? new Date(row.date).toISOString().split("T")[0] : null })
+    (row) =>
+      initAggregatedRow({
+        date: row.date ? new Date(row.date).toISOString().split("T")[0] : null,
+      }),
   );
-export const aggregateByCampaign = (data: ITypeParsedOmpData[]): Map<string, ITypeParsedOmpData> =>
+export const aggregateByCampaign = (
+  data: ITypeParsedOmpData[],
+): Map<string, ITypeParsedOmpData> =>
   aggregateBy(
     data,
     (row) => row.campaign_name || null,
-    (row) => initAggregatedRow({ campaign_name: row.campaign_name, campaign_id: row.campaign_id })
+    (row) =>
+      initAggregatedRow({
+        campaign_name: row.campaign_name,
+        campaign_id: row.campaign_id,
+      }),
   );
-export const aggregateByAdGroupId = (data: ITypeParsedOmpData[]): Map<string, ITypeParsedOmpData> =>
+export const aggregateByAdGroupId = (
+  data: ITypeParsedOmpData[],
+): Map<string, ITypeParsedOmpData> =>
   aggregateBy(
     data,
-    (row) => (row.ad_group_id !== null && row.ad_group_id !== undefined ? row.ad_group_id.toString() : null),
+    (row) =>
+      row.ad_group_id !== null && row.ad_group_id !== undefined
+        ? row.ad_group_id.toString()
+        : null,
     (row) =>
       initAggregatedRow({
         campaign_name: row.campaign_name,
         campaign_id: row.campaign_id,
         ad_group_name: row.ad_group_name,
         ad_group_id: row.ad_group_id,
-      })
+      }),
   );
 
-const sumMetrics = (target: ITypeParsedOmpData, source: ITypeParsedOmpData): void => {
+const sumMetrics = (
+  target: ITypeParsedOmpData,
+  source: ITypeParsedOmpData,
+): void => {
   target.impressions = (target.impressions || 0) + (source.impressions || 0);
   target.clicks = (target.clicks || 0) + (source.clicks || 0);
   target.cost_micros = (target.cost_micros || 0) + (source.cost_micros || 0);
@@ -34,7 +53,9 @@ const sumMetrics = (target: ITypeParsedOmpData, source: ITypeParsedOmpData): voi
   target.revenue = (target.revenue || 0) + (source.revenue || 0);
 };
 
-const initAggregatedRow = (initialRow: Partial<ITypeParsedOmpData>): ITypeParsedOmpData => ({
+const initAggregatedRow = (
+  initialRow: Partial<ITypeParsedOmpData>,
+): ITypeParsedOmpData => ({
   date: initialRow.date ?? null,
   campaign_name: initialRow.campaign_name ?? null,
   campaign_id: initialRow.campaign_id ?? null,
@@ -51,7 +72,7 @@ const initAggregatedRow = (initialRow: Partial<ITypeParsedOmpData>): ITypeParsed
 const aggregateBy = (
   data: ITypeParsedOmpData[],
   keyExtractor: (row: ITypeParsedOmpData) => string | null,
-  initialRowCreator: (row: ITypeParsedOmpData) => ITypeParsedOmpData
+  initialRowCreator: (row: ITypeParsedOmpData) => ITypeParsedOmpData,
 ): Map<string, ITypeParsedOmpData> => {
   const aggregatedData = new Map<string, ITypeParsedOmpData>();
   data.forEach((row) => {

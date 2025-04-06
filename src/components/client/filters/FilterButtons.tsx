@@ -6,7 +6,11 @@ interface FilterButtonsProps {
   isFilterDisabled: boolean;
 }
 
-export const FilterButtons: React.FC<FilterButtonsProps> = ({ onFilter, onReset, isFilterDisabled }) => (
+export const FilterButtons: React.FC<FilterButtonsProps> = ({
+  onFilter,
+  onReset,
+  isFilterDisabled,
+}) => (
   <div className="flex gap-4 mb-4">
     <button
       className="bg-red-400 hover:bg-red-500 text-white px-8 py-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-lg font-medium"

@@ -15,13 +15,23 @@ export const Table = ({ table }: TableProps) => {
   const { pageIndex, pageSize } = table.getState().pagination;
   const totalRows = table.getFilteredRowModel().rows.length;
   const visibleColumns = table.getVisibleFlatColumns().length;
-  const { selectedTable } = useSelector((state: RootState) => state.dataExplorer);
+  const { selectedTable } = useSelector(
+    (state: RootState) => state.dataExplorer,
+  );
   if (!selectedTable) {
-    return <div className="text-center py-4 text-gray-500 italic">{UI_MESSAGES.NO_TABLE_SELECTED}</div>;
+    return (
+      <div className="text-center py-4 text-gray-500 italic">
+        {UI_MESSAGES.NO_TABLE_SELECTED}
+      </div>
+    );
   }
 
   if (visibleColumns === 0) {
-    return <div className="text-center py-4 text-gray-500 italic">{UI_MESSAGES.NO_FILTERS_SELECTED}</div>;
+    return (
+      <div className="text-center py-4 text-gray-500 italic">
+        {UI_MESSAGES.NO_FILTERS_SELECTED}
+      </div>
+    );
   }
 
   return (
@@ -63,8 +73,8 @@ export const Table = ({ table }: TableProps) => {
             ))}
           </select>
           <span>
-            Rows {totalRows ? pageIndex * pageSize + 1 : 0}-{Math.min((pageIndex + 1) * pageSize, totalRows)} of{" "}
-            {totalRows}
+            Rows {totalRows ? pageIndex * pageSize + 1 : 0}-
+            {Math.min((pageIndex + 1) * pageSize, totalRows)} of {totalRows}
           </span>
         </div>
       </nav>
@@ -84,9 +94,16 @@ export const Table = ({ table }: TableProps) => {
                     {header.isPlaceholder ? null : (
                       <div
                         onClick={header.column.getToggleSortingHandler()}
-                        className={header.column.getCanSort() ? "cursor-pointer select-none" : ""}
+                        className={
+                          header.column.getCanSort()
+                            ? "cursor-pointer select-none"
+                            : ""
+                        }
                       >
-                        {flexRender(header.column.columnDef.header, header.getContext())}
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext(),
+                        )}
                         {header.column.getIsSorted() === "asc"
                           ? " 🔼"
                           : header.column.getIsSorted() === "desc"
@@ -109,7 +126,10 @@ export const Table = ({ table }: TableProps) => {
                   {rowIndex + 1}
                 </td>
                 {row.getVisibleCells().map((cell) => (
-                  <td key={cell.id} className="border border-indigo-200 px-2 py-1 sm:px-3 sm:py-2 text-xs sm:text-sm">
+                  <td
+                    key={cell.id}
+                    className="border border-indigo-200 px-2 py-1 sm:px-3 sm:py-2 text-xs sm:text-sm"
+                  >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </td>
                 ))}
@@ -127,7 +147,12 @@ export const Table = ({ table }: TableProps) => {
                     key={header.id}
                     className="border border-indigo-200 px-2 py-2 sm:px-3 text-xs sm:text-sm font-semibold text-indigo-800 whitespace-nowrap"
                   >
-                    {header.isPlaceholder ? null : flexRender(header.column.columnDef.footer, header.getContext())}
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.footer,
+                          header.getContext(),
+                        )}
                   </th>
                 ))}
               </tr>

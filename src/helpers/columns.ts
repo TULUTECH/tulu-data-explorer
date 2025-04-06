@@ -1,6 +1,10 @@
 "use client";
-import { DIMENSION_DATA_ENUM, DIMENSION_OBJS, ITypeParsedOmpData, METRIC_DATA_ENUM } from "@/types/data";
-import { createColumnHelper, FilterFn } from "@tanstack/react-table";
+import {
+  DIMENSION_DATA_ENUM,
+  ITypeParsedOmpData,
+  METRIC_DATA_ENUM,
+} from "@/types/data";
+import { createColumnHelper } from "@tanstack/react-table";
 import { columnConfigs } from "./columnConfig";
 
 export const columnHelper = createColumnHelper<ITypeParsedOmpData>();
@@ -15,9 +19,12 @@ export const columns = columnConfigs.map((config) => {
       filterFn: config.filterFn,
     });
   }
-  return columnHelper.accessor(config.key as DIMENSION_DATA_ENUM | METRIC_DATA_ENUM, {
-    header: config.header,
-    cell: config.cell || ((props) => props.getValue() ?? "0"),
-    footer: (props) => props.column.id,
-  });
+  return columnHelper.accessor(
+    config.key as DIMENSION_DATA_ENUM | METRIC_DATA_ENUM,
+    {
+      header: config.header,
+      cell: config.cell || ((props) => props.getValue() ?? "0"),
+      footer: (props) => props.column.id,
+    },
+  );
 });

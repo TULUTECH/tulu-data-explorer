@@ -3,9 +3,13 @@ import React from "react";
 import { DIMENSION_DATA_ENUM, METRIC_DATA_ENUM } from "@/types/data";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import { setSelectedDimensions, setSelectedMetrics } from "@/store/slices/dataExplorerSlice";
+import {
+  setSelectedDimensions,
+  setSelectedMetrics,
+} from "@/store/slices/dataExplorerSlice";
 import { DIMENSION_OBJS, METRIC_OBJS } from "@/constants";
 import Select, { MultiValue } from "react-select";
+import { StylesConfig } from "react-select";
 
 type OptionType = {
   value: DIMENSION_DATA_ENUM | METRIC_DATA_ENUM;
@@ -14,10 +18,14 @@ type OptionType = {
 
 export const DimensionsAndMetricsPicker: React.FC = () => {
   const dispatch = useDispatch();
-  const { selectedDimensions, selectedMetrics } = useSelector((state: RootState) => state.dataExplorer);
+  const { selectedDimensions, selectedMetrics } = useSelector(
+    (state: RootState) => state.dataExplorer,
+  );
 
   const handleDimensionChange = (selectedOptions: MultiValue<OptionType>) => {
-    const selectedValues = selectedOptions.map((option) => option.value as DIMENSION_DATA_ENUM);
+    const selectedValues = selectedOptions.map(
+      (option) => option.value as DIMENSION_DATA_ENUM,
+    );
     let newDimensions: DIMENSION_DATA_ENUM[] = [...selectedValues];
 
     // Handle the special case for AdGroupId and CampaignName
@@ -33,21 +41,27 @@ export const DimensionsAndMetricsPicker: React.FC = () => {
   };
 
   const handleMetricChange = (selectedOptions: MultiValue<OptionType>) => {
-    const selectedValues = selectedOptions.map((option) => option.value as METRIC_DATA_ENUM);
+    const selectedValues = selectedOptions.map(
+      (option) => option.value as METRIC_DATA_ENUM,
+    );
     dispatch(setSelectedMetrics(selectedValues));
   };
 
   // Convert selected dimensions to the format expected by react-select
-  const selectedDimensionOptions = DIMENSION_OBJS.filter((dimension) => selectedDimensions.includes(dimension.value));
+  const selectedDimensionOptions = DIMENSION_OBJS.filter((dimension) =>
+    selectedDimensions.includes(dimension.value),
+  );
 
   // Convert selected metrics to the format expected by react-select
-  const selectedMetricOptions = METRIC_OBJS.filter((metric) => selectedMetrics.includes(metric.value));
+  const selectedMetricOptions = METRIC_OBJS.filter((metric) =>
+    selectedMetrics.includes(metric.value),
+  );
 
   const isMetricsDisabled = selectedDimensions.length === 0;
 
   // Custom styles for the Select components
-  const customStyles = {
-    control: (provided: any) => ({
+  const customStyles: StylesConfig<OptionType, true> = {
+    control: (provided) => ({
       ...provided,
       borderColor: "#e5e7eb",
       borderRadius: "0.375rem",
@@ -56,17 +70,17 @@ export const DimensionsAndMetricsPicker: React.FC = () => {
         borderColor: "#d1d5db",
       },
     }),
-    multiValue: (provided: any) => ({
+    multiValue: (provided) => ({
       ...provided,
       backgroundColor: "#f3f4f6",
       borderRadius: "0.25rem",
     }),
-    multiValueLabel: (provided: any) => ({
+    multiValueLabel: (provided) => ({
       ...provided,
       color: "#374151",
       fontWeight: 500,
     }),
-    multiValueRemove: (provided: any) => ({
+    multiValueRemove: (provided) => ({
       ...provided,
       color: "#6b7280",
       "&:hover": {
@@ -83,7 +97,9 @@ export const DimensionsAndMetricsPicker: React.FC = () => {
         <Select
           isMulti
           name="dimensions"
-          options={DIMENSION_OBJS.filter((option) => option.isSelectableForTable)}
+          options={DIMENSION_OBJS.filter(
+            (option) => option.isSelectableForTable,
+          )}
           className="basic-multi-select"
           classNamePrefix="select"
           value={selectedDimensionOptions}
@@ -94,7 +110,8 @@ export const DimensionsAndMetricsPicker: React.FC = () => {
         />
         {selectedDimensions.includes(DIMENSION_DATA_ENUM.AdGroupId) && (
           <p className="text-xs text-gray-500 mt-1">
-            Note: Campaign Name is automatically selected when Ad Group is selected.
+            Note: Campaign Name is automatically selected when Ad Group is
+            selected.
           </p>
         )}
       </div>
