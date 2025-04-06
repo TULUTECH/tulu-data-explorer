@@ -26,12 +26,14 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials) {
         // Find the user in our "database"
         const user = users.find(
-          (user) => user.username === credentials?.username && user.password === credentials?.password
+          (user) =>
+            user.username === credentials?.username &&
+            user.password === credentials?.password,
         );
-
         if (user) {
           // Return user data without the password
-          const { password, ...userWithoutPassword } = user;
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const { password: password, ...userWithoutPassword } = user;
           return userWithoutPassword;
         }
 
