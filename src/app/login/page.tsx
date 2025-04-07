@@ -30,6 +30,7 @@ function LoginPageContent() {
         setError("Invalid username or password");
         setIsLoading(false);
       } else {
+        router.refresh();
         router.push(callbackUrl);
       }
     } catch (error) {
