@@ -18,8 +18,7 @@ import {
 } from "@/helpers/dataProcessing";
 import { Filters } from "@/components/client/filters/Filters";
 import { FilterButtons } from "@/components/client/filters/FilterButtons";
-import { INITIAL_COLUMN_VISIBILITY } from "@/constants/columnConfig";
-import { DIMENSION_KEY_ENUM } from "@/constants/dimensionsConfig";
+import { DIMENSION_KEY_ENUM, INITIAL_COLUMN_VISIBILITY } from "@/constants";
 
 interface DataExplorerClientProps {
   initialData: ITypeParsedOmpData[];

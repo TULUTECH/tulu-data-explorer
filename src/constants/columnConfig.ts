@@ -1,8 +1,9 @@
 import {
   DIMENSION_KEY_ENUM,
   DIMENSION_LABEL_MAP,
-} from "@/constants/dimensionsConfig";
-import { METRIC_KEY_ENUM, METRIC_LABEL_MAP } from "@/constants/metricsConfig";
+  METRIC_KEY_ENUM,
+  METRIC_LABEL_MAP,
+} from "@/constants";
 import { ITypeParsedOmpData } from "@/types/data";
 import { FilterFn, CellContext, VisibilityState } from "@tanstack/react-table";
 import { format } from "date-fns";

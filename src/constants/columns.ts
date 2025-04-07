@@ -1,11 +1,11 @@
 "use client";
+import { ITypeParsedOmpData } from "@/types/data";
 import {
   DIMENSION_KEY_ENUM,
-  ITypeParsedOmpData,
   METRIC_KEY_ENUM,
-} from "@/types/data";
+  columnConfigs,
+} from "@/constants";
 import { createColumnHelper } from "@tanstack/react-table";
-import { columnConfigs } from "./columnConfig";
 
 export const columnHelper = createColumnHelper<ITypeParsedOmpData>();
 

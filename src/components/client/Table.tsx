@@ -5,7 +5,7 @@ import { ITypeParsedOmpData } from "@/types/data";
 import { flexRender, Table as TanstackTable } from "@tanstack/react-table";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import { UI_MESSAGES } from "@/constants/uiMessages";
+import { UI_MESSAGES } from "@/constants";
 
 interface TableProps {
   table: TanstackTable<ITypeParsedOmpData>;
