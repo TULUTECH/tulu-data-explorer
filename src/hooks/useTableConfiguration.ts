@@ -12,7 +12,7 @@ import {
 import { ITypeParsedOmpData } from "@/types/data";
 import { columns } from "@/constants/columns";
 import { AppDispatch } from "@/store/store";
-import { columnOrder } from "@/constants/columnConfig";
+import { columnOrder } from "@/constants";
 
 const INITIAL_TABLE_STATE = {
   pagination: {
