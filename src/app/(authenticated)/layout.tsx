@@ -1,3 +1,4 @@
+import Navbar from "@/components/client/Navbar";
 import { authOptions } from "@/lib/authOptions";
 import { getServerSession } from "next-auth/next";
 import { redirect } from "next/navigation";
@@ -17,6 +18,7 @@ export default async function AuthenticatedLayout({
 
   return (
     <div className="min-h-screen flex flex-col">
+      <Navbar />
       <main className="flex-grow">{children}</main>
     </div>
   );
