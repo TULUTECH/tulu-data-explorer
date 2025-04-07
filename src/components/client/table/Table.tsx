@@ -36,9 +36,7 @@ export const Table = ({ table }: TableProps) => {
 
   return (
     <section className="w-full">
-      {/* Pagination controls */}
       <nav className="flex flex-wrap justify-between items-center mb-3 text-xs sm:text-sm">
-        {/* Previous/Next buttons */}
         <div className="flex items-center space-x-1 sm:space-x-2 mb-2 sm:mb-0">
           <button
             className="px-1 sm:px-2 py-1 bg-indigo-200 hover:bg-indigo-300 rounded disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed transition-colors duration-200"
@@ -58,8 +56,6 @@ export const Table = ({ table }: TableProps) => {
             {">"}
           </button>
         </div>
-
-        {/* Page size selector and row count */}
         <div className="flex items-center gap-2 text-xs sm:text-sm whitespace-nowrap">
           <select
             className="text-xs sm:text-sm border border-indigo-200 rounded p-1 bg-white focus:outline-none focus:ring-1 focus:ring-indigo-500"
@@ -105,9 +101,9 @@ export const Table = ({ table }: TableProps) => {
                           header.getContext(),
                         )}
                         {header.column.getIsSorted() === "asc"
-                          ? " 🔼"
+                          ? "🔼"
                           : header.column.getIsSorted() === "desc"
-                            ? " 🔽"
+                            ? "🔽"
                             : ""}
                       </div>
                     )}
