@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { DIMENSION_KEY_ENUM, METRIC_KEY_ENUM, IDateRange } from "@/types/data";
+import { IDateRange } from "@/types/data";
+import { DIMENSION_KEY_ENUM, METRIC_KEY_ENUM } from "@/constants";
 
 interface DataExplorerState {
   selectedDimensions: DIMENSION_KEY_ENUM[];

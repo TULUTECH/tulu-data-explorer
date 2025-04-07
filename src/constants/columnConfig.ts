@@ -121,12 +121,12 @@ export const columnConfigs: ColumnConfig[] = [
       DIMENSION_LABEL_MAP[DIMENSION_KEY_ENUM.CampaignName] || "Campaign Name",
   },
   {
-    key: "campaign_id",
+    key: DIMENSION_KEY_ENUM.CampaignId,
     header: () =>
       DIMENSION_LABEL_MAP[DIMENSION_KEY_ENUM.CampaignId] || "Campaign ID",
   },
   {
-    key: "ad_group_name",
+    key: DIMENSION_KEY_ENUM.AdGroupName,
     header: () =>
       DIMENSION_LABEL_MAP[DIMENSION_KEY_ENUM.AdGroupName] || "Ad-Group Name",
   },
@@ -192,10 +192,10 @@ export const columnConfigs: ColumnConfig[] = [
 
 export const columnOrder = [
   DIMENSION_KEY_ENUM.Date,
-  "campaign_id",
+  DIMENSION_KEY_ENUM.CampaignId,
   DIMENSION_KEY_ENUM.CampaignName,
   DIMENSION_KEY_ENUM.AdGroupId,
-  "ad_group_name",
+  DIMENSION_KEY_ENUM.AdGroupName,
   METRIC_KEY_ENUM.CostMicros,
   METRIC_KEY_ENUM.Impressions,
   METRIC_KEY_ENUM.Clicks,
