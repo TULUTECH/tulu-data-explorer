@@ -10,9 +10,9 @@ import {
   OnChangeFn,
 } from "@tanstack/react-table";
 import { ITypeParsedOmpData } from "@/types/data";
-import { columns } from "@/helpers/columns";
+import { columns } from "@/constants/columns";
 import { AppDispatch } from "@/store/store";
-import { columnOrder } from "@/helpers/columnConfig";
+import { columnOrder } from "@/constants/columnConfig";
 
 const INITIAL_TABLE_STATE = {
   pagination: {

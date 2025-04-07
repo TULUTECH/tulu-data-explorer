@@ -1,8 +1,8 @@
 "use client";
 import {
-  DIMENSION_DATA_ENUM,
+  DIMENSION_KEY_ENUM,
   ITypeParsedOmpData,
-  METRIC_DATA_ENUM,
+  METRIC_KEY_ENUM,
 } from "@/types/data";
 import { createColumnHelper } from "@tanstack/react-table";
 import { columnConfigs } from "./columnConfig";
@@ -20,7 +20,7 @@ export const columns = columnConfigs.map((config) => {
     });
   }
   return columnHelper.accessor(
-    config.key as DIMENSION_DATA_ENUM | METRIC_DATA_ENUM,
+    config.key as DIMENSION_KEY_ENUM | METRIC_KEY_ENUM,
     {
       header: config.header,
       cell: config.cell || ((props) => props.getValue() ?? "0"),

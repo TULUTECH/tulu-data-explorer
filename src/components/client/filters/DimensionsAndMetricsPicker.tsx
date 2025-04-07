@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { DIMENSION_DATA_ENUM, METRIC_DATA_ENUM } from "@/types/data";
+import { DIMENSION_KEY_ENUM, METRIC_KEY_ENUM } from "@/constants";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import {
@@ -12,7 +12,7 @@ import Select, { MultiValue } from "react-select";
 import { StylesConfig } from "react-select";
 
 type OptionType = {
-  value: DIMENSION_DATA_ENUM | METRIC_DATA_ENUM;
+  value: DIMENSION_KEY_ENUM | METRIC_KEY_ENUM;
   label: string;
 };
 
@@ -24,17 +24,17 @@ export const DimensionsAndMetricsPicker: React.FC = () => {
 
   const handleDimensionChange = (selectedOptions: MultiValue<OptionType>) => {
     const selectedValues = selectedOptions.map(
-      (option) => option.value as DIMENSION_DATA_ENUM,
+      (option) => option.value as DIMENSION_KEY_ENUM,
     );
-    let newDimensions: DIMENSION_DATA_ENUM[] = [...selectedValues];
+    let newDimensions: DIMENSION_KEY_ENUM[] = [...selectedValues];
 
     // Handle the special case for AdGroupId and CampaignName
     if (
-      selectedValues.includes(DIMENSION_DATA_ENUM.AdGroupId) &&
-      !selectedValues.includes(DIMENSION_DATA_ENUM.CampaignName)
+      selectedValues.includes(DIMENSION_KEY_ENUM.AdGroupId) &&
+      !selectedValues.includes(DIMENSION_KEY_ENUM.CampaignName)
     ) {
       // If AdGroupId is selected but CampaignName is not, add CampaignName
-      newDimensions = [...newDimensions, DIMENSION_DATA_ENUM.CampaignName];
+      newDimensions = [...newDimensions, DIMENSION_KEY_ENUM.CampaignName];
     }
 
     dispatch(setSelectedDimensions(newDimensions));
@@ -42,7 +42,7 @@ export const DimensionsAndMetricsPicker: React.FC = () => {
 
   const handleMetricChange = (selectedOptions: MultiValue<OptionType>) => {
     const selectedValues = selectedOptions.map(
-      (option) => option.value as METRIC_DATA_ENUM,
+      (option) => option.value as METRIC_KEY_ENUM,
     );
     dispatch(setSelectedMetrics(selectedValues));
   };
@@ -108,7 +108,7 @@ export const DimensionsAndMetricsPicker: React.FC = () => {
           styles={customStyles}
           closeMenuOnSelect={false}
         />
-        {selectedDimensions.includes(DIMENSION_DATA_ENUM.AdGroupId) && (
+        {selectedDimensions.includes(DIMENSION_KEY_ENUM.AdGroupId) && (
           <p className="text-xs text-gray-500 mt-1">
             Note: Campaign Name is automatically selected when Ad Group is
             selected.

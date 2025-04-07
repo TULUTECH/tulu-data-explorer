@@ -2,8 +2,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { VisibilityState } from "@tanstack/react-table";
-import { DIMENSION_DATA_ENUM, ITypeParsedOmpData } from "@/types/data";
-import { Table } from "@/components/client/table/Table";
+import { ITypeParsedOmpData } from "@/types/data";
+import { Table } from "@/components/client/Table";
 import { RootState } from "@/store/store";
 import {
   resetFilters,
@@ -18,7 +18,8 @@ import {
 } from "@/helpers/dataProcessing";
 import { Filters } from "@/components/client/filters/Filters";
 import { FilterButtons } from "@/components/client/filters/FilterButtons";
-import { INITIAL_COLUMN_VISIBILITY } from "@/constants";
+import { INITIAL_COLUMN_VISIBILITY } from "@/constants/columnConfig";
+import { DIMENSION_KEY_ENUM } from "@/constants/dimensionsConfig";
 
 interface DataExplorerClientProps {
   initialData: ITypeParsedOmpData[];
@@ -64,15 +65,15 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({
 
   const getProcessedData = (
     data: ITypeParsedOmpData[],
-    dimensions: DIMENSION_DATA_ENUM[],
+    dimensions: DIMENSION_KEY_ENUM[],
   ): ITypeParsedOmpData[] => {
-    if (dimensions.includes(DIMENSION_DATA_ENUM.Date)) {
+    if (dimensions.includes(DIMENSION_KEY_ENUM.Date)) {
       return processDateDimension(data, dimensions);
     }
-    if (dimensions.includes(DIMENSION_DATA_ENUM.AdGroupId)) {
+    if (dimensions.includes(DIMENSION_KEY_ENUM.AdGroupId)) {
       return processAdGroupDimension(data);
     }
-    if (dimensions.includes(DIMENSION_DATA_ENUM.CampaignName)) {
+    if (dimensions.includes(DIMENSION_KEY_ENUM.CampaignName)) {
       return processCampaignDimension(data);
     }
     return data;
