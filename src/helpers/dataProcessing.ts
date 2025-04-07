@@ -22,7 +22,7 @@ export const processDateDimension = (
 
   if (selectedDimensions.includes(DIMENSION_KEY_ENUM.AdGroupId)) {
     return processDateDimensionWithAdGroup(filteredData, aggregatedByDate);
-  } else if (selectedDimensions.includes("campaign_name")) {
+  } else if (selectedDimensions.includes(DIMENSION_KEY_ENUM.CampaignName)) {
     return processDateDimensionWithCampaign(filteredData, aggregatedByDate);
   }
   return sortByDate(Array.from(aggregatedByDate.values()));
@@ -168,14 +168,13 @@ function createAdGroupRow(
 
 // Utility functions for metric field operations
 function initializeMetricFields(): Record<METRIC_KEY_ENUM, number> {
-  return {
-    impressions: 0,
-    clicks: 0,
-    cost_micros: 0,
-    sessions: 0,
-    leads: 0,
-    revenue: 0,
-  };
+  return Object.values(METRIC_KEY_ENUM).reduce(
+    (acc, metric) => {
+      acc[metric] = 0;
+      return acc;
+    },
+    {} as Record<METRIC_KEY_ENUM, number>,
+  );
 }
 
 function aggregateMetricFields(
