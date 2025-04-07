@@ -4,15 +4,11 @@ import { parseOmpDataTypes } from "@/helpers/dataParsing";
 
 // Simulate API call
 async function fetchOmpData() {
-  // In the future, replace this with:
-  // const response = await fetch('your-api-endpoint');
-  // const data = await response.json();
-
+  // TODO: use a real API call according to the logged-in user
   return parseOmpDataTypes(rawDataJson);
 }
 
 export default async function DataExplorerPage() {
-  // Fetch data on the server
   const initialData = await fetchOmpData();
 
   return (
