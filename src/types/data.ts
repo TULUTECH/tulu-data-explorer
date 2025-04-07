@@ -1,47 +1,20 @@
+import { DIMENSION_KEY_ENUM, METRIC_KEY_ENUM } from "@/constants";
+
 export interface ITypeParsedOmpData {
-  campaign_id: number | null;
-  campaign_name: string | null;
-  ad_group_id: number | null;
-  ad_group_name: string | null;
-  date: string | null;
-  cost_micros: number | null;
-  impressions: number | null;
-  clicks: number | null;
-  sessions: number | null;
-  leads: number | null;
-  revenue: number | null;
+  [DIMENSION_KEY_ENUM.CampaignId]: number | null;
+  [DIMENSION_KEY_ENUM.CampaignName]: string | null;
+  [DIMENSION_KEY_ENUM.AdGroupId]: number | null;
+  [DIMENSION_KEY_ENUM.AdGroupName]: string | null;
+  [DIMENSION_KEY_ENUM.Date]: string | null;
+  [METRIC_KEY_ENUM.CostMicros]: number | null;
+  [METRIC_KEY_ENUM.Impressions]: number | null;
+  [METRIC_KEY_ENUM.Clicks]: number | null;
+  [METRIC_KEY_ENUM.Sessions]: number | null;
+  [METRIC_KEY_ENUM.Leads]: number | null;
+  [METRIC_KEY_ENUM.Revenue]: number | null;
 }
 
 export interface IDateRange {
   startDate: string | null;
   endDate: string | null;
-}
-
-export enum DIMENSION_DATA_ENUM {
-  Date = "date",
-  CampaignName = "campaign_name",
-  CampaignId = "campaign_id",
-  AdGroupName = "ad_group_name",
-  AdGroupId = "ad_group_id",
-}
-
-export enum METRIC_DATA_ENUM {
-  Impressions = "impressions",
-  Clicks = "clicks",
-  CostMicros = "cost_micros",
-  Sessions = "sessions",
-  Leads = "leads",
-  Revenue = "revenue",
-}
-
-export interface IDimensionObj {
-  value: DIMENSION_DATA_ENUM;
-  label: string;
-  isSelectableForTable: boolean;
-}
-
-export interface IMetricObj {
-  value: METRIC_DATA_ENUM;
-  label: string;
-  isSelectableForTable: boolean;
 }

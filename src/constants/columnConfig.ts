@@ -1,13 +1,27 @@
-import { DIMENSION_LABEL_MAP, METRIC_LABEL_MAP } from "@/constants";
 import {
-  DIMENSION_DATA_ENUM,
-  METRIC_DATA_ENUM,
-  ITypeParsedOmpData,
-} from "@/types/data";
-import { FilterFn, CellContext } from "@tanstack/react-table";
+  DIMENSION_KEY_ENUM,
+  DIMENSION_LABEL_MAP,
+} from "@/constants/dimensionsConfig";
+import { METRIC_KEY_ENUM, METRIC_LABEL_MAP } from "@/constants/metricsConfig";
+import { ITypeParsedOmpData } from "@/types/data";
+import { FilterFn, CellContext, VisibilityState } from "@tanstack/react-table";
 import { format } from "date-fns";
 
 type CellValue = string | number | Date | null;
+
+export const INITIAL_COLUMN_VISIBILITY: VisibilityState = {
+  date: false,
+  campaign_name: false,
+  campaign_id: false,
+  ad_group_name: false,
+  ad_group_id: false,
+  impressions: false,
+  clicks: false,
+  cost_micros: false,
+  sessions: false,
+  leads: false,
+  revenue: false,
+};
 
 // Helper Functions
 const formatNumberEuropean = (
@@ -28,7 +42,7 @@ const formatCurrency =
     const value = props.getValue();
     if (value == null) return "-";
     const adjustedValue =
-      key === METRIC_DATA_ENUM.CostMicros
+      key === METRIC_KEY_ENUM.CostMicros
         ? Number(value) / 1000000
         : Number(value);
     return adjustedValue.toLocaleString("de-DE", {
@@ -101,28 +115,28 @@ type ColumnConfig = {
 };
 export const columnConfigs: ColumnConfig[] = [
   {
-    key: DIMENSION_DATA_ENUM.CampaignName,
+    key: DIMENSION_KEY_ENUM.CampaignName,
     header: () =>
-      DIMENSION_LABEL_MAP[DIMENSION_DATA_ENUM.CampaignName] || "Campaign Name",
+      DIMENSION_LABEL_MAP[DIMENSION_KEY_ENUM.CampaignName] || "Campaign Name",
   },
   {
     key: "campaign_id",
     header: () =>
-      DIMENSION_LABEL_MAP[DIMENSION_DATA_ENUM.CampaignId] || "Campaign ID",
+      DIMENSION_LABEL_MAP[DIMENSION_KEY_ENUM.CampaignId] || "Campaign ID",
   },
   {
     key: "ad_group_name",
     header: () =>
-      DIMENSION_LABEL_MAP[DIMENSION_DATA_ENUM.AdGroupName] || "Ad-Group Name",
+      DIMENSION_LABEL_MAP[DIMENSION_KEY_ENUM.AdGroupName] || "Ad-Group Name",
   },
   {
-    key: DIMENSION_DATA_ENUM.AdGroupId,
+    key: DIMENSION_KEY_ENUM.AdGroupId,
     header: () =>
-      DIMENSION_LABEL_MAP[DIMENSION_DATA_ENUM.AdGroupId] || "Ad-Group ID",
+      DIMENSION_LABEL_MAP[DIMENSION_KEY_ENUM.AdGroupId] || "Ad-Group ID",
   },
   {
-    key: DIMENSION_DATA_ENUM.Date,
-    header: () => DIMENSION_LABEL_MAP[DIMENSION_DATA_ENUM.Date] || "Date",
+    key: DIMENSION_KEY_ENUM.Date,
+    header: () => DIMENSION_LABEL_MAP[DIMENSION_KEY_ENUM.Date] || "Date",
     // Use a custom accessor function to convert date strings to Date objects
     accessorFn: (row) => (row.date ? new Date(row.date) : new Date(0)),
     filterFn: customDateRangeFilter,
@@ -143,48 +157,48 @@ export const columnConfigs: ColumnConfig[] = [
     },
   },
   {
-    key: METRIC_DATA_ENUM.CostMicros,
-    header: () => METRIC_LABEL_MAP[METRIC_DATA_ENUM.CostMicros] || "Cost",
-    cell: formatCurrency(METRIC_DATA_ENUM.CostMicros),
+    key: METRIC_KEY_ENUM.CostMicros,
+    header: () => METRIC_LABEL_MAP[METRIC_KEY_ENUM.CostMicros] || "Cost",
+    cell: formatCurrency(METRIC_KEY_ENUM.CostMicros),
   },
   {
-    key: METRIC_DATA_ENUM.Impressions,
+    key: METRIC_KEY_ENUM.Impressions,
     header: () =>
-      METRIC_LABEL_MAP[METRIC_DATA_ENUM.Impressions] || "Impressions",
+      METRIC_LABEL_MAP[METRIC_KEY_ENUM.Impressions] || "Impressions",
     cell: formatNumberEuropean,
   },
   {
-    key: METRIC_DATA_ENUM.Clicks,
-    header: () => METRIC_LABEL_MAP[METRIC_DATA_ENUM.Clicks] || "Clicks",
+    key: METRIC_KEY_ENUM.Clicks,
+    header: () => METRIC_LABEL_MAP[METRIC_KEY_ENUM.Clicks] || "Clicks",
     cell: formatNumberEuropean,
   },
   {
-    key: METRIC_DATA_ENUM.Sessions,
-    header: () => METRIC_LABEL_MAP[METRIC_DATA_ENUM.Sessions] || "Sessions",
+    key: METRIC_KEY_ENUM.Sessions,
+    header: () => METRIC_LABEL_MAP[METRIC_KEY_ENUM.Sessions] || "Sessions",
     cell: formatNumberEuropean,
   },
   {
-    key: METRIC_DATA_ENUM.Leads,
-    header: () => METRIC_LABEL_MAP[METRIC_DATA_ENUM.Leads] || "Leads",
+    key: METRIC_KEY_ENUM.Leads,
+    header: () => METRIC_LABEL_MAP[METRIC_KEY_ENUM.Leads] || "Leads",
     cell: formatNumberEuropean,
   },
   {
-    key: METRIC_DATA_ENUM.Revenue,
-    header: () => METRIC_LABEL_MAP[METRIC_DATA_ENUM.Revenue] || "Revenue",
-    cell: formatCurrency(METRIC_DATA_ENUM.Revenue),
+    key: METRIC_KEY_ENUM.Revenue,
+    header: () => METRIC_LABEL_MAP[METRIC_KEY_ENUM.Revenue] || "Revenue",
+    cell: formatCurrency(METRIC_KEY_ENUM.Revenue),
   },
 ];
 
 export const columnOrder = [
-  DIMENSION_DATA_ENUM.Date,
+  DIMENSION_KEY_ENUM.Date,
   "campaign_id",
-  DIMENSION_DATA_ENUM.CampaignName,
-  DIMENSION_DATA_ENUM.AdGroupId,
+  DIMENSION_KEY_ENUM.CampaignName,
+  DIMENSION_KEY_ENUM.AdGroupId,
   "ad_group_name",
-  METRIC_DATA_ENUM.CostMicros,
-  METRIC_DATA_ENUM.Impressions,
-  METRIC_DATA_ENUM.Clicks,
-  METRIC_DATA_ENUM.Sessions,
-  METRIC_DATA_ENUM.Leads,
-  METRIC_DATA_ENUM.Revenue,
+  METRIC_KEY_ENUM.CostMicros,
+  METRIC_KEY_ENUM.Impressions,
+  METRIC_KEY_ENUM.Clicks,
+  METRIC_KEY_ENUM.Sessions,
+  METRIC_KEY_ENUM.Leads,
+  METRIC_KEY_ENUM.Revenue,
 ];
