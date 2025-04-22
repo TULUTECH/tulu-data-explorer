@@ -11,14 +11,11 @@ import {
 } from "@/store/slices/dataExplorerSlice";
 import { useTableConfiguration } from "@/hooks/useTableConfiguration";
 import { getVisibilityState, filterByDateRange } from "@/helpers/dataParsing";
-import {
-  processAdGroupDimension,
-  processCampaignDimension,
-  processDateDimension,
-} from "@/helpers/dataProcessing";
+
 import { Filters } from "@/components/client/filters/Filters";
 import { FilterButtons } from "@/components/client/filters/FilterButtons";
-import { DIMENSION_KEY_ENUM, INITIAL_COLUMN_VISIBILITY } from "@/constants";
+import { INITIAL_COLUMN_VISIBILITY } from "@/constants";
+import { aggregateDataByKeys } from "@/helpers/aggregations";
 
 interface DataExplorerClientProps {
   initialData: ITypeParsedOmpData[];
@@ -62,37 +59,28 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({
     setTableData([]);
   };
 
-  const getProcessedData = (
-    data: ITypeParsedOmpData[],
-    dimensions: DIMENSION_KEY_ENUM[],
-  ): ITypeParsedOmpData[] => {
-    if (dimensions.includes(DIMENSION_KEY_ENUM.Date)) {
-      return processDateDimension(data, dimensions);
-    }
-    if (dimensions.includes(DIMENSION_KEY_ENUM.AdGroupId)) {
-      return processAdGroupDimension(data);
-    }
-    if (dimensions.includes(DIMENSION_KEY_ENUM.CampaignName)) {
-      return processCampaignDimension(data);
-    }
-    return data;
-  };
-
   const handleFilter = () => {
     if (selectedDimensions.length === 0) {
       setTableData([]);
       return;
     }
+
     setColumnVisibility(
       getVisibilityState(selectedDimensions, selectedMetrics),
     );
+
     const filteredData = filterByDateRange(
       initialData,
       selectedDateRange.startDate,
       selectedDateRange.endDate,
     );
-    const processedData = getProcessedData(filteredData, selectedDimensions);
-    setTableData(processedData);
+
+    const aggregatedData = aggregateDataByKeys(
+      filteredData,
+      selectedDimensions as (keyof ITypeParsedOmpData)[],
+    );
+
+    setTableData(aggregatedData);
   };
 
   const isFilterDisabled = selectedDimensions.length === 0;
