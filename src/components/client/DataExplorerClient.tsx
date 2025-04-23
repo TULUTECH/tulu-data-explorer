@@ -65,22 +65,30 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({
       return;
     }
 
-    setColumnVisibility(
-      getVisibilityState(selectedDimensions, selectedMetrics),
-    );
+    try {
+      setColumnVisibility(
+        getVisibilityState(selectedDimensions, selectedMetrics),
+      );
 
-    const filteredData = filterByDateRange(
-      initialData,
-      selectedDateRange.startDate,
-      selectedDateRange.endDate,
-    );
+      const filteredData = filterByDateRange(
+        initialData,
+        selectedDateRange.startDate,
+        selectedDateRange.endDate,
+      );
 
-    const aggregatedData = aggregateDataByKeys(
-      filteredData,
-      selectedDimensions as (keyof ITypeParsedOmpData)[],
-    );
+      const aggregatedData = aggregateDataByKeys(
+        filteredData,
+        selectedDimensions as (keyof ITypeParsedOmpData)[],
+      );
 
-    setTableData(aggregatedData);
+      setTableData(aggregatedData);
+    } catch (error) {
+      console.error("Error processing data:", error);
+      alert(
+        "An error occurred while processing the data. Please try again or contact support.",
+      );
+      setTableData([]);
+    }
   };
 
   const isFilterDisabled = selectedDimensions.length === 0;
