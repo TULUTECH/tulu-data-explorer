@@ -1,8 +1,14 @@
 export enum DIMENSION_KEY_ENUM {
-  CampaignId = "campaign_id",
-  CampaignName = "campaign_name",
-  AdGroupId = "ad_group_id",
-  AdGroupName = "ad_group_name",
+  CampaignId = "tulu_campaign_id",
+  CampaignName = "tulu_campaign_name",
+  AdGroupId = "tulu_adgroup_id",
+  AdGroupName = "tulu_adgroup_name",
+  Group = "tulu_group",
+  Medium = "tulu_medium",
+  Source = "tulu_source",
+  CampaignStatus = "tulu_campaign_status",
+  AdGroupStatus = "tulu_adgroup_status",
+  Geo = "tulu_geo",
   Date = "date",
 }
 
@@ -15,7 +21,7 @@ export const DIMENSION_CONFIG: Record<DIMENSION_KEY_ENUM, IDimensionConfig> = {
   [DIMENSION_KEY_ENUM.Date]: { label: "Date", isSelectableForTable: true },
   [DIMENSION_KEY_ENUM.CampaignId]: {
     label: "Campaign ID",
-    isSelectableForTable: false,
+    isSelectableForTable: true,
   },
   [DIMENSION_KEY_ENUM.CampaignName]: {
     label: "Campaign Name",
@@ -27,7 +33,31 @@ export const DIMENSION_CONFIG: Record<DIMENSION_KEY_ENUM, IDimensionConfig> = {
   },
   [DIMENSION_KEY_ENUM.AdGroupName]: {
     label: "Ad-Group Name",
-    isSelectableForTable: false,
+    isSelectableForTable: true,
+  },
+  [DIMENSION_KEY_ENUM.Group]: {
+    label: "Group",
+    isSelectableForTable: true,
+  },
+  [DIMENSION_KEY_ENUM.Medium]: {
+    label: "Medium",
+    isSelectableForTable: true,
+  },
+  [DIMENSION_KEY_ENUM.Source]: {
+    label: "Source",
+    isSelectableForTable: true,
+  },
+  [DIMENSION_KEY_ENUM.CampaignStatus]: {
+    label: "Campaign Status",
+    isSelectableForTable: true,
+  },
+  [DIMENSION_KEY_ENUM.AdGroupStatus]: {
+    label: "Ad-Group Status",
+    isSelectableForTable: true,
+  },
+  [DIMENSION_KEY_ENUM.Geo]: {
+    label: "Geo",
+    isSelectableForTable: true,
   },
 };
 

@@ -12,16 +12,24 @@ type CellValue = string | number | Date | null;
 
 export const INITIAL_COLUMN_VISIBILITY: VisibilityState = {
   date: false,
-  campaign_name: false,
-  campaign_id: false,
-  ad_group_name: false,
-  ad_group_id: false,
-  impressions: false,
-  clicks: false,
-  cost_micros: false,
-  sessions: false,
-  leads: false,
-  revenue: false,
+  tulu_campaign_name: false,
+  tulu_campaign_id: false,
+  tulu_adgroup_name: false,
+  tulu_adgroup_id: false,
+  tulu_impressions: false,
+  tulu_clicks: false,
+  tulu_cost: false,
+  tulu_sessions: false,
+  tulu_leads: false,
+  tulu_revenue: false,
+  tulu_source: false,
+  tulu_medium: false,
+  tulu_campaign_status: false,
+  tulu_adgroup_status: false,
+  tulu_mql: false,
+  tulu_clients: false,
+  tulu_geo: false,
+  tulu_group: false,
 };
 
 // Helper Functions
@@ -43,9 +51,7 @@ const formatCurrency =
     const value = props.getValue();
     if (value == null) return "-";
     const adjustedValue =
-      key === METRIC_KEY_ENUM.CostMicros
-        ? Number(value) / 1000000
-        : Number(value);
+      key === METRIC_KEY_ENUM.tulu_cost ? Number(value) : Number(value);
     return adjustedValue.toLocaleString("de-DE", {
       style: "currency",
       currency: "EUR",
@@ -158,48 +164,101 @@ export const columnConfigs: ColumnConfig[] = [
     },
   },
   {
-    key: METRIC_KEY_ENUM.CostMicros,
-    header: () => METRIC_LABEL_MAP[METRIC_KEY_ENUM.CostMicros] || "Cost",
-    cell: formatCurrency(METRIC_KEY_ENUM.CostMicros),
-  },
-  {
-    key: METRIC_KEY_ENUM.Impressions,
+    key: DIMENSION_KEY_ENUM.Source,
     header: () =>
-      METRIC_LABEL_MAP[METRIC_KEY_ENUM.Impressions] || "Impressions",
+      DIMENSION_LABEL_MAP[DIMENSION_KEY_ENUM.Source] || "tulu_source",
+  },
+  {
+    key: DIMENSION_KEY_ENUM.Medium,
+    header: () =>
+      DIMENSION_LABEL_MAP[DIMENSION_KEY_ENUM.Medium] || "tulu_medium",
+  },
+  {
+    key: DIMENSION_KEY_ENUM.CampaignStatus,
+    header: () =>
+      DIMENSION_LABEL_MAP[DIMENSION_KEY_ENUM.CampaignStatus] ||
+      "tulu_campaign_status",
+  },
+  {
+    key: DIMENSION_KEY_ENUM.AdGroupStatus,
+    header: () =>
+      DIMENSION_LABEL_MAP[DIMENSION_KEY_ENUM.AdGroupStatus] ||
+      "tulu_adgroup_status",
+  },
+  {
+    key: DIMENSION_KEY_ENUM.Group,
+    header: () => DIMENSION_LABEL_MAP[DIMENSION_KEY_ENUM.Group] || "tulu_group",
+  },
+  {
+    key: DIMENSION_KEY_ENUM.Geo,
+    header: () => DIMENSION_LABEL_MAP[DIMENSION_KEY_ENUM.Geo] || "tulu_geo",
+  },
+
+  {
+    key: METRIC_KEY_ENUM.tulu_cost,
+    header: () => METRIC_LABEL_MAP[METRIC_KEY_ENUM.tulu_cost] || "Cost",
+    cell: formatCurrency(METRIC_KEY_ENUM.tulu_cost),
+  },
+  {
+    key: METRIC_KEY_ENUM.tulu_impressions,
+    header: () =>
+      METRIC_LABEL_MAP[METRIC_KEY_ENUM.tulu_impressions] || "tulu_impressions",
     cell: formatNumberEuropean,
   },
   {
-    key: METRIC_KEY_ENUM.Clicks,
-    header: () => METRIC_LABEL_MAP[METRIC_KEY_ENUM.Clicks] || "Clicks",
+    key: METRIC_KEY_ENUM.tulu_clicks,
+    header: () =>
+      METRIC_LABEL_MAP[METRIC_KEY_ENUM.tulu_clicks] || "tulu_clicks",
     cell: formatNumberEuropean,
   },
   {
-    key: METRIC_KEY_ENUM.Sessions,
-    header: () => METRIC_LABEL_MAP[METRIC_KEY_ENUM.Sessions] || "Sessions",
+    key: METRIC_KEY_ENUM.tulu_sessions,
+    header: () =>
+      METRIC_LABEL_MAP[METRIC_KEY_ENUM.tulu_sessions] || "tulu_sessions",
     cell: formatNumberEuropean,
   },
   {
-    key: METRIC_KEY_ENUM.Leads,
-    header: () => METRIC_LABEL_MAP[METRIC_KEY_ENUM.Leads] || "Leads",
+    key: METRIC_KEY_ENUM.tulu_leads,
+    header: () => METRIC_LABEL_MAP[METRIC_KEY_ENUM.tulu_leads] || "tulu_leads",
     cell: formatNumberEuropean,
   },
   {
-    key: METRIC_KEY_ENUM.Revenue,
-    header: () => METRIC_LABEL_MAP[METRIC_KEY_ENUM.Revenue] || "Revenue",
-    cell: formatCurrency(METRIC_KEY_ENUM.Revenue),
+    key: METRIC_KEY_ENUM.tulu_revenue,
+    header: () =>
+      METRIC_LABEL_MAP[METRIC_KEY_ENUM.tulu_revenue] || "tulu_revenue",
+    cell: formatCurrency(METRIC_KEY_ENUM.tulu_revenue),
+  },
+  {
+    key: METRIC_KEY_ENUM.tulu_mql,
+    header: () => METRIC_LABEL_MAP[METRIC_KEY_ENUM.tulu_mql] || "tulu_mql",
+    cell: formatNumberEuropean,
+  },
+  {
+    key: METRIC_KEY_ENUM.tulu_clients,
+    header: () =>
+      METRIC_LABEL_MAP[METRIC_KEY_ENUM.tulu_clients] || "tulu_clients",
+    cell: formatNumberEuropean,
   },
 ];
 
 export const columnOrder = [
   DIMENSION_KEY_ENUM.Date,
+  DIMENSION_KEY_ENUM.Geo,
   DIMENSION_KEY_ENUM.CampaignId,
   DIMENSION_KEY_ENUM.CampaignName,
   DIMENSION_KEY_ENUM.AdGroupId,
   DIMENSION_KEY_ENUM.AdGroupName,
-  METRIC_KEY_ENUM.CostMicros,
-  METRIC_KEY_ENUM.Impressions,
-  METRIC_KEY_ENUM.Clicks,
-  METRIC_KEY_ENUM.Sessions,
-  METRIC_KEY_ENUM.Leads,
-  METRIC_KEY_ENUM.Revenue,
+  DIMENSION_KEY_ENUM.Source,
+  DIMENSION_KEY_ENUM.Medium,
+  DIMENSION_KEY_ENUM.CampaignStatus,
+  DIMENSION_KEY_ENUM.AdGroupStatus,
+  DIMENSION_KEY_ENUM.Group,
+  METRIC_KEY_ENUM.tulu_cost,
+  METRIC_KEY_ENUM.tulu_impressions,
+  METRIC_KEY_ENUM.tulu_clicks,
+  METRIC_KEY_ENUM.tulu_sessions,
+  METRIC_KEY_ENUM.tulu_leads,
+  METRIC_KEY_ENUM.tulu_revenue,
+  METRIC_KEY_ENUM.tulu_mql,
+  METRIC_KEY_ENUM.tulu_clients,
 ];
