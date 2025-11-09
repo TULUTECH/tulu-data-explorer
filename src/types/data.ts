@@ -34,6 +34,7 @@ export interface IDimensionValueFilter {
   dimension: DIMENSION_KEY_ENUM | "";
   operator: DimensionFilterOperator;
   value: string;
+  connector: "AND" | "OR";
 }
 
 export type DimensionValueMap = Record<DIMENSION_KEY_ENUM, string[]>;

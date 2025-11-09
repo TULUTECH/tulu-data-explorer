@@ -14,6 +14,7 @@ interface TableProps {
 export const Table = ({ table }: TableProps) => {
   const { pageIndex, pageSize } = table.getState().pagination;
   const totalRows = table.getFilteredRowModel().rows.length;
+  const pageCount = table.getPageCount() || 1;
   const visibleColumns = table.getVisibleFlatColumns().length;
   const { selectedTable } = useSelector(
     (state: RootState) => state.dataExplorer,
@@ -45,9 +46,23 @@ export const Table = ({ table }: TableProps) => {
           >
             {"<"}
           </button>
-          <span className="whitespace-nowrap">
-            Page {pageIndex + 1} of {table.getPageCount() || 1}
-          </span>
+          <label className="flex items-center gap-1 text-xs sm:text-sm whitespace-nowrap">
+            <span>Page</span>
+            <select
+              className="border border-indigo-200 rounded px-1 py-0.5 bg-white focus:outline-none focus:ring-1 focus:ring-indigo-500"
+              value={pageIndex}
+              onChange={(event) =>
+                table.setPageIndex(Number(event.target.value))
+              }
+            >
+              {Array.from({ length: pageCount }, (_, index) => (
+                <option key={index} value={index}>
+                  {index + 1}
+                </option>
+              ))}
+            </select>
+            <span className="text-gray-600">/ {pageCount}</span>
+          </label>
           <button
             className="px-1 sm:px-2 py-1 bg-indigo-200 hover:bg-indigo-300 rounded disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed transition-colors duration-200"
             onClick={() => table.nextPage()}

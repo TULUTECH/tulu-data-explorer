@@ -112,19 +112,42 @@ export const filterByDimensionValues = (
     return data;
   }
 
-  return data.filter((row) =>
-    filters.every((filter) => {
-      if (!filter.dimension || filter.value === "") {
-        return true;
+  const evaluateFilter = (
+    row: ITypeParsedOmpData,
+    filter: IDimensionValueFilter,
+  ): boolean => {
+    if (!filter.dimension || filter.value === "") {
+      return true;
+    }
+    const dimensionKey = filter.dimension as DIMENSION_KEY_ENUM;
+    const rowValue = row[dimensionKey];
+    if (rowValue == null) {
+      return false;
+    }
+    return String(rowValue).toLowerCase() === filter.value.toLowerCase();
+  };
+
+  return data.filter((row) => {
+    let accumulatedResult: boolean | null = null;
+
+    filters.forEach((filter, index) => {
+      const conditionResult = evaluateFilter(row, filter);
+
+      if (accumulatedResult === null) {
+        accumulatedResult = conditionResult;
+        return;
       }
-      const dimensionKey = filter.dimension as DIMENSION_KEY_ENUM;
-      const rowValue = row[dimensionKey];
-      if (rowValue == null) {
-        return false;
+
+      const connector = index === 0 ? "AND" : filter.connector || "AND";
+      if (connector === "OR") {
+        accumulatedResult = accumulatedResult || conditionResult;
+      } else {
+        accumulatedResult = accumulatedResult && conditionResult;
       }
-      return String(rowValue).toLowerCase() === filter.value.toLowerCase();
-    }),
-  );
+    });
+
+    return accumulatedResult ?? true;
+  });
 };
 
 export const getDimensionValueMap = (
