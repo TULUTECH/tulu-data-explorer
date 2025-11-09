@@ -1,12 +1,19 @@
-// import { withAuth } from "next-auth/middleware";
+import { withAuth } from "next-auth/middleware";
 import { NextResponse } from "next/server";
 
-// withAuth disabled to allow open access while keeping middleware in place
-export function middleware() {
-  return NextResponse.next();
-}
+// This function can be marked `async` if using `await` inside
+export default withAuth(
+  function middleware() {
+    return NextResponse.next();
+  },
+  {
+    callbacks: {
+      authorized: ({ token }) => !!token,
+    },
+  },
+);
 
 // Specify which routes should be protected
-// export const config = {
-//   matcher: ["/", "/dashboard/:path*"],
-// };
+export const config = {
+  matcher: ["/", "/dashboard/:path*"],
+};
