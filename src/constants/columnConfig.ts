@@ -51,9 +51,7 @@ const formatCurrency =
     const value = props.getValue();
     if (value == null) return "-";
     const adjustedValue =
-      key === METRIC_KEY_ENUM.tulu_cost
-        ? Number(value)
-        : Number(value);
+      key === METRIC_KEY_ENUM.tulu_cost ? Number(value) : Number(value);
     return adjustedValue.toLocaleString("de-DE", {
       style: "currency",
       currency: "EUR",

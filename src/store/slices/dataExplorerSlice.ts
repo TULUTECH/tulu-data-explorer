@@ -29,6 +29,7 @@ const createEmptyFilter = (): IDimensionValueFilter => ({
   dimension: "",
   operator: "equals",
   value: "",
+  connector: "AND",
 });
 
 const dataExplorerSlice = createSlice({

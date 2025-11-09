@@ -44,6 +44,15 @@ export const DimensionValueFilters: React.FC<DimensionValueFiltersProps> = ({
     );
   };
 
+  const handleConnectorChange = (id: string, connector: "AND" | "OR") => {
+    dispatch(
+      updateDimensionFilter({
+        id,
+        changes: { connector },
+      }),
+    );
+  };
+
   return (
     <section className="flex flex-col gap-3">
       <div className="flex items-center justify-between">
@@ -65,7 +74,7 @@ export const DimensionValueFilters: React.FC<DimensionValueFiltersProps> = ({
       )}
 
       <div className="flex flex-col gap-3">
-        {dimensionFilters.map((filter) => {
+        {dimensionFilters.map((filter, index) => {
           const options = filter.dimension
             ? dimensionValueMap[filter.dimension as DIMENSION_KEY_ENUM] || []
             : [];
@@ -75,6 +84,31 @@ export const DimensionValueFilters: React.FC<DimensionValueFiltersProps> = ({
               key={filter.id}
               className="flex flex-col md:flex-row gap-3 md:items-center border border-gray-200 rounded-md p-3 bg-gray-50"
             >
+              {index > 0 && (
+                <div className="md:w-20">
+                  <label
+                    htmlFor={`connector-${filter.id}`}
+                    className="text-xs text-gray-500 uppercase tracking-wide"
+                  >
+                    Join
+                  </label>
+                  <select
+                    id={`connector-${filter.id}`}
+                    className="w-full border border-gray-300 rounded-md px-2 py-2 bg-white"
+                    value={filter.connector}
+                    onChange={(event) =>
+                      handleConnectorChange(
+                        filter.id,
+                        event.target.value as "AND" | "OR",
+                      )
+                    }
+                  >
+                    <option value="AND">AND</option>
+                    <option value="OR">OR</option>
+                  </select>
+                </div>
+              )}
+
               <div className="flex-1">
                 <label
                   htmlFor={`dimension-${filter.id}`}
