@@ -27,7 +27,7 @@ declare module "next-auth" {
 }
 
 declare module "next-auth/jwt" {
-  /** Returned by the `jwt` callback and `getToken`, when using JWT sessions */
+  /** Returned by the `jwt` callback and `getToken`, when using JWT tulu_sessions */
   interface JWT {
     id: string;
     role?: string;

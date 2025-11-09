@@ -1,10 +1,10 @@
 "use client";
 
-import { signOut, useSession } from "next-auth/react";
+// import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 
 export default function Navbar() {
-  const { data: session } = useSession();
+  // const { data: session } = useSession();
 
   return (
     <nav className="bg-white shadow-sm">
@@ -13,7 +13,7 @@ export default function Navbar() {
           Data Explorer
         </Link>
 
-        {session && (
+        {/* {session && (
           <div className="flex items-center gap-4">
             <span className="text-sm text-gray-700">
               Signed in as: {session.user?.name || session.user?.email}
@@ -25,7 +25,7 @@ export default function Navbar() {
               Sign Out
             </button>
           </div>
-        )}
+        )} */}
       </div>
     </nav>
   );

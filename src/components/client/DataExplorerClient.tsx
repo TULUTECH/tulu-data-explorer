@@ -1,8 +1,8 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { VisibilityState } from "@tanstack/react-table";
-import { ITypeParsedOmpData } from "@/types/data";
+import { ITypeParsedOmpData, MetricTotals } from "@/types/data";
 import { Table } from "@/components/client/Table";
 import { RootState } from "@/store/store";
 import {
@@ -10,12 +10,26 @@ import {
   setSelectedTable,
 } from "@/store/slices/dataExplorerSlice";
 import { useTableConfiguration } from "@/hooks/useTableConfiguration";
-import { getVisibilityState, filterByDateRange } from "@/helpers/dataParsing";
+import {
+  getVisibilityState,
+  filterByDateRange,
+  filterByDimensionValues,
+  getDimensionValueMap,
+} from "@/helpers/dataParsing";
 
 import { Filters } from "@/components/client/filters/Filters";
 import { FilterButtons } from "@/components/client/filters/FilterButtons";
 import { INITIAL_COLUMN_VISIBILITY } from "@/constants";
-import { aggregateDataByKeys } from "@/helpers/aggregations";
+import {
+  aggregateDataByKeys,
+  calculateMetricTotals,
+  createEmptyMetricTotals,
+} from "@/helpers/aggregations";
+import { CalculationsPanel } from "@/components/client/calculations/CalculationsPanel";
+import {
+  CalculationKey,
+  DEFAULT_CALCULATION_KEYS,
+} from "@/constants/calculations";
 
 interface DataExplorerClientProps {
   initialData: ITypeParsedOmpData[];
@@ -28,14 +42,25 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
     INITIAL_COLUMN_VISIBILITY,
   );
+  const [metricTotals, setMetricTotals] = useState<MetricTotals>(
+    createEmptyMetricTotals(),
+  );
+  const [calculationKeys, setCalculationKeys] = useState<CalculationKey[]>(
+    DEFAULT_CALCULATION_KEYS,
+  );
   const {
     selectedDimensions,
     selectedMetrics,
     selectedDateRange,
     selectedTable,
+    dimensionFilters,
   } = useSelector((state: RootState) => state.dataExplorer);
   const dispatch = useDispatch();
   const isMountedRef = useRef(false);
+  const dimensionValueMap = useMemo(
+    () => getDimensionValueMap(initialData),
+    [initialData],
+  );
 
   useEffect(() => {
     isMountedRef.current = true;
@@ -57,10 +82,17 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({
     setColumnVisibility(INITIAL_COLUMN_VISIBILITY);
     dispatch(resetFilters());
     setTableData([]);
+    setMetricTotals(createEmptyMetricTotals());
   };
 
   const handleFilter = () => {
-    if (selectedDimensions.length === 0) {
+    if (!selectedTable) {
+      alert("Please select a table before applying filters.");
+      return;
+    }
+
+    if (selectedMetrics.length === 0) {
+      alert("Please select at least one metric to display.");
       setTableData([]);
       return;
     }
@@ -76,22 +108,30 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({
         selectedDateRange.endDate,
       );
 
-      const aggregatedData = aggregateDataByKeys(
+      const dimensionFilteredData = filterByDimensionValues(
         filteredData,
+        dimensionFilters,
+      );
+
+      const aggregatedData = aggregateDataByKeys(
+        dimensionFilteredData,
         selectedDimensions as (keyof ITypeParsedOmpData)[],
       );
 
       setTableData(aggregatedData);
+      setMetricTotals(calculateMetricTotals(dimensionFilteredData));
     } catch (error) {
       console.error("Error processing data:", error);
       alert(
         "An error occurred while processing the data. Please try again or contact support.",
       );
       setTableData([]);
+      setMetricTotals(createEmptyMetricTotals());
     }
   };
 
-  const isFilterDisabled = selectedDimensions.length === 0;
+  const isApplyDisabled = !selectedTable || selectedMetrics.length === 0;
+  const hasTableData = tableData.length > 0;
 
   return (
     <div className="bg-gradient-to-br from-slate-50 to-slate-100 p-4 md:p-6 rounded-xl shadow-lg w-full max-w-[95vw] 2xl:max-w-[90vw] mx-auto relative">
@@ -129,10 +169,12 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({
                       transition-all duration-300"
             value={selectedTable}
             onChange={(e) => {
-              dispatch(setSelectedTable(e.target.value));
-              if (e.target.value === "om_proptech") {
+              const value = e.target.value;
+              dispatch(setSelectedTable(value));
+              if (value === "om_proptech") {
                 setTableData([...initialData]);
                 setColumnVisibility(INITIAL_COLUMN_VISIBILITY);
+                setMetricTotals(calculateMetricTotals(initialData));
               } else {
                 handleReset();
               }
@@ -151,15 +193,29 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({
           <div
             className={`transition-opacity duration-500 ${tableData.length > 0 ? "opacity-100" : "opacity-50"}`}
           >
-            <Filters hasData={tableData.length > 0} />
+            <Filters
+              hasData={hasTableData}
+              dimensionValueMap={dimensionValueMap}
+            />
           </div>
           <FilterButtons
-            isFilterDisabled={isFilterDisabled}
+            isApplyDisabled={isApplyDisabled}
             onFilter={handleFilter}
             onReset={handleReset}
           />
         </div>
       </div>
+
+      {selectedTable && (
+        <div className="mb-6">
+          <CalculationsPanel
+            selectedKeys={calculationKeys}
+            onChange={setCalculationKeys}
+            totals={metricTotals}
+            disabled={!hasTableData}
+          />
+        </div>
+      )}
 
       <div className="bg-white rounded-lg shadow-md overflow-hidden border border-indigo-100 transition-all duration-300 hover:shadow-lg">
         <div className="p-3 md:p-4">

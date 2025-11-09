@@ -1,5 +1,14 @@
-import NextAuth from "next-auth/next";
-import { authOptions } from "@/lib/authOptions";
+// import NextAuth from "next-auth/next";
+// import { authOptions } from "@/lib/authOptions";
 
-const handler = NextAuth(authOptions);
-export { handler as GET, handler as POST };
+// const handler = NextAuth(authOptions);
+// export { handler as GET, handler as POST };
+
+export async function GET() {
+  return Response.json(
+    { message: "Authentication temporarily disabled" },
+    { status: 503 },
+  );
+}
+
+export const POST = GET;
