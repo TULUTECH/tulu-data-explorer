@@ -1,5 +1,16 @@
-import { ITypeParsedOmpData } from "@/types/data";
-import { METRIC_KEY_ENUM } from "@/constants";
+import { ITypeParsedOmpData, MetricTotals } from "@/types/data";
+import { METRIC_KEY_ENUM } from "@/constants/metricsConfig";
+
+export const AGGREGATABLE_METRICS: METRIC_KEY_ENUM[] = [
+  METRIC_KEY_ENUM.tulu_cost,
+  METRIC_KEY_ENUM.tulu_impressions,
+  METRIC_KEY_ENUM.tulu_clicks,
+  METRIC_KEY_ENUM.tulu_sessions,
+  METRIC_KEY_ENUM.tulu_leads,
+  METRIC_KEY_ENUM.tulu_revenue,
+  METRIC_KEY_ENUM.tulu_mql,
+  METRIC_KEY_ENUM.tulu_clients,
+];
 
 // Groups data based on provided keys
 export const groupData = (
@@ -28,33 +39,11 @@ export const aggregateGroup = (
 ): ITypeParsedOmpData => {
   const baseRow = { ...rows[0] };
 
-  const numericMetrics: (keyof ITypeParsedOmpData)[] = [
-    METRIC_KEY_ENUM.CostMicros,
-    METRIC_KEY_ENUM.Impressions,
-    METRIC_KEY_ENUM.Clicks,
-    METRIC_KEY_ENUM.Sessions,
-    METRIC_KEY_ENUM.Leads,
-    METRIC_KEY_ENUM.Revenue,
-  ];
-
-  numericMetrics.forEach((metric) => {
+  AGGREGATABLE_METRICS.forEach((metric) => {
     baseRow[metric] = rows.reduce((acc, row) => acc + (row[metric] || 0), 0);
   });
 
   return baseRow;
-};
-
-// Computes custom calculated metrics such as CTR
-export const computeCustomMetrics = (
-  aggregatedRow: ITypeParsedOmpData,
-): ITypeParsedOmpData => {
-  const clicks = aggregatedRow.clicks || 0;
-  const impressions = aggregatedRow.impressions || 0;
-
-  (aggregatedRow as any)[METRIC_KEY_ENUM.CTR] =
-    impressions > 0 ? parseFloat(((clicks / impressions) * 100).toFixed(2)) : 0;
-
-  return aggregatedRow;
 };
 
 // Combines grouping, aggregating, and calculating custom metrics in one step
@@ -68,9 +57,29 @@ export const aggregateDataByKeys = (
 
   groupedData.forEach((rows) => {
     const aggregatedRow = aggregateGroup(rows);
-    computeCustomMetrics(aggregatedRow);
     aggregatedResults.push(aggregatedRow);
   });
 
   return aggregatedResults;
+};
+
+export const createEmptyMetricTotals = (): MetricTotals => {
+  return AGGREGATABLE_METRICS.reduce((acc, metric) => {
+    acc[metric] = 0;
+    return acc;
+  }, {} as MetricTotals);
+};
+
+export const calculateMetricTotals = (
+  data: ITypeParsedOmpData[],
+): MetricTotals => {
+  const totals = createEmptyMetricTotals();
+
+  data.forEach((row) => {
+    AGGREGATABLE_METRICS.forEach((metric) => {
+      totals[metric] += row[metric] || 0;
+    });
+  });
+
+  return totals;
 };

@@ -12,7 +12,7 @@ export default async function DataExplorerPage() {
   const initialData = await fetchOmpData();
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container max-w-[100000px] mx-auto p-4">
       <DataExplorerClient initialData={initialData} />
     </div>
   );
