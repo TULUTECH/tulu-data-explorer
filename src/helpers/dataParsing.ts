@@ -128,25 +128,30 @@ export const filterByDimensionValues = (
   };
 
   return data.filter((row) => {
-    let accumulatedResult: boolean | null = null;
+    const results = filters.map((filter) => evaluateFilter(row, filter));
 
-    filters.forEach((filter, index) => {
-      const conditionResult = evaluateFilter(row, filter);
+    if (results.length === 0) {
+      return true;
+    }
 
-      if (accumulatedResult === null) {
-        accumulatedResult = conditionResult;
-        return;
-      }
+    // Combine results while respecting AND precedence over OR.
+    // We collapse consecutive AND sequences into a single term, then OR the terms.
+    const terms: boolean[] = [];
+    let currentTerm = results[0];
 
-      const connector = index === 0 ? "AND" : filter.connector || "AND";
-      if (connector === "OR") {
-        accumulatedResult = accumulatedResult || conditionResult;
+    for (let index = 1; index < results.length; index += 1) {
+      const connector = filters[index].connector || "AND";
+      if (connector === "AND") {
+        currentTerm = currentTerm && results[index];
       } else {
-        accumulatedResult = accumulatedResult && conditionResult;
+        terms.push(currentTerm);
+        currentTerm = results[index];
       }
-    });
+    }
 
-    return accumulatedResult ?? true;
+    terms.push(currentTerm);
+
+    return terms.some((term) => term);
   });
 };
 
