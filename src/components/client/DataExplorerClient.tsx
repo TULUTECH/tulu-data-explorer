@@ -1,5 +1,11 @@
 "use client";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { VisibilityState } from "@tanstack/react-table";
 import { ITypeParsedOmpData, MetricTotals } from "@/types/data";
@@ -70,6 +76,56 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({
   }, []);
   useEffect(() => {}, [selectedTable]);
 
+  const safeSetTableData = useCallback(
+    (
+      updater:
+        | ITypeParsedOmpData[]
+        | ((prev: ITypeParsedOmpData[]) => ITypeParsedOmpData[]),
+    ) => {
+      if (!isMountedRef.current) return;
+      setTableData(updater);
+    },
+    [],
+  );
+
+  const safeSetColumnVisibility = useCallback(
+    (
+      updater: VisibilityState | ((prev: VisibilityState) => VisibilityState),
+    ) => {
+      if (!isMountedRef.current) return;
+      setColumnVisibility(updater);
+    },
+    [],
+  );
+
+  const safeSetMetricTotals = useCallback(
+    (updater: MetricTotals | ((prev: MetricTotals) => MetricTotals)) => {
+      if (!isMountedRef.current) return;
+      setMetricTotals(updater);
+    },
+    [],
+  );
+
+  useEffect(() => {
+    if (!isMountedRef.current) return;
+
+    if (selectedTable === "om_proptech") {
+      safeSetColumnVisibility(INITIAL_COLUMN_VISIBILITY);
+      safeSetTableData([...initialData]);
+      safeSetMetricTotals(calculateMetricTotals(initialData));
+    } else if (!selectedTable) {
+      safeSetColumnVisibility(INITIAL_COLUMN_VISIBILITY);
+      safeSetTableData([]);
+      safeSetMetricTotals(createEmptyMetricTotals());
+    }
+  }, [
+    selectedTable,
+    initialData,
+    safeSetColumnVisibility,
+    safeSetMetricTotals,
+    safeSetTableData,
+  ]);
+
   const table = useTableConfiguration({
     tableData,
     columnVisibility,
@@ -79,10 +135,10 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({
   });
 
   const handleReset = () => {
-    setColumnVisibility(INITIAL_COLUMN_VISIBILITY);
+    safeSetColumnVisibility(INITIAL_COLUMN_VISIBILITY);
     dispatch(resetFilters());
-    setTableData([]);
-    setMetricTotals(createEmptyMetricTotals());
+    safeSetTableData([]);
+    safeSetMetricTotals(createEmptyMetricTotals());
   };
 
   const handleFilter = () => {
@@ -98,7 +154,7 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({
     }
 
     try {
-      setColumnVisibility(
+      safeSetColumnVisibility(
         getVisibilityState(selectedDimensions, selectedMetrics),
       );
 
@@ -118,15 +174,15 @@ export const DataExplorerClient: React.FC<DataExplorerClientProps> = ({
         selectedDimensions as (keyof ITypeParsedOmpData)[],
       );
 
-      setTableData(aggregatedData);
-      setMetricTotals(calculateMetricTotals(dimensionFilteredData));
+      safeSetTableData(aggregatedData);
+      safeSetMetricTotals(calculateMetricTotals(dimensionFilteredData));
     } catch (error) {
       console.error("Error processing data:", error);
       alert(
         "An error occurred while processing the data. Please try again or contact support.",
       );
-      setTableData([]);
-      setMetricTotals(createEmptyMetricTotals());
+      safeSetTableData([]);
+      safeSetMetricTotals(createEmptyMetricTotals());
     }
   };
 
