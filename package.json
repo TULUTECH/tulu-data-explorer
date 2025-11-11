@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "prebuild": "if git lfs version >/dev/null 2>&1; then git lfs install --local && git lfs pull; else echo \"git-lfs not available, skipping pull\"; fi",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
