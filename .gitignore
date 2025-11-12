@@ -8,3 +8,4 @@ private/
 .vercel
 src/data/*.json
 !src/data/*.json.gz
+.DS_Store
