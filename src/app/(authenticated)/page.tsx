@@ -1,11 +1,12 @@
 import { DataExplorerClient } from "@/components/client/DataExplorerClient";
-import rawDataJson from "@/data/normalized_omp_data.json";
+import { loadNormalizedOmpData } from "@/lib/loadNormalizedOmpData";
 import { parseOmpDataTypes } from "@/helpers/dataParsing";
 
 // Simulate API call
 async function fetchOmpData() {
   // TODO: use a real API call according to the logged-in user
-  return parseOmpDataTypes(rawDataJson);
+  const rawData = loadNormalizedOmpData();
+  return parseOmpDataTypes(rawData);
 }
 
 export default async function DataExplorerPage() {

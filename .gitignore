@@ -6,3 +6,5 @@ private/
 .vscode/
 .qodo
 .vercel
+src/data/*.json
+!src/data/*.json.gz
